@@ -39,7 +39,7 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
         return this.writeByte(value);
     }
 
-    public function writeBytes(input:ByteArray, offset:Int = -1, length:Int = -1) {
+    public function writeBytes(input:ByteArray, offset:Int = 0, length:Int = 0) {
         return this.writeBytes(input, offset, length);
     }
 
@@ -90,6 +90,7 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
 class ByteArrayData implements IDataOutput implements IDataInput {
     public var position(get, set):Int;
     public var length(get, set):Int;
+    public var bytesAvailable(get, never):Int;
     public var endian:Endian = Endian.BIG_ENDIAN;
     private var _data:Bytes = Bytes.alloc(16);
     private var _length:Int = 0;
@@ -109,15 +110,20 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     }
 
     public function readBytes(output:ByteArray, offset:Int, length:Int) {
-        throw new Error('Not implemented');
+        if (length == 0) length = this.bytesAvailable;
+        output.position = offset;
+        for (n in 0 ... length) output.writeByte(this.readUnsignedByte());
     }
 
     public function readUTFBytes(length:Int):String {
-        throw new Error('Not implemented');
+        return readMultiByte(length, 'ascii');
     }
 
     public function readMultiByte(length:Int, encoding:String):String {
-        throw new Error('Not implemented');
+        // @TODO: handle encoding
+        var str = '';
+        for (n in 0 ... length) str += String.fromCharCode(readUnsignedByte());
+        return str;
     }
 
     public function readUnsignedByte():Int {
@@ -140,11 +146,12 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     }
 
     public function writeUTF(str:String) {
-        throw new Error('Not implemented');
+        this.writeUnsignedShort(str.length);
+        this.writeUTFBytes(str);
     }
 
     public function writeUTFBytes(str:String) {
-        throw new Error('Not implemented');
+        return writeMultiByte(str, 'ascii');
     }
 
     public function writeMultiByte(str:String, encoding:String) {
@@ -157,12 +164,24 @@ class ByteArrayData implements IDataOutput implements IDataInput {
         writeUnsignedByte(value);
     }
 
-    public function writeBytes(input:ByteArray, offset:Int = -1, length:Int = -1) {
-        throw new Error('Not implemented');
+    public function writeShort(value:Int) {
+        writeUnsignedShort(value);
+    }
+
+    public function writeBytes(input:ByteArray, offset:Int = 0, length:Int = 0) {
+        if (length == 0) length = input.bytesAvailable;
+        //throw new Error('Not implemented');
+        for (n in 0 ... length) {
+            this.writeByte(input[offset + n]);
+        }
     }
 
     public function writeUnsignedByte(value:Int) {
         this._data.set(getUpdatePos(1), value);
+    }
+
+    public function writeUnsignedShort(value:Int) {
+        this._data.setUInt16(getUpdatePos(2), bswap16Endian(value));
     }
 
     public function writeUnsignedInt(value:Int) {
@@ -184,6 +203,10 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     private function set_length(value:Int):Int {
         ensureLength(value);
         return this._length = value;
+    }
+
+    private function get_bytesAvailable():Int {
+        return this.length - this.position;
     }
 
     private function getUpdatePos(count:Int):Int {
