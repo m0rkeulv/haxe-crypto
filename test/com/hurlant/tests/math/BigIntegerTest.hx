@@ -19,9 +19,7 @@ import com.hurlant.util.ByteArray;
 class BigIntegerTest extends BaseTestCase
 {
     
-    @:meta(Test())
-
-    public function add() : Void{
+    public function test_add() : Void{
         var n1 : BigInteger = BigInteger.nbv(25);
         var n2 : BigInteger = BigInteger.nbv(1002);
         var n3 : BigInteger = n1.add(n2);
@@ -35,9 +33,7 @@ class BigIntegerTest extends BaseTestCase
         assert(Std.string(xp), "eef71f932bdb2741");
     }
     
-    @:meta(Test())
-
-    public function signed() : Void{
+    public function test_signed() : Void{
         var i1 : BigInteger = new BigInteger("1");
         var i2 : BigInteger = new BigInteger("2");
         var i3 : BigInteger = i1.subtract(i2);
@@ -49,16 +45,12 @@ class BigIntegerTest extends BaseTestCase
         assert(i3.equals(i4));
     }
     
-    @:meta(Test())
-
-    public function signed2() : Void{
+    public function test_signed2() : Void{
         var i1 : BigInteger = BigInteger.nbv(-13);
         assert(i1.valueOf(), -13);
     }
     
-    @:meta(Test())
-
-    public function toAndFromString() : Void{
+    public function test_toAndFromString() : Void{
         var a : BigInteger;
         
         a = new BigInteger("1", 10);
@@ -81,9 +73,7 @@ class BigIntegerTest extends BaseTestCase
         assert(Std.string(a), "ffff");
     }
     
-    @:meta(Test())
-
-    public function compareTo() : Void{
+    public function test_compareTo() : Void{
         var a : BigInteger;
         var b : BigInteger;
         
@@ -124,9 +114,7 @@ class BigIntegerTest extends BaseTestCase
         assert(a.compareTo(b) < 0);
     }
     
-    @:meta(Test())
-
-    public function toAndFromByteArray() : Void{
+    public function test_toAndFromByteArray() : Void{
         var a : BigInteger;
         var b : ByteArray;
         a = new BigInteger("0", 10);

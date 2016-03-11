@@ -22,9 +22,7 @@ class Base64Test extends BaseTestCase
     /**
 		 * Test vectors from RFC 4648 (http://tools.ietf.org/html/rfc4648) and Wikipedia (http://en.wikipedia.org/wiki/Base64)
 		 */
-    @:meta(Test())
-
-    public function vectors() : Void{
+    public function test_vectors() : Void{
         var srcs : Array<Dynamic> = [
         "", 
         "f", 

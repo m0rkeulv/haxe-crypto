@@ -19,10 +19,7 @@ import com.hurlant.util.ByteArray;
 
 class AESKeyTest extends BaseTestCase
 {
-    
-    @:meta(Test())
-
-    public function getBlockSize() : Void{
+    public function test_getBlockSize() : Void{
         var key : ByteArray = new ByteArray();
         for (i in 0...32){
             key[i] = i;
@@ -36,9 +33,7 @@ class AESKeyTest extends BaseTestCase
 		 * this uses ecb_tbl.txt
 		 * we test encryption and decryption with keys of length 128,192,256 bits.
 		 */
-    @:meta(Test())
-
-    public function ecb_tbl() : Void{
+    public function test_ecb_tbl() : Void{
         var keys : Array<Dynamic> = [
         "00010203050607080A0B0C0D0F101112", 
         "14151617191A1B1C1E1F202123242526", 

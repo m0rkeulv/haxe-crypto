@@ -111,7 +111,7 @@ class PEM
         if (j == -1)             return null;
         var b64 : String = str.substring(i, j);
         // remove whitesapces.
-        b64 = b64.replace(new EReg('\\s', "mg"), "");
+        b64 = new EReg('\\s', "mg").replace(b64, "");
         // decode
         return Base64.decodeToByteArray(b64);
     }

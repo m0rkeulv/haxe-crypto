@@ -17,10 +17,7 @@ import com.hurlant.util.ByteArray;
 
 class HexTest extends BaseTestCase
 {
-    
-    @:meta(Test())
-
-    public function toArray() : Void{
+    public function test_toArray() : Void{
         var ba : ByteArray = new ByteArray();
         ba.writeByte(0x00);
         ba.writeByte(0xBA);
@@ -45,9 +42,7 @@ class HexTest extends BaseTestCase
         assert(ArrayUtil.equals(Hex.toArray("00 BA DA 55 00"), ba));
     }
     
-    @:meta(Test())
-
-    public function fromArray() : Void{
+    public function test_fromArray() : Void{
         var ba : ByteArray = new ByteArray();
         ba.writeByte(0x00);
         ba.writeByte(0xBA);
@@ -58,18 +53,14 @@ class HexTest extends BaseTestCase
         assert(Hex.fromArray(ba), "00bada5500");
     }
     
-    @:meta(Test())
-
-    public function toString() : Void{
+    public function test_toString() : Void{
         assert(Std.string(Hex), "as3crypto");
         
         assert(Std.string(Hex), "⸮");
         assert(Hex.toRawString("e2b8ae"), "â¸®");
     }
     
-    @:meta(Test())
-
-    public function fromString() : Void{
+    public function test_fromString() : Void{
         assert(Hex.fromString("as3crypto"), "61733363727970746f");
         
         assert(Hex.fromString("⸮"), "e2b8ae");

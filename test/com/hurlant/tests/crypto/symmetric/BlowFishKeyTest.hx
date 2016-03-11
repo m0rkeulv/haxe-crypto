@@ -23,9 +23,7 @@ class BlowFishKeyTest extends BaseTestCase
     /**
 		 * Test vectors from http://www.schneier.com/code/vectors.txt
 		 */
-    @:meta(Test())
-
-    public function ecb() : Void{
+    public function test_ecb() : Void{
         var keys : Array<Dynamic> = [
         "0000000000000000", 
         "FFFFFFFFFFFFFFFF", 

@@ -20,7 +20,7 @@ class Set extends Sequence
     override public function toString() : String{
         var s : String = DER.indent;
         DER.indent += "    ";
-        var t : String = join("\n");
+        var t : String = this.data.join("\n");
         DER.indent = s;
         return DER.indent + "Set[" + type + "][" + len + "][\n" + t + "\n" + s + "]";
     }

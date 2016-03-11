@@ -24,9 +24,7 @@ class MD5Test extends BaseTestCase
 		 * Test Vectors grabbed from
 		 * http://www.faqs.org/rfcs/rfc1321.html
 		 */
-    @:meta(Test())
-
-    public function md5() : Void{
+    public function test_md5() : Void{
         var srcs : Array<Dynamic> = [
         "", 
         Hex.fromString("a"), 

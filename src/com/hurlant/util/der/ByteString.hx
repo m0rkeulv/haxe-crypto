@@ -13,33 +13,30 @@ import com.hurlant.util.der.IAsn1Type;
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Hex;
 
-class ByteString extends ByteArray implements IAsn1Type
-{
-    private var type : Int;
-    private var len : Int;
-    
-    public function new(type : Int = 0x04, length : Int = 0x00)
-    {
-        super();
+class ByteString implements IAsn1Type {
+    public var data:ByteArray;
+    private var type:Int;
+    private var len:Int;
+
+    public function new(type:Int = 0x04, length:Int = 0x00) {
+        this.data = new ByteArray();
         this.type = type;
         this.len = length;
     }
-    
-    public function getLength() : Int
-    {
+
+    public function getLength():Int {
         return len;
     }
-    
-    public function getType() : Int
-    {
+
+    public function getType():Int {
         return type;
     }
-    
-    public function toDER() : ByteArray{
-        return DER.wrapDER(type, this);
+
+    public function toDER():ByteArray {
+        return DER.wrapDER(type, data);
     }
-    
-    public function toString() : String{
-        return DER.indent + "ByteString[" + type + "][" + len + "][" + Hex.fromArray(this) + "]";
+
+    public function toString():String {
+        return DER.indent + "ByteString[" + type + "][" + len + "][" + Hex.fromArray(data) + "]";
     }
 }

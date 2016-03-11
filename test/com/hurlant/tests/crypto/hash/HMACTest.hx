@@ -29,9 +29,7 @@ class HMACTest extends com.hurlant.tests.BaseTestCase
 		 * http://tools.ietf.org/html/rfc2202
 		 * Yes, it's from an RFC, jefe! Now waddayawant?
 		 */
-    @:meta(Test())
-
-    public function hmac_sha1() : Void{
+    public function test_hmac_sha1() : Void{
         var keys : Array<Dynamic> = [
         "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b", 
         Hex.fromString("Jefe"), 
@@ -66,9 +64,7 @@ class HMACTest extends com.hurlant.tests.BaseTestCase
         }
     }
     
-    @:meta(Test())
-
-    public function hmac96_sha1() : Void{
+    public function test_hmac96_sha1() : Void{
         var hmac : HMAC = new HMAC(new SHA1(), 96);
         var key : ByteArray = Hex.toArray("0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c");
         var pt : ByteArray = Hex.toArray(Hex.fromString("Test With Truncation"));
@@ -77,9 +73,7 @@ class HMACTest extends com.hurlant.tests.BaseTestCase
         assert(Hex.fromArray(digest), ct);
     }
     
-    @:meta(Test())
-
-    public function hmac_md5() : Void{
+    public function test_hmac_md5() : Void{
         var keys : Array<Dynamic> = [
         Hex.fromString("Jefe"), 
         "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b", 
@@ -114,9 +108,7 @@ class HMACTest extends com.hurlant.tests.BaseTestCase
         }
     }
     
-    @:meta(Test())
-
-    public function hmac96_md5() : Void{
+    public function test_hmac96_md5() : Void{
         var hmac : HMAC = new HMAC(new MD5(), 96);
         var key : ByteArray = Hex.toArray("0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c");
         var pt : ByteArray = Hex.toArray(Hex.fromString("Test With Truncation"));
@@ -130,9 +122,7 @@ class HMACTest extends com.hurlant.tests.BaseTestCase
 		 * http://www.ietf.org/rfc/rfc4231.txt
 		 * Still the same lame strings, but hidden in hex. why not.
 		 */
-    @:meta(Test())
-
-    public function hmac_sha2() : Void{
+    public function test_hmac_sha2() : Void{
         var keys : Array<Dynamic> = [
         "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b", 
         "4a656665", 
@@ -175,9 +165,7 @@ class HMACTest extends com.hurlant.tests.BaseTestCase
         }
     }
     
-    @:meta(Test())
-
-    public function hmac128_sha2() : Void{
+    public function test_hmac128_sha2() : Void{
         var hmac224 : HMAC = new HMAC(new SHA224(), 128);
         var hmac256 : HMAC = new HMAC(new SHA256(), 128);
         var key : ByteArray = Hex.toArray("0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c");

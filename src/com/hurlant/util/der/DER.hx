@@ -54,13 +54,14 @@ class DER
         }  // data  
         
         var b : ByteArray;
+        var p : Int;
         switch (type)
         {  // WHAT IS THIS THINGY? (seen as 0xa0)  
             // (note to self: read a spec someday.)
             // for now, treat as a sequence.
             case 0x00, 0x10:  // SEQUENCE/SEQUENCE OF. whatever  
                 // treat as an array
-                var p : Int = der.position;
+                var p = der.position;
                 var o : Sequence = new Sequence(type, len);
                 var arrayStruct : Array<Dynamic> = try cast(structure, Array<Dynamic>) catch(e:Dynamic) null;
                 if (arrayStruct != null) {
@@ -80,7 +81,7 @@ class DER
                             if (wantConstructed != isConstructed) {
                                 // not found. put default stuff, or null
                                 o.push(tmpStruct.defaultValue);
-                                o[tmpStruct.name] = tmpStruct.defaultValue;
+                                o.set(tmpStruct.name, tmpStruct.defaultValue);
                                 // try the next thing
                                 tmpStruct = arrayStruct.shift();
                             }
@@ -97,7 +98,7 @@ class DER
                             var size : Int = getLengthOfNextElement(der);
                             var ba : ByteArray = new ByteArray();
                             ba.writeBytes(der, der.position, size);
-                            o[name + "_bin"] = ba;
+                            o.setStr(name + "_bin", ba);
                         }
                         var obj : IAsn1Type = DER.parse(der, value);
                         o.push(obj);
@@ -109,7 +110,7 @@ class DER
                 }
                 return o;
             case 0x11:  // SET/SET OF  
-                p = der.position;
+                var p = der.position;
                 var s : Set = new Set(type, len);
                 while (der.position < p + len){
                     s.push(DER.parse(der));
@@ -132,13 +133,13 @@ class DER
                 {case 0x03:  // BIT STRING  
                     if (der[der.position] == 0) {
                         //trace("Horrible Bit String pre-padding removal hack."); // I wish I had the patience to find a spec for this.
-                        der.position++;
+                        der.position = der.position + 1;
                         len--;
                     }
                 }  // OCTET STRING  
                 // stuff in a ByteArray for now.
                 var bs : ByteString = new ByteString(type, len);
-                der.readBytes(bs, 0, len);
+                der.readBytes(bs.data, 0, len);
                 return bs;
             case 0x05, 0x13:
 
@@ -148,11 +149,11 @@ class DER
                     // should I check?
                     return null;
                 }  // PrintableString  
-                var ps : PrintableString = new PrintableString(type, len);
+                var ps = new PrintableString(type, len);
                 ps.setString(der.readMultiByte(len, "US-ASCII"));
                 return ps;  // XXX look up what this is. openssl uses this to store my email.  
             case 0x22, 0x14:  // T61String - an horrible format we don't even pretend to support correctly  
-                ps = new PrintableString(type, len);
+                var ps = new PrintableString(type, len);
                 ps.setString(der.readMultiByte(len, "latin1"));
                 return ps;
             case 0x17:  // UTCTime  
@@ -161,6 +162,7 @@ class DER
                 return ut;
             default:
                 trace("I DONT KNOW HOW TO HANDLE DER stuff of TYPE " + type);
+                return null;
         }
     }
     

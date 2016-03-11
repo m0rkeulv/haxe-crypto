@@ -24,9 +24,7 @@ class SHA1Test extends BaseTestCase
 		 * Test Vectors grabbed from
 		 * http://csrc.nist.gov/cryptval/shs.htm
 		 */
-    @:meta(Test())
-
-    public function sha1() : Void{
+    public function test_sha1() : Void{
         var srcs : Array<Dynamic> = [
         "", 
         "a8", 
@@ -171,9 +169,7 @@ class SHA1Test extends BaseTestCase
     /**
 		 * A few long SHA-1, from the same page
 		 */
-    @:meta(Test())
-
-    public function longSha1() : Void{
+    public function test_longSha1() : Void{
         var srcs : Array<Dynamic> = [
         "ec29561244ede706b6eb30a1c371d74450a105c3f9735f7fa9fe38cf67f304a5736a106e92e17139a6813b1c81a4f3d3fb9546ab4296fa9f722826c066869edacd73b2548035185813e22634a9da44000d95a281ff9f264ecce0a931222162d021cca28db5f3c2aa24945ab1e31cb413ae29810fd794cad5dfaf29ec43cb38d198fe4ae1da2359780221405bd6712a5305da4b1b737fce7cd21c0eb7728d08235a9011", 
         "5fc2c3f6a7e79dc94be526e5166a238899d54927ce470018fbfd668fd9dd97cbf64e2c91584d01da63be3cc9fdff8adfefc3ac728e1e335b9cdc87f069172e323d094b47fa1e652afe4d6aa147a9f46fda33cacb65f3aa12234746b9007a8c85fe982afed7815221e43dba553d8fe8a022cdac1b99eeeea359e5a9d2e72e382dffa6d19f359f4f27dc3434cd27daeeda8e38594873398678065fbb23665aba9309d946135da0e4a4afdadff14db18e85e71dd93c3bf9faf7f25c8194c4269b1ee3d9934097ab990025d9c3aaf63d5109f52335dd3959d38ae485050e4bbb6235574fc0102be8f7a306d6e8de6ba6becf80f37415b57f9898a5824e77414197422be3d36a6080", 

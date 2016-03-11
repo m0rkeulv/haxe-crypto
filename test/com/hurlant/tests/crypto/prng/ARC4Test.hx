@@ -24,9 +24,7 @@ class ARC4Test extends BaseTestCase
 		 * Sad test vectors pilfered from
 		 * http://en.wikipedia.org/wiki/RC4
 		 */
-    @:meta(Test())
-
-    public function vectors() : Void{
+    public function test_vectors() : Void{
         var keys : Array<Dynamic> = [
         Hex.fromString("Key"), 
         Hex.fromString("Wiki"), 

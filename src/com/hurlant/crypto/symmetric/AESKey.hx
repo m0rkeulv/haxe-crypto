@@ -213,6 +213,7 @@ class AESKey implements ISymmetricKey
     
     public function new(key : ByteArray)
     {
+        initOnce();
         tmp = new ByteArray();
         state = new ByteArray();
         keyLength = key.length;
@@ -457,35 +458,32 @@ class AESKey implements ISymmetricKey
     public function toString() : String{
         return "aes" + (8 * keyLength);
     }
-    private static var init = {
-        {
-            (function() : Void{
-                        Sbox = new ByteArray();
-                        InvSbox = new ByteArray();
-                        Xtime2Sbox = new ByteArray();
-                        Xtime3Sbox = new ByteArray();
-                        Xtime2 = new ByteArray();
-                        Xtime9 = new ByteArray();
-                        XtimeB = new ByteArray();
-                        XtimeD = new ByteArray();
-                        XtimeE = new ByteArray();
-                        for (i in 0...256){
-                            Sbox[i] = _Sbox[i];
-                            InvSbox[i] = _InvSbox[i];
-                            Xtime2Sbox[i] = _Xtime2Sbox[i];
-                            Xtime3Sbox[i] = _Xtime3Sbox[i];
-                            Xtime2[i] = _Xtime2[i];
-                            Xtime9[i] = _Xtime9[i];
-                            XtimeB[i] = _XtimeB[i];
-                            XtimeD[i] = _XtimeD[i];
-                            XtimeE[i] = _XtimeE[i];
-                        }
-                        Rcon = new ByteArray();
-                        for (i in 0..._Rcon.length){
-                            Rcon[i] = _Rcon[i];
-                        }
-                    }());
-        };
-    }
 
+    static private function initOnce() {
+        if (Sbox == null) return;
+        Sbox = new ByteArray();
+        InvSbox = new ByteArray();
+        Xtime2Sbox = new ByteArray();
+        Xtime3Sbox = new ByteArray();
+        Xtime2 = new ByteArray();
+        Xtime9 = new ByteArray();
+        XtimeB = new ByteArray();
+        XtimeD = new ByteArray();
+        XtimeE = new ByteArray();
+        for (i in 0...256){
+            Sbox[i] = _Sbox[i];
+            InvSbox[i] = _InvSbox[i];
+            Xtime2Sbox[i] = _Xtime2Sbox[i];
+            Xtime3Sbox[i] = _Xtime3Sbox[i];
+            Xtime2[i] = _Xtime2[i];
+            Xtime9[i] = _Xtime9[i];
+            XtimeB[i] = _XtimeB[i];
+            XtimeD[i] = _XtimeD[i];
+            XtimeE[i] = _XtimeE[i];
+        }
+        Rcon = new ByteArray();
+        for (i in 0..._Rcon.length){
+            Rcon[i] = _Rcon[i];
+        }
+    }
 }

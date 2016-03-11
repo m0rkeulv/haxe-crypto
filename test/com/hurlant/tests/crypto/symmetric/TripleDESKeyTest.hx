@@ -24,9 +24,7 @@ class TripleDESKeyTest extends BaseTestCase
 		 * Lots of vectors at http://csrc.nist.gov/publications/nistpubs/800-20/800-20.pdf
 		 * XXX move them in here.
 		 */
-    @:meta(Test())
-
-    public function ecb() : Void{
+    public function test_ecb() : Void{
         var keys : Array<Dynamic> = [
         "010101010101010101010101010101010101010101010101", 
         "dd24b3aafcc69278d650dad234956b01e371384619492ac4"];

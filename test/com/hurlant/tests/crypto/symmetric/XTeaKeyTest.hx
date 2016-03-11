@@ -20,16 +20,12 @@ import com.hurlant.util.ByteArray;
 class XTeaKeyTest extends BaseTestCase
 {
     
-    @:meta(Test())
-
-    public function getBlockSize() : Void{
+    public function test_getBlockSize() : Void{
         var tea : XTeaKey = new XTeaKey(Hex.toArray("deadbabecafebeefdeadbabecafebeef"));
         assert(tea.getBlockSize(), 8);
     }
     
-    @:meta(Test())
-
-    public function vectors() : Void{
+    public function test_vectors() : Void{
         // blah.
         // can't find working test vectors.
         // algorithms should not get published without vectors :(

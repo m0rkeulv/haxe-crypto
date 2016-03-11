@@ -12,6 +12,7 @@
 package com.hurlant.crypto.rsa;
 
 
+import com.hurlant.crypto.tls.TLSError;
 import com.hurlant.util.Function;
 import com.hurlant.util.Std2;
 import com.hurlant.crypto.prng.Random;
@@ -157,7 +158,7 @@ class RSAKey {
     private function pkcs1pad(src:ByteArray, end:Int, n:Int, type:Int = 0x02):ByteArray {
         var out:ByteArray = new ByteArray();
         var p:Int = src.position;
-        end = Math.min(end, src.length, p + n - 11);
+        end = Std.int(Std2.min3(end, src.length, p + n - 11));
         src.position = end;
         var i:Int = end - 1;
         while (i >= p && n > 11) {
@@ -268,7 +269,7 @@ class RSAKey {
         var rng:Random = new Random();
         var qs:Int = B >> 1;
         var key:RSAKey = new RSAKey(null, 0, null);
-        key.e = parseInt(E, 16);
+        key.e = Std2.parseInt(E, 16);
         var ee:BigInteger = new BigInteger(E, 16, true);
         while (true) {
             while (true) {

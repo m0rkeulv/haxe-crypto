@@ -26,9 +26,7 @@ class DESKeyTest extends BaseTestCase
 		 * (Appendix A and B)
 		 * incomplete.
 		 */
-    @:meta(Test())
-
-    public function ecb() : Void{
+    public function test_ecb() : Void{
         var keys : Array<Dynamic> = [
         "3b3898371520f75e",   // grabbed from the output of some js implementation out there  
         "10316E028C8F3B4A",   // appendix A vector  

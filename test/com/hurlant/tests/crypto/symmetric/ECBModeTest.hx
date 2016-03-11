@@ -28,9 +28,7 @@ class ECBModeTest extends BaseTestCase
 		 * Eventually, this should get correlated with some well known vectors.
 		 * yay. found hawt test vectors: http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf
 		 */
-    @:meta(Test())
-
-    public function aes128() : Void{
+    public function test_aes128() : Void{
         var key : ByteArray = Hex.toArray("2b7e151628aed2a6abf7158809cf4f3c");
         var pt : ByteArray = Hex.toArray(
                 "6bc1bee22e409f96e93d7e117393172a" +
@@ -51,9 +49,7 @@ class ECBModeTest extends BaseTestCase
         assert(Hex.fromArray(src), Hex.fromArray(pt));
     }
     
-    @:meta(Test())
-
-    public function aes192() : Void{
+    public function test_aes192() : Void{
         var key : ByteArray = Hex.toArray("8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b");
         var pt : ByteArray = Hex.toArray(
                 "6bc1bee22e409f96e93d7e117393172a" +
@@ -74,9 +70,7 @@ class ECBModeTest extends BaseTestCase
         assert(Hex.fromArray(src), Hex.fromArray(pt));
     }
     
-    @:meta(Test())
-
-    public function aes256() : Void{
+    public function test_aes256() : Void{
         var key : ByteArray = Hex.toArray(
                 "603deb1015ca71be2b73aef0857d7781" +
                 "1f352c073b6108d72d9810a30914dff4");
@@ -100,9 +94,7 @@ class ECBModeTest extends BaseTestCase
     }
     
     // crappier, older testing. keeping around for no good reason.
-    @:meta(Test())
-
-    public function aes() : Void{
+    public function test_aes() : Void{
         var keys : Array<Dynamic> = [
         "00010203050607080A0B0C0D0F101112", 
         "14151617191A1B1C1E1F202123242526"];
@@ -128,9 +120,7 @@ class ECBModeTest extends BaseTestCase
         }
     }
     
-    @:meta(Test())
-
-    public function xtea() : Void{
+    public function test_xtea() : Void{
         var keys : Array<Dynamic> = [
         "00000000000000000000000000000000", 
         "2b02056806144976775d0e266c287843"];

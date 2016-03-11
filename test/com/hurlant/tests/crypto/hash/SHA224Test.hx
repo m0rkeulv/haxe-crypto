@@ -24,9 +24,7 @@ class SHA224Test extends BaseTestCase
 		 * Test vectors courtesy of
 		 * http://www.ietf.org/rfc/rfc3874.txt
 		 */
-    @:meta(Test())
-
-    public function sha224() : Void{
+    public function test_sha224() : Void{
         var srcs : Array<Dynamic> = [
         Hex.fromString("abc"), 
         Hex.fromString("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq")];
@@ -42,9 +40,7 @@ class SHA224Test extends BaseTestCase
         }
     }
     
-    @:meta(Test())
-
-    public function longSha224() : Void{
+    public function test_longSha224() : Void{
         var src : ByteArray = new ByteArray();
         var a : Int = "a".charCodeAt(0);
         for (i in 0...Std.int(1e6)){

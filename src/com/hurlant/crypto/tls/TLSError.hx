@@ -7,7 +7,7 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package
+package com.hurlant.crypto.tls;
 
 import com.hurlant.util.Error;
 
@@ -38,6 +38,7 @@ class TLSError extends Error
     
     public function new(message : String, id : Int)
     {
-        super(message, id);
+        //super(message, id);
+        super(message);
     }
 }

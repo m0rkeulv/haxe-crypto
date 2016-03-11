@@ -66,13 +66,24 @@ class BigInteger
                 radix = 0;
             }
         }
-        if (Std.is(value, ByteArray)) {
+        if (Std.is(value, ByteArrayData)) {
             var array : ByteArray = try cast(value, ByteArray) catch(e:Dynamic) null;
             var length : Int = radix;
             if (length == 0) length = (array.length - array.position);
             fromArray(array, length, unsigned);
         }
     }
+
+    //private var data:Array<Int> = [];
+
+    public function get(index:Int):Int {
+        return a[index];
+    }
+
+    public function set(index:Int, value:Int):Int {
+        return a[index] = value;
+    }
+
     public function dispose() : Void{
         var r : Random = new Random();
         for (i in 0...a.length){
@@ -331,7 +342,7 @@ class BigInteger
             }
         }
         clamp();
-        value.position = Math.min(p + length, value.length);
+        value.position = Std.int(Math.min(p + length, value.length));
     }
     /**
 		 * clamp off excess high words
@@ -368,7 +379,7 @@ class BigInteger
         for (i in n...t){
             r.a[i - n] = a[i];
         }
-        r.t = Math.max(t - n, 0);
+        r.t = Std.int(Math.max(t - n, 0));
         r.s = s;
     }
     /**
@@ -402,7 +413,7 @@ class BigInteger
 		 */
     public function rShiftTo(n : Int, r : BigInteger) : Void{
         r.s = s;
-        var ds : Int = n / DB;
+        var ds : Int = Std.int(n / DB);
         if (ds >= t) {
             r.t = 0;
             return;
@@ -570,7 +581,7 @@ class BigInteger
         }
         while (--j >= 0){
             // Estimate quotient digit
-            var qd : Int = ((r.a[--i] == y0)) ? DM : Std.int(Std.parseFloat(r.a[i]) * d1 + (Std.parseFloat(r.a[i - 1]) + e) * d2);
+            var qd : Int = ((r.a[--i] == y0)) ? DM : Std.int((r.a[i]) * d1 + ((r.a[i - 1]) + e) * d2);
             if ((r.a[i] += y.am(0, qd, r, j, 0, ys)) < qd) {  // Try it out  
                 y.dlShiftTo(j, t);
                 r.subTo(t, r);
@@ -672,7 +683,7 @@ class BigInteger
     // Functions above are sufficient for RSA encryption.
     // The stuff below is useful for decryption and key generation
     
-    public static var lowprimes : Array<Dynamic> = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509];
+    public static var lowprimes : Array<Int> = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509];
     public static var lplim : Int = Std.int((1 << 26) / lowprimes[lowprimes.length - 1]);
     
     
@@ -732,7 +743,12 @@ class BigInteger
 		 * 
 		 */
     public function chunkSize(r : Float) : Int{
-        return Math.floor(Math.LN2 * DB / Math.log(r));
+        return Math.floor(getLN2() * DB / Math.log(r));
+    }
+
+    static public function getLN2(): Float {
+        //return Math.LN2;
+        throw new Error('Not implemented Math.LN2');
     }
     
     /**
@@ -870,7 +886,7 @@ class BigInteger
     public function bitwiseTo(a : BigInteger, op : Function, r : BigInteger) : Void{
         var i : Int;
         var f : Int;
-        var m : Int = Math.min(a.t, t);
+        var m : Int = Std.int(Math.min(a.t, t));
         for (i in 0...m){
             r.a[i] = op(this.a[i], a.a[i]);
         }
@@ -927,13 +943,13 @@ class BigInteger
     public function not() : BigInteger{
         var r : BigInteger = new BigInteger();
         for (i in 0...t){
-            r[i] = DM & ~a[i];
+            r.set(i, DM & ~a[i]);
         }
         r.t = t;
         r.s = ~s;
         return r;
     }
-    
+
     public function shiftLeft(n : Int) : BigInteger{
         var r : BigInteger = new BigInteger();
         if (n < 0) {
@@ -1079,7 +1095,7 @@ class BigInteger
     public function addTo(a : BigInteger, r : BigInteger) : Void{
         var i : Int = 0;
         var c : Int = 0;
-        var m : Int = Math.min(a.t, t);
+        var m : Int = Std.int(Math.min(a.t, t));
         while (i < m){
             c += this.a[i] + a.a[i];
             r.a[i++] = c & DM;
@@ -1234,18 +1250,21 @@ class BigInteger
 		 * 
 		 */
     public function multiplyLowerTo(a : BigInteger, n : Int, r : BigInteger) : Void{
-        var i : Int = Math.min(t + a.t, n);
+        var i : Int = Std.int(Math.min(t + a.t, n));
         r.s = 0;  // assumes a, this >= 0  
         r.t = i;
         while (i > 0){
             r.a[--i] = 0;
         }
-        var j : Int;
-        for (j in r.t - t...j){
-            r.a[i + t] = am(0, a.a[i], r, i, 0, t);
+        var j=r.t-t;
+        while (i<j) {
+        r.a[i+t] = am(0, a.a[i], r, i, 0, t);
+            i++;
         }
-        for (j in Math.min(a.t, n)...j){
-            am(0, a.a[i], r, i, 0, n - i);
+        j=Std.int(Math.min(a.t,n));
+        while (i<j) {
+        am(0, a.a[i], r, i, 0, n-i);
+        i++;
         }
         r.clamp();
     }
@@ -1264,7 +1283,7 @@ class BigInteger
         while (--i >= 0){
             r.a[i] = 0;
         }
-        for (i in Math.max(n - t, 0)...a.t){
+        for (i in Std.int(Math.max(n - t, 0))...a.t){
             r.a[t + i - n] = am(n - i, a.a[i], r, 0, 0, t + i - n);
         }
         r.clamp();
@@ -1548,7 +1567,8 @@ class BigInteger
         var x : BigInteger = abs();
         if (x.t == 1 && x.a[0] <= lowprimes[lowprimes.length - 1]) {
             for (i in 0...lowprimes.length){
-                if (x[0] == lowprimes[i])                     return true;
+                if (x.get(0) == lowprimes[i]) return true;
+                //throw new Error('bug? BigInteger[0]?');
             }
             return false;
         }

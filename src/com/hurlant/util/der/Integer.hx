@@ -12,33 +12,29 @@ package com.hurlant.util.der;
 import com.hurlant.math.BigInteger;
 import com.hurlant.util.ByteArray;
 
-class Integer extends BigInteger implements IAsn1Type
-{
-    private var type : Int;
-    private var len : Int;
-    
-    public function new(type : Int, length : Int, b : ByteArray)
-    {
+class Integer extends BigInteger implements IAsn1Type {
+    private var type:Int;
+    private var len:Int;
+
+    public function new(type:Int, length:Int, b:ByteArray) {
         this.type = type;
         this.len = length;
         super(b);
     }
-    
-    public function getLength() : Int
-    {
+
+    public function getLength():Int {
         return len;
     }
-    
-    public function getType() : Int
-    {
+
+    public function getType():Int {
         return type;
     }
-    
-    override public function toString(radix : Float = 0) : String{
-        return DER.indent + "Integer[" + type + "][" + len + "][" + Std.string(super) + "]";
+
+    override public function toString(radix:Float = 0):String {
+        return DER.indent + "Integer[" + type + "][" + len + "][" + super.toString(16) + "]";
     }
-    
-    public function toDER() : ByteArray{
+
+    public function toDER():ByteArray {
         return null;
     }
 }

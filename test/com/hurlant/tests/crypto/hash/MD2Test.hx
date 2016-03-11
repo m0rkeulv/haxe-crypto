@@ -24,9 +24,7 @@ class MD2Test extends BaseTestCase
 		 * Test Vectors grabbed from
 		 * http://www.faqs.org/rfcs/rfc1319.html
 		 */
-    @:meta(Test())
-
-    public function md2() : Void{
+    public function test_md2() : Void{
         var srcs : Array<Dynamic> = [
         "", 
         Hex.fromString("a"), 

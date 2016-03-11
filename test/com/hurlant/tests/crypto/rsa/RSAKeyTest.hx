@@ -21,9 +21,7 @@ import com.hurlant.util.ByteArray;
 class RSAKeyTest extends BaseTestCase
 {
     
-    @:meta(Test())
-
-    public function smoke() : Void{
+    public function test_smoke() : Void{
         var N : String = "C4E3F7212602E1E396C0B6623CF11D26204ACE3E7D26685E037AD2507DCE82FC" +
         "28F2D5F8A67FC3AFAB89A6D818D1F4C28CFA548418BD9F8E7426789A67E73E41";
         var E : String = "10001";
@@ -46,9 +44,7 @@ class RSAKeyTest extends BaseTestCase
         assert(txt, txt2);
     }
     
-    @:meta(Test())
-
-    public function generate() : Void{
+    public function test_generate() : Void{
         var rsa : RSAKey = RSAKey.generate(256, "10001");
         // same lame smoke test here.
         var txt : String = "hello";
@@ -61,9 +57,7 @@ class RSAKeyTest extends BaseTestCase
         assert(txt, txt2);
     }
     
-    @:meta(Test())
-
-    public function pem() : Void{
+    public function test_pem() : Void{
         var pem : String = "-----BEGIN RSA PRIVATE KEY-----\n" +
         "MGQCAQACEQDJG3bkuB9Ie7jOldQTVdzPAgMBAAECEQCOGqcPhP8t8mX8cb4cQEaR\n" +
         "AgkA5WTYuAGmH0cCCQDgbrto0i7qOQIINYr5btGrtccCCQCYy4qX4JDEMQIJAJll\n" +
@@ -83,9 +77,7 @@ class RSAKeyTest extends BaseTestCase
         assert(txt, txt2);
     }
     
-    @:meta(Test())
-
-    public function pem2() : Void{
+    public function test_pem2() : Void{
         var pem : String = "-----BEGIN PUBLIC KEY-----\n" +
         "MCwwDQYJKoZIhvcNAQEBBQADGwAwGAIRAMkbduS4H0h7uM6V1BNV3M8CAwEAAQ==\n" +
         "-----END PUBLIC KEY-----";
@@ -93,9 +85,7 @@ class RSAKeyTest extends BaseTestCase
         assert(rsa != null);
     }
     
-    @:meta(Test())
-
-    public function adobeSample() : Void{
+    public function test_adobeSample() : Void{
         var myPEMPublicKeyString : String = 
         "-----BEGIN PUBLIC KEY-----" +
         "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALHpyYTN96rMbkQB" +
@@ -120,9 +110,7 @@ class RSAKeyTest extends BaseTestCase
         assert(hexEncryptedResult.length > 5);
     }
     
-    @:meta(Test())
-
-    public function longText() : Void{
+    public function test_longText() : Void{
         var pem : String = "-----BEGIN RSA PRIVATE KEY-----\n" +
         "MGQCAQACEQDJG3bkuB9Ie7jOldQTVdzPAgMBAAECEQCOGqcPhP8t8mX8cb4cQEaR\n" +
         "AgkA5WTYuAGmH0cCCQDgbrto0i7qOQIINYr5btGrtccCCQCYy4qX4JDEMQIJAJll\n" +

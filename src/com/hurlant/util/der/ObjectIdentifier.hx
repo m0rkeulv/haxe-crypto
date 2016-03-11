@@ -21,7 +21,7 @@ class ObjectIdentifier implements IAsn1Type {
     public function new(type:Int = 0, length:Int = 0, b:Dynamic = null) {
         this.type = type;
         this.len = length;
-        if (Std.is(b, ByteArray)) {
+        if (Std.is(b, ByteArrayData)) {
             parse(try cast(b, ByteArray) catch (e:Dynamic) null);
         }
         else if (Std.is(b, String)) {
@@ -69,7 +69,7 @@ class ObjectIdentifier implements IAsn1Type {
         var tmp:Array<Dynamic> = [];
         tmp[0] = oid[0] * 40 + oid[1];
         for (i in 2...oid.length) {
-            var v:Int = parseInt(oid[i]);
+            var v:Int = Std.parseInt(oid[i]);
             if (v < 128) {
                 tmp.push(v);
             }

@@ -26,9 +26,7 @@ class CTRModeTest extends BaseTestCase
 		 * Vectors from http://csrc.nist.gov/CryptoToolkit/modes/800-38_Series_Publications/SP800-38A.pdf
 		 * Section F.5.1 and below.
 		 */
-    @:meta(Test())
-
-    public function aes128() : Void{
+    public function test_aes128() : Void{
         var key : ByteArray = Hex.toArray("2b7e151628aed2a6abf7158809cf4f3c");
         var pt : ByteArray = Hex.toArray(
                 "6bc1bee22e409f96e93d7e117393172a" +
@@ -54,9 +52,7 @@ class CTRModeTest extends BaseTestCase
         assert(hsrc, hpt);
     }
     
-    @:meta(Test())
-
-    public function aes192() : Void{
+    public function test_aes192() : Void{
         var key : ByteArray = Hex.toArray("8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b");
         var pt : ByteArray = Hex.toArray(
                 "6bc1bee22e409f96e93d7e117393172a" +
@@ -82,9 +78,7 @@ class CTRModeTest extends BaseTestCase
         assert(hsrc, hpt);
     }
     
-    @:meta(Test())
-
-    public function aes256() : Void{
+    public function test_aes256() : Void{
         var key : ByteArray = Hex.toArray("603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4");
         var pt : ByteArray = Hex.toArray(
                 "6bc1bee22e409f96e93d7e117393172a" +

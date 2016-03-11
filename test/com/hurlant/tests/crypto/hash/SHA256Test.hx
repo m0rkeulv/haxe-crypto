@@ -24,9 +24,7 @@ class SHA256Test extends BaseTestCase
 		 * Test vectors courtesy of
 		 * https://www.cosic.esat.kuleuven.be/nessie/testvectors/hash/sha/Sha-2-256.unverified.test-vectors
 		 */
-    @:meta(Test())
-
-    public function sha256() : Void{
+    public function test_sha256() : Void{
         var srcs : Array<Dynamic> = [
         Hex.fromString(""), 
         Hex.fromString("a"), 

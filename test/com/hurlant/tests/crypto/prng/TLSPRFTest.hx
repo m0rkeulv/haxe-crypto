@@ -24,9 +24,7 @@ class TLSPRFTest extends BaseTestCase
 		 * Test Vector as defined in
 		 * http://www.imc.org/ietf-tls/mail-archive/msg01589.html
 		 */
-    @:meta(Test())
-
-    public function vector() : Void{
+    public function test_vector() : Void{
         var secret : ByteArray = new ByteArray();
         for (i in 0...48){
             secret[i] = 0xab;
