@@ -9,7 +9,7 @@
 package com.hurlant.crypto.symmetric;
 
 import com.hurlant.crypto.symmetric.PKCS5;
-import nme.errors.Error;
+import com.hurlant.util.Error;
 
 import com.hurlant.crypto.prng.Random;
 import com.hurlant.util.Memory;

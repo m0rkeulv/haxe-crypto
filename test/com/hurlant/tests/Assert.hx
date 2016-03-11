@@ -7,8 +7,6 @@ package com.hurlant.tests;
 @:final class ClassForAssert
 {
     
-    import org.flexunit.Assert;
-    
     /**
 	 * Shorthand assertion handler
 	 */

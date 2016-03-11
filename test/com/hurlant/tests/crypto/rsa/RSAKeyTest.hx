@@ -16,7 +16,7 @@ import com.hurlant.crypto.rsa.RSAKey;
 import com.hurlant.util.Hex;
 import com.hurlant.util.der.PEM;
 
-import flash.utils.ByteArray;
+import com.hurlant.util.ByteArray;
 
 class RSAKeyTest
 {

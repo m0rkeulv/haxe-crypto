@@ -11,8 +11,6 @@
  */
 package com.hurlant.crypto.prng;
 
-import com.hurlant.crypto.prng.Prng;
-
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Memory;
 import flash.system.System;
@@ -49,8 +47,8 @@ class Random
         if (x == 0) {
             x = Date.now().getTime();
         }
-        pool[pptr++] ^= x & 255;
-        pool[pptr++] ^= (x >> 8) & 255;
+        pool[pptr++] ^= (x  >> 0) & 255;
+        pool[pptr++] ^= (x  >> 8) & 255;
         pool[pptr++] ^= (x >> 16) & 255;
         pool[pptr++] ^= (x >> 24) & 255;
         pptr %= psize;
@@ -58,12 +56,12 @@ class Random
     }
     
     /**
-		 * Gather anything we have that isn't entirely predictable:
-		 *  - memory used
-		 *  - system capabilities
-		 *  - timing stuff
-		 *  - installed fonts
-		 */
+     * Gather anything we have that isn't entirely predictable:
+     *  - memory used
+     *  - system capabilities
+     *  - timing stuff
+     *  - installed fonts
+     */
     public function autoSeed() : Void{
         var b : ByteArray = new ByteArray();
         b.writeUnsignedInt(System.totalMemory);

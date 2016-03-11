@@ -14,7 +14,7 @@
 package com.hurlant.crypto.tls;
 
 import com.hurlant.crypto.tls.TLSSocketEvent;
-import nme.errors.Error;
+import com.hurlant.util.Error;
 
 
 import flash.events.Event;

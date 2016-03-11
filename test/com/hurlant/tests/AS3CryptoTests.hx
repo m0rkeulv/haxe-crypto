@@ -14,8 +14,8 @@ import com.hurlant.tests.crypto.symmetric.*;
 import com.hurlant.tests.math.*;
 import com.hurlant.tests.util.*;
 
-import flash.display.Sprite;
-import flash.events.Event;
+import com.hurlant.util.Sprite;
+import com.hurlant.util.Event;
 
 import org.flexunit.internals.TraceListener;
 import org.flexunit.runner.FlexUnitCore;

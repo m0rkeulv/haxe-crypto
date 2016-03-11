@@ -20,7 +20,7 @@ package com.hurlant.crypto.hash;
 
 
 import com.hurlant.util.ByteArray;
-import flash.utils.Endian;
+import com.hurlant.util.Endian;
 
 class MD5 implements IHash
 {
@@ -84,10 +84,22 @@ class MD5 implements IHash
         
         var i : Int = 0;
         while (i < x.length){
-            x[i] ||= 0;x[i + 1] ||= 0;x[i + 2] ||= 0;x[i + 3] ||= 0;
-            x[i + 4] ||= 0;x[i + 5] ||= 0;x[i + 6] ||= 0;x[i + 7] ||= 0;
-            x[i + 8] ||= 0;x[i + 9] ||= 0;x[i + 10] ||= 0;x[i + 11] ||= 0;
-            x[i + 12] ||= 0;x[i + 13] ||= 0;x[i + 14] ||= 0;x[i + 15] ||= 0;
+            x[i + 0] ||= 0;
+            x[i + 1] ||= 0;
+            x[i + 2] ||= 0;
+            x[i + 3] ||= 0;
+            x[i + 4] ||= 0;
+            x[i + 5] ||= 0;
+            x[i + 6] ||= 0;
+            x[i + 7] ||= 0;
+            x[i + 8] ||= 0;
+            x[i + 9] ||= 0;
+            x[i + 10] ||= 0;
+            x[i + 11] ||= 0;
+            x[i + 12] ||= 0;
+            x[i + 13] ||= 0;
+            x[i + 14] ||= 0;
+            x[i + 15] ||= 0;
             
             var olda : Int = a;
             var oldb : Int = b;

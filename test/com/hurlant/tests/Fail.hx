@@ -1,13 +1,12 @@
 package com.hurlant.tests;
 
+import org.flexunit.Assert;
 
 /**
  * Class for fail
  */
 @:final class ClassForFail
 {
-    
-    import org.flexunit.Assert;
     
     /**
 	 * Shorthand failure counterpart to the assert() method

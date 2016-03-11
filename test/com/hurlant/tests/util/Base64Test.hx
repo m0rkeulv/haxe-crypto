@@ -14,7 +14,7 @@ import com.hurlant.util.ArrayUtil;
 import com.hurlant.util.Base64;
 import com.hurlant.util.Hex;
 
-import flash.utils.ByteArray;
+import com.hurlant.util.ByteArray;
 
 class Base64Test
 {

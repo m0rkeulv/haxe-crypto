@@ -17,7 +17,7 @@ import com.hurlant.math.ClassicReduction;
 import com.hurlant.math.IReduction;
 import com.hurlant.math.MontgomeryReduction;
 import com.hurlant.math.NullReduction;
-import nme.errors.Error;
+import com.hurlant.util.Error;
 
 
 import com.hurlant.crypto.prng.Random;

@@ -14,7 +14,7 @@ import com.hurlant.tests.*;
 
 import com.hurlant.math.BigInteger;
 
-import flash.utils.ByteArray;
+import com.hurlant.util.ByteArray;
 
 class BigIntegerTest
 {

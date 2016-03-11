@@ -9,7 +9,7 @@
  */
 package com.hurlant.crypto.tls;
 
-import nme.errors.Error;
+import com.hurlant.util.Error;
 
 import com.hurlant.crypto.Crypto;
 import com.hurlant.util.ByteArray;

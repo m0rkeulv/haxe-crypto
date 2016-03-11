@@ -1,2 +1,4 @@
 docs/validation_errors.log
-
+*.iml
+*.iws
+*.ipr

@@ -15,7 +15,7 @@ package com.hurlant.crypto.cert;
 
 import com.hurlant.crypto.cert.X509Certificate;
 import com.hurlant.crypto.cert.X509CertificateCollection;
-import nme.errors.Error;
+import com.hurlant.util.Error;
 
 class MozillaRootCertificates extends X509CertificateCollection
 {
@@ -3995,7 +3995,7 @@ class MozillaRootCertificates extends X509CertificateCollection
                 "t0QmwCbAr1UwnjvVNioZBPRcHv/PLLf/0P2HQBHVESO7SMAhqaQoLf0V+LBOK/Qw\n" +
                 "WyH8EZE0vkHve52Xdf+XlcCWWC/qu0bXu+TZLg==\n" +
                 "-----END CERTIFICATE-----");
-        super.addPEMCertificate("AC Ra+¡z Certic+ímara S.A.",
+        super.addPEMCertificate("AC Ra+ï¿½z Certic+ï¿½mara S.A.",
                 // X500 Subject, for lookups.
                 "MHsxCzAJBgNVBAYTAkNPMUcwRQYDVQQKDD5Tb2NpZWRhZCBDYW1lcmFsIGRlIENlcnRpZmljYWNp" +
                 "w7NuIERpZ2l0YWwgLSBDZXJ0aWPDoW1hcmEgUy5BLjEjMCEGA1UEAwwaQUMgUmHDrXogQ2VydGlj" +

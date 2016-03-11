@@ -9,7 +9,7 @@
  */
 package com.hurlant.crypto.tls;
 
-import nme.errors.Error;
+import com.hurlant.util.Error;
 
 class TLSError extends Error
 {

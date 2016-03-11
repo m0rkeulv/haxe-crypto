@@ -8,7 +8,7 @@
  */
 package com.hurlant.crypto.symmetric;
 
-import nme.errors.Error;
+import com.hurlant.util.Error;
 
 import com.hurlant.util.ByteArray;
 

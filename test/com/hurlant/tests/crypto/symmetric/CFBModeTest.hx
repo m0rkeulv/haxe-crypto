@@ -17,7 +17,7 @@ import com.hurlant.crypto.symmetric.CFBMode;
 import com.hurlant.crypto.symmetric.NullPad;
 import com.hurlant.util.Hex;
 
-import flash.utils.ByteArray;
+import com.hurlant.util.ByteArray;
 
 class CFBModeTest
 {

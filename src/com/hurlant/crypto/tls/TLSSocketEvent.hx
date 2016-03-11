@@ -11,7 +11,7 @@ package com.hurlant.crypto.tls;
 
 
 
-import flash.events.Event;
+import com.hurlant.util.Event;
 import com.hurlant.crypto.cert.X509Certificate;
 
 class TLSSocketEvent extends Event

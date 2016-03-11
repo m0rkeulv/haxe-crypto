@@ -18,7 +18,7 @@ import com.hurlant.crypto.symmetric.NullPad;
 import com.hurlant.crypto.symmetric.XTeaKey;
 import com.hurlant.util.Hex;
 
-import flash.utils.ByteArray;
+import com.hurlant.util.ByteArray;
 
 class CBCModeTest
 {

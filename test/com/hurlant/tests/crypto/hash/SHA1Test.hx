@@ -15,7 +15,7 @@ import com.hurlant.tests.*;
 import com.hurlant.crypto.hash.SHA1;
 import com.hurlant.util.Hex;
 
-import flash.utils.ByteArray;
+import com.hurlant.util.ByteArray;
 
 class SHA1Test
 {

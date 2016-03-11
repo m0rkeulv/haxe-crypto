@@ -13,7 +13,7 @@ import com.hurlant.crypto.symmetric.IMode;
 import com.hurlant.crypto.symmetric.IPad;
 import com.hurlant.crypto.symmetric.ISymmetricKey;
 import com.hurlant.crypto.symmetric.PKCS5;
-import nme.errors.Error;
+import com.hurlant.util.Error;
 
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Memory;

@@ -10,7 +10,7 @@
 package com.hurlant.crypto.cert;
 
 import com.hurlant.crypto.cert.X509CertificateCollection;
-import nme.errors.Error;
+import com.hurlant.util.Error;
 
 import com.hurlant.crypto.hash.IHash;
 import com.hurlant.crypto.hash.MD2;
