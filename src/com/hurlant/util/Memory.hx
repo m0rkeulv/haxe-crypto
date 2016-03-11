@@ -9,26 +9,14 @@
  */
 package com.hurlant.util;
 
+class Memory {
+    public static var used(get, never):Int;
 
-import flash.net.LocalConnection;
-import flash.system.System;
-
-class Memory
-{
-    public static var used(get, never) : Int;
-
-    public static function gc() : Void{
-        // force a GC
-        try{
-            new LocalConnection().connect("foo");
-            new LocalConnection().connect("foo");
-        }        catch (e : Dynamic){ };
-    }
-    private static function get_Used() : Int{
-        return System.totalMemory;
+    public static function gc():Void {
     }
 
-    public function new()
-    {
+    private static function get_used():Int {
+        //return System.totalMemory;
+        return 0;
     }
 }

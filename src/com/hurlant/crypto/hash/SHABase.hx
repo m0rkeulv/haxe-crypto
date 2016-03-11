@@ -10,7 +10,7 @@ package com.hurlant.crypto.hash;
 
 
 import com.hurlant.util.ByteArray;
-import flash.utils.Endian;
+import com.hurlant.util.Endian;
 
 class SHABase implements IHash
 {

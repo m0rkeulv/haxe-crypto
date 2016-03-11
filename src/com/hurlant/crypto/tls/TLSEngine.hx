@@ -21,12 +21,12 @@ import com.hurlant.crypto.cert.X509CertificateCollection;
 import com.hurlant.crypto.prng.Random;
 import com.hurlant.util.ArrayUtil;
 
-import flash.events.Event;
+import com.hurlant.util.Event;
 import flash.events.EventDispatcher;
 import flash.events.ProgressEvent;
 import com.hurlant.util.ByteArray;
-import flash.utils.IDataInput;
-import flash.utils.IDataOutput;
+import com.hurlant.util.IDataInput;
+import com.hurlant.util.IDataOutput;
 import flash.utils.ClearTimeout;
 import flash.utils.SetTimeout;
 

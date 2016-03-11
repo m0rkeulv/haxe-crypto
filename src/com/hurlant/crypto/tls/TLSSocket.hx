@@ -17,7 +17,7 @@ import com.hurlant.crypto.tls.TLSSocketEvent;
 import com.hurlant.util.Error;
 
 
-import flash.events.Event;
+import com.hurlant.util.Event;
 import flash.events.IOErrorEvent;
 import flash.events.ProgressEvent;
 import flash.events.SecurityErrorEvent;

@@ -16,9 +16,9 @@ import com.hurlant.crypto.cert.X509CertificateCollection;
 import com.hurlant.util.Hex;
 import com.hurlant.util.der.PEM;
 
-import flash.events.Event;
+import com.hurlant.util.Event;
 import flash.events.ProgressEvent;
-import flash.net.Socket;
+import sys.net.Socket;
 import com.hurlant.util.ByteArray;
 
 

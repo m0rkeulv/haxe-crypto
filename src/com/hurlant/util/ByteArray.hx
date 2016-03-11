@@ -1,5 +1,5 @@
 package com.hurlant.util;
-class ByteArray {
+class ByteArray implements IDataOutput implements IDataInput {
     public var position(get, set):Int;
     public var length(get, set):Int;
     public var endian:Endian = Endian.BIG_ENDIAN;
@@ -20,6 +20,10 @@ class ByteArray {
     }
 
     public function writeByte(value:Int) {
+        throw new Error('Not implemented');
+    }
+
+    public function writeBytes(input:ByteArray) {
         throw new Error('Not implemented');
     }
 

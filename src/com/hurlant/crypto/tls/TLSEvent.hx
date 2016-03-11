@@ -10,7 +10,7 @@
 package com.hurlant.crypto.tls;
 
 
-import flash.events.Event;
+import com.hurlant.util.Event;
 import com.hurlant.util.ByteArray;
 
 class TLSEvent extends Event

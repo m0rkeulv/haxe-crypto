@@ -15,7 +15,7 @@ import com.hurlant.crypto.hash.HMAC;
 import com.hurlant.crypto.hash.MD5;
 import com.hurlant.crypto.hash.SHA1;
 import com.hurlant.util.Memory;
-import flash.utils.IDataOutput;
+import com.hurlant.util.IDataOutput;
 
 /**
 	 * There's "Random", and then there's TLS Random.
