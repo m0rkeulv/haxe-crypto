@@ -45,7 +45,7 @@ class MD2Test extends BaseTestCase
         for (i in 0...srcs.length){
             var src : ByteArray = Hex.toArray(srcs[i]);
             var digest : ByteArray = md2.hash(src);
-            assert(Hex.fromArray(digest), hashes[i]);
+            assertEquals(hashes[i], Hex.fromArray(digest));
         }
     }
 

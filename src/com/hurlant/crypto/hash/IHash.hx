@@ -11,12 +11,10 @@ package com.hurlant.crypto.hash;
 
 import com.hurlant.util.ByteArray;
 
-interface IHash
-{
-
-    function getInputSize() : Int;
-    function getHashSize() : Int;
-    function hash(src : ByteArray) : ByteArray;
-    function toString() : String;
-    function getPadSize() : Int;
+interface IHash {
+    function getInputSize():Int;
+    function getHashSize():Int;
+    function hash(src:ByteArray):ByteArray;
+    function toString():String;
+    function getPadSize():Int;
 }

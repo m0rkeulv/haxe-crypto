@@ -142,7 +142,7 @@ class ByteArrayData implements IDataOutput implements IDataInput {
 
     public function get(index:Int):Int {
         ensureLength(index + 1);
-        return this._data.get(index);
+        return this._data.get(index) & 0xFF;
     }
 
     public function writeUTF(str:String) {
@@ -169,7 +169,7 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     }
 
     public function writeBytes(input:ByteArray, offset:Int = 0, length:Int = 0) {
-        if (length == 0) length = input.bytesAvailable;
+        if (length == 0) length = input.length - offset;
         //throw new Error('Not implemented');
         for (n in 0 ... length) {
             this.writeByte(input[offset + n]);
@@ -185,7 +185,7 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     }
 
     public function writeUnsignedInt(value:Int) {
-        this._data.setInt32(getUpdatePos(1), bswap32Endian(value));
+        this._data.setInt32(getUpdatePos(4), bswap32Endian(value));
     }
 
     private function get_position():Int {

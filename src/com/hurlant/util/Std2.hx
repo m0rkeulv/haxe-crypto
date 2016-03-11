@@ -6,6 +6,7 @@ class Std2 {
     static private var _Clz = 'z'.charCodeAt(0);
     static private var _UA = 'A'.charCodeAt(0);
     static private var _UZ = 'Z'.charCodeAt(0);
+    static private var DIGITS = '0123456789abcdefghijklmnopqrstuvwxyz';
 
     static public function getDigit(charCode:Int):Int {
         if (charCode >=_C0 && charCode <= _C9) return charCode - _C0;
@@ -26,6 +27,18 @@ class Std2 {
 
             out *= radix;
             out += digit;
+        }
+        return out;
+    }
+
+    static public function string(value:Int, radix:Int = 10):String {
+        if (value < 0) return '-' + string(-value, radix);
+        if (value == 0) return '0';
+        var out = '';
+        while (value > 0) {
+            var c = DIGITS.charAt(value % radix);
+            out = c + out;
+            value = Std.int(value / radix);
         }
         return out;
     }

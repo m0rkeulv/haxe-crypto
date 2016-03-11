@@ -26,62 +26,59 @@ package com.hurlant.crypto.hash;
 
 import com.hurlant.util.ByteArray;
 
-class MD2 implements IHash
-{
-    public static inline var HASH_SIZE : Int = 16;
-    public var pad_size : Int = 48;  // probably will never get used, only here for SSL 3.0 support  
-    
-    private static var S : Array<Dynamic> = [  // PI Digits  
-        41, 46, 67, 201, 162, 216, 124, 1, 61, 54, 84, 161, 236, 240, 6, 19, 
-        98, 167, 5, 243, 192, 199, 115, 140, 152, 147, 43, 217, 188, 76, 130, 202, 
-        30, 155, 87, 60, 253, 212, 224, 22, 103, 66, 111, 24, 138, 23, 229, 18, 
-        190, 78, 196, 214, 218, 158, 222, 73, 160, 251, 245, 142, 187, 47, 238, 122, 
-        169, 104, 121, 145, 21, 178, 7, 63, 148, 194, 16, 137, 11, 34, 95, 33, 
-        128, 127, 93, 154, 90, 144, 50, 39, 53, 62, 204, 231, 191, 247, 151, 3, 
-        255, 25, 48, 179, 72, 165, 181, 209, 215, 94, 146, 42, 172, 86, 170, 198, 
-        79, 184, 56, 210, 150, 164, 125, 182, 118, 252, 107, 226, 156, 116, 4, 241, 
-        69, 157, 112, 89, 100, 113, 135, 32, 134, 91, 207, 101, 230, 45, 168, 2, 
-        27, 96, 37, 173, 174, 176, 185, 246, 28, 70, 97, 105, 52, 64, 126, 15, 
-        85, 71, 163, 35, 221, 81, 175, 58, 195, 92, 249, 206, 186, 197, 234, 38, 
-        44, 83, 13, 110, 133, 40, 132, 9, 211, 223, 205, 244, 65, 129, 77, 82, 
-        106, 220, 55, 200, 108, 193, 171, 250, 36, 225, 123, 8, 12, 189, 177, 74, 
-        120, 136, 149, 139, 227, 99, 232, 109, 233, 203, 213, 254, 59, 0, 29, 57, 
-        242, 239, 183, 14, 102, 88, 208, 228, 166, 119, 114, 248, 235, 117, 75, 10, 
+class MD2 implements IHash {
+    public static inline var HASH_SIZE = 16;
+    public var pad_size = 48; // probably will never get used, only here for SSL 3.0 support
+
+    private static var S = [ // PI Digits
+        41, 46, 67, 201, 162, 216, 124, 1, 61, 54, 84, 161, 236, 240, 6, 19,
+        98, 167, 5, 243, 192, 199, 115, 140, 152, 147, 43, 217, 188, 76, 130, 202,
+        30, 155, 87, 60, 253, 212, 224, 22, 103, 66, 111, 24, 138, 23, 229, 18,
+        190, 78, 196, 214, 218, 158, 222, 73, 160, 251, 245, 142, 187, 47, 238, 122,
+        169, 104, 121, 145, 21, 178, 7, 63, 148, 194, 16, 137, 11, 34, 95, 33,
+        128, 127, 93, 154, 90, 144, 50, 39, 53, 62, 204, 231, 191, 247, 151, 3,
+        255, 25, 48, 179, 72, 165, 181, 209, 215, 94, 146, 42, 172, 86, 170, 198,
+        79, 184, 56, 210, 150, 164, 125, 182, 118, 252, 107, 226, 156, 116, 4, 241,
+        69, 157, 112, 89, 100, 113, 135, 32, 134, 91, 207, 101, 230, 45, 168, 2,
+        27, 96, 37, 173, 174, 176, 185, 246, 28, 70, 97, 105, 52, 64, 126, 15,
+        85, 71, 163, 35, 221, 81, 175, 58, 195, 92, 249, 206, 186, 197, 234, 38,
+        44, 83, 13, 110, 133, 40, 132, 9, 211, 223, 205, 244, 65, 129, 77, 82,
+        106, 220, 55, 200, 108, 193, 171, 250, 36, 225, 123, 8, 12, 189, 177, 74,
+        120, 136, 149, 139, 227, 99, 232, 109, 233, 203, 213, 254, 59, 0, 29, 57,
+        242, 239, 183, 14, 102, 88, 208, 228, 166, 119, 114, 248, 235, 117, 75, 10,
         49, 68, 80, 180, 143, 237, 31, 26, 219, 153, 141, 51, 159, 17, 131, 20];
-    
-    public function getInputSize() : Int
-    {
+
+    public function getInputSize():Int {
         return 16;
     }
-    
-    public function getPadSize() : Int{
+
+    public function getPadSize():Int {
         return pad_size;
     }
-    
-    public function getHashSize() : Int
-    {
+
+    public function getHashSize():Int {
         return HASH_SIZE;
     }
-    
-    public function hash(src : ByteArray) : ByteArray
-    {
-        var savedLength : Int = src.length;
-        
+
+    public function hash(src:ByteArray):ByteArray {
+        var savedLength:Int = src.length;
+
         // 3.1 Step 1. Padding
-        var i : Int = (16 - src.length % 16);
+        var i = (16 - src.length % 16);
         if (i == 0) i = 16;
-        do{
+        do {
             src.set(src.length, i);
         } while ((src.length % 16) != 0);
-        
+
         // 3.2 Step 2. Checksum
-        var len : Int = src.length;
-        var checksum : ByteArray = new ByteArray();
-        var L : Int = 0;
+        var len = src.length;
+        var checksum = new ByteArray();
+        checksum.length = 16;
+        var L = 0;
         i = 0;
-        while (i < len){
-            for (j in 0...16){
-                checksum.set(j, checksum.get(j) ^ S[src[i + j] ^ L]);
+        while (i < len) {
+            for (j in 0...16) {
+                checksum[j] ^= S[src[i + j] ^ L];
                 L = checksum[j];
             }
             i += 16;
@@ -89,43 +86,38 @@ class MD2 implements IHash
         src.position = src.length;
         src.writeBytes(checksum);
         len += 16;
-        
+
         // 3.3 Step 3. MD Buffer
-        var X : ByteArray = new ByteArray();
-        
+        var X = new ByteArray();
+
         // 3.4 Process Message
         i = 0;
-        while (i < len){
-            
+        while (i < len) {
+
             /* Copy block i into X */
-            for (j in 0...16){
-                X[32 + j] = (X[16 + j] = src[i + j]) ^ X[j];
-            }
-            var t : Int = 0;
+            for (j in 0...16) X[32 + j] = (X[16 + j] = src[i + j]) ^ X[j];
+            var t:Int = 0;
             /* Do 18 rounds */
-            for (j in 0...18){
+            for (j in 0...18) {
                 /* Round j. */
-                for (k in 0...48){
-                    t = X[k] ^ S[t];
-                    X.set(k, t);
+                for (k in 0...48) {
+                    t = X[k] ^= S[t];
                 }
                 t = (t + j) & 0xff;
             }
             i += 16;
-        }  // 3.5 Step 5. Output  
-        
+        } // 3.5 Step 5. Output
+
         X.length = 16;
         // restore original length;
         src.length = savedLength;
         return X;
     }
-    
-    public function toString() : String
-    {
+
+    public function toString():String {
         return "md2";
     }
 
-    public function new()
-    {
+    public function new() {
     }
 }

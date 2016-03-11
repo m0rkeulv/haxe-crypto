@@ -1,16 +1,17 @@
 package com.hurlant.tests;
 
+import haxe.PosInfos;
 import com.hurlant.util.Error;
 class BaseTestCase extends haxe.unit.TestCase {
     public function new() {
         super();
     }
 
-    public inline function assert(a:Dynamic, ?b:Dynamic) {
+    public inline function assert(a:Dynamic, ?b:Dynamic, ?pos:PosInfos) {
         if (b == null) {
-            assertEquals(a, true);
+            assertEquals(a, true, pos);
         } else {
-            assertEquals(a, b);
+            assertEquals(a, b, pos);
         }
 
         /*

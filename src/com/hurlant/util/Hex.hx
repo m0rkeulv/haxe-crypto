@@ -40,7 +40,7 @@ class Hex
     public static function fromArray(array : ByteArray, colons : Bool = false) : String{
         var s : String = "";
         for (i in 0...array.length){
-            s += ("0" + Std.string(array[i])).substr(-2, 2);
+            s += ("0" + Std2.string(array[i], 16)).substr(-2, 2);
             if (colons) {
                 if (i < array.length - 1)                     s += ":";
             }
