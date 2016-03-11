@@ -17,7 +17,7 @@ import com.hurlant.util.Hex;
 
 import com.hurlant.util.ByteArray;
 
-class AESKeyTest
+class AESKeyTest extends BaseTestCase
 {
     
     @:meta(Test())

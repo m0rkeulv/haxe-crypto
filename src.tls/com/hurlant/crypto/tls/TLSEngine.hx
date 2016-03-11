@@ -9,11 +9,7 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.tls;
-
-import com.hurlant.crypto.tls.TLSError;
-import com.hurlant.crypto.tls.TLSEvent;
-import com.hurlant.crypto.tls.TLSSecurityParameters;
+package
 
 
 import com.hurlant.crypto.cert.X509Certificate;

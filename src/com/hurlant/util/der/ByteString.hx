@@ -39,7 +39,7 @@ class ByteString extends ByteArray implements IAsn1Type
         return DER.wrapDER(type, this);
     }
     
-    override public function toString() : String{
+    public function toString() : String{
         return DER.indent + "ByteString[" + type + "][" + len + "][" + Hex.fromArray(this) + "]";
     }
 }

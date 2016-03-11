@@ -232,8 +232,8 @@ class BlowFishKey implements ISymmetricKey
             
             var i : Int = 1;
             while (i < ROUNDS){
-                xr ^= cast((xl), F) ^ P[i];
-                xl ^= cast((xr), F) ^ P[i + 1];
+                xr ^= F(xl) ^ P[i + 0];
+                xl ^= F(xr) ^ P[i + 1];
                 i += 2;
             }
             
@@ -258,11 +258,11 @@ class BlowFishKey implements ISymmetricKey
 			 * (1) Initialise the S-boxes and the P-array, with a fixed string This
 			 * string contains the hexadecimal digits of pi (3.141...)
 			 */
-        S0 = KS0.concat();
-        S1 = KS1.concat();
-        S2 = KS2.concat();
-        S3 = KS3.concat();
-        P = KP.concat();
+        S0 = KS0.slice(0);
+        S1 = KS1.slice(0);
+        S2 = KS2.slice(0);
+        S3 = KS3.slice(0);
+        P = KP.slice(0);
         
         /*
 			 * (2) Now, XOR P[0] with the first 32 bits of the key, XOR P[1] with
@@ -353,8 +353,8 @@ class BlowFishKey implements ISymmetricKey
         
         var i : Int = ROUNDS;
         while (i > 0){
-            xr ^= cast((xl), F) ^ P[i];
-            xl ^= cast((xr), F) ^ P[i - 1];
+            xr ^= F(xl) ^ P[i - 0];
+            xl ^= F(xr) ^ P[i - 1];
             i -= 2;
         }
         

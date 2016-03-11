@@ -42,8 +42,8 @@ class BigInteger
     public static var ONE : BigInteger = nbv(1);
     
     /*bi_internal */public var t : Int;  // number of chunks.  
-    private var s : Int;  // sign  
-    private var a : Array<Dynamic>;  // chunks  
+    public var s : Int;  // sign
+    public var a : Array<Int>;  // chunks
     
     /**
 		 * 
@@ -54,7 +54,7 @@ class BigInteger
 		 */
     public function new(value : Dynamic = null, radix : Int = 0, unsigned : Bool = false)
     {
-        a = new Array<Dynamic>();
+        a = new Array<Int>();
         if (Std.is(value, String)) {
             if (radix != 0 && radix != 16) {
                 fromRadix(try cast(value, String) catch(e:Dynamic) null, radix);
@@ -74,7 +74,6 @@ class BigInteger
         var r : Random = new Random();
         for (i in 0...a.length){
             a[i] = r.nextByte();
-            ;
         }
         a = null;
         t = 0;
@@ -93,7 +92,7 @@ class BigInteger
             case 16:k = 4;
             case 32:k = 5;
             default:
-                return toRadix(radix);
+                return toRadix(Std.int(radix));
         }
         var km : Int = (1 << k) - 1;
         var d : Int = 0;
@@ -217,7 +216,7 @@ class BigInteger
     /**
 		 * returns bit length of the integer x
 		 */
-    private function nbits(x : Int) : Int{
+    public function nbits(x : Int) : Int{
         var r : Int = 1;
         var t : Int;
         if ((t = x >>> 16) != 0) {x = t;r += 16;
@@ -270,7 +269,7 @@ class BigInteger
     /**
 		 * copy this to r
 		 */
-    private function copyTo(r : BigInteger) : Void{
+    public function copyTo(r : BigInteger) : Void{
         var i : Int = t - 1;
         while (i >= 0){
             r.a[i] = a[i];
@@ -282,7 +281,7 @@ class BigInteger
     /**
 		 * set from integer value "value", -DV <= value < DV
 		 */
-    private function fromInt(value : Int) : Void{
+    public function fromInt(value : Int) : Void{
         t = 1;
         s = ((value < 0)) ? -1 : 0;
         if (value > 0) {
@@ -300,7 +299,7 @@ class BigInteger
 		 * starting a current position
 		 * If length goes beyond the array, pad with zeroes.
 		 */
-    private function fromArray(value : ByteArray, length : Int, unsigned : Bool = false) : Void{
+    public function fromArray(value : ByteArray, length : Int, unsigned : Bool = false) : Void{
         var p : Int = value.position;
         var i : Int = p + length;
         var sh : Int = 0;
@@ -334,7 +333,7 @@ class BigInteger
     /**
 		 * clamp off excess high words
 		 */
-    private function clamp() : Void{
+    public function clamp() : Void{
         var c : Int = s & DM;
         while (t > 0 && a[t - 1] == c){
             --t;
@@ -343,7 +342,7 @@ class BigInteger
     /**
 		 * r = this << n*DB
 		 */
-    private function dlShiftTo(n : Int, r : BigInteger) : Void{
+    public function dlShiftTo(n : Int, r : BigInteger) : Void{
         var i : Int;
         i = t - 1;
         while (i >= 0){
@@ -361,7 +360,7 @@ class BigInteger
     /**
 		 * r = this >> n*DB
 		 */
-    private function drShiftTo(n : Int, r : BigInteger) : Void{
+    public function drShiftTo(n : Int, r : BigInteger) : Void{
         var i : Int;
         for (i in n...t){
             r.a[i - n] = a[i];
@@ -372,11 +371,11 @@ class BigInteger
     /**
 		 * r = this << n
 		 */
-    private function lShiftTo(n : Int, r : BigInteger) : Void{
+    public function lShiftTo(n : Int, r : BigInteger) : Void{
         var bs : Int = n % DB;
         var cbs : Int = DB - bs;
         var bm : Int = (1 << cbs) - 1;
-        var ds : Int = n / DB;
+        var ds : Int = Std.int(n / DB);
         var c : Int = (s << bs) & DM;
         var i : Int;
         i = t - 1;
@@ -398,7 +397,7 @@ class BigInteger
     /**
 		 * r = this >> n
 		 */
-    private function rShiftTo(n : Int, r : BigInteger) : Void{
+    public function rShiftTo(n : Int, r : BigInteger) : Void{
         r.s = s;
         var ds : Int = n / DB;
         if (ds >= t) {
@@ -423,7 +422,7 @@ class BigInteger
     /**
 		 * r = this - v
 		 */
-    private function subTo(v : BigInteger, r : BigInteger) : Void{
+    public function subTo(v : BigInteger, r : BigInteger) : Void{
         var i : Int = 0;
         var c : Int = 0;
         var m : Int = Math.min(v.t, t);
@@ -465,7 +464,7 @@ class BigInteger
 		 * c is initial carry, returns final carry.
 		 * c < 3*dvalue, x < 2*dvalue, this_i < dvalue
 		 */
-    private function am(i : Int, x : Int, w : BigInteger, j : Int, c : Int, n : Int) : Int{
+    public function am(i : Int, x : Int, w : BigInteger, j : Int, c : Int, n : Int) : Int{
         var xl : Int = x & 0x7fff;
         var xh : Int = x >> 15;
         while (--n >= 0){
@@ -482,7 +481,7 @@ class BigInteger
 		 * r = this * v, r != this,a (HAC 14.12)
 		 * "this" should be the larger one if appropriate
 		 */
-    private function multiplyTo(v : BigInteger, r : BigInteger) : Void{
+    public function multiplyTo(v : BigInteger, r : BigInteger) : Void{
         var x : BigInteger = abs();
         var y : BigInteger = v.abs();
         var i : Int = x.t;
@@ -502,7 +501,7 @@ class BigInteger
     /**
 		 * r = this^2, r != this (HAC 14.16)
 		 */
-    private function squareTo(r : BigInteger) : Void{
+    public function squareTo(r : BigInteger) : Void{
         var x : BigInteger = abs();
         var i : Int = r.t = 2 * x.t;
         while (--i >= 0)r.a[i] = 0;
@@ -523,7 +522,7 @@ class BigInteger
 		 * divide this by m, quotient and remainder to q, r (HAC 14.20)
 		 * r != q, this != m. q or r may be null.
 		 */
-    private function divRemTo(m : BigInteger, q : BigInteger = null, r : BigInteger = null) : Void{
+    public function divRemTo(m : BigInteger, q : BigInteger = null, r : BigInteger = null) : Void{
         var pm : BigInteger = m.abs();
         if (pm.t <= 0)             return;
         var pt : BigInteger = abs();
@@ -568,7 +567,7 @@ class BigInteger
         }
         while (--j >= 0){
             // Estimate quotient digit
-            var qd : Int = ((r.a[--i] == y0)) ? DM : Std.parseFloat(r.a[i]) * d1 + (Std.parseFloat(r.a[i - 1]) + e) * d2;
+            var qd : Int = ((r.a[--i] == y0)) ? DM : Std.int(Std.parseFloat(r.a[i]) * d1 + (Std.parseFloat(r.a[i - 1]) + e) * d2);
             if ((r.a[i] += y.am(0, qd, r, j, 0, ys)) < qd) {  // Try it out  
                 y.dlShiftTo(j, t);
                 r.subTo(t, r);
@@ -604,7 +603,7 @@ class BigInteger
 		 * should reduce x and y(2-xy) by m^2 at each step to keep size bounded
 		 * [XXX unit test the living shit out of this.]
 		 */
-    private function invDigit() : Int{
+    public function invDigit() : Int{
         if (t < 1)             return 0;
         var x : Int = a[0];
         if ((x & 1) == 0)             return 0;
@@ -622,13 +621,13 @@ class BigInteger
     /**
 		 * true iff this is even
 		 */
-    private function isEven() : Bool{
+    public function isEven() : Bool{
         return (((t > 0)) ? (a[0] & 1) : s) == 0;
     }
     /**
 		 * this^e, e < 2^32, doing sqr and mul with "r" (HAC 14.79)
 		 */
-    private function exp(e : Int, z : IReduction) : BigInteger{
+    public function exp(e : Int, z : IReduction) : BigInteger{
         if (e > 0xffffffff || e < 1)             return ONE;
         var r : BigInteger = nbi();
         var r2 : BigInteger = nbi();
@@ -649,12 +648,12 @@ class BigInteger
         return z.revert(r);
     }
     
-    private function intAt(str : String, index : Int) : Int{
+    public function intAt(str : String, index : Int) : Int{
         var i : Float = parseInt(str.charAt(index), 36);
         return (Math.isNaN(i)) ? -1 : i;
     }
     
-    private function nbi() : Dynamic{
+    public function nbi() : Dynamic{
         return new BigInteger();
     }
     /**
@@ -729,7 +728,7 @@ class BigInteger
 		 * @return x s.t. r^x < DV
 		 * 
 		 */
-    private function chunkSize(r : Float) : Int{
+    public function chunkSize(r : Float) : Int{
         return Math.floor(Math.LN2 * DB / Math.log(r));
     }
     
@@ -756,11 +755,11 @@ class BigInteger
 		 * @return a string representing the integer converted to the radix.
 		 * 
 		 */
-    private function toRadix(b : Int = 10) : String{
+    public function toRadix(b : Int = 10) : String{
         if (sigNum() == 0 || b < 2 || b > 32)             return "0";
         var cs : Int = chunkSize(b);
         var a : Float = Math.pow(b, cs);
-        var d : BigInteger = nbv(a);
+        var d : BigInteger = nbv(Std.int(a));
         var y : BigInteger = nbi();
         var z : BigInteger = nbi();
         var r : String = "";
@@ -778,7 +777,7 @@ class BigInteger
 		 * @param b a radix
 		 * 
 		 */
-    private function fromRadix(s : String, b : Int = 10) : Void{
+    public function fromRadix(s : String, b : Int = 10) : Void{
         fromInt(0);
         var cs : Int = chunkSize(b);
         var d : Float = Math.pow(b, cs);
@@ -866,7 +865,7 @@ class BigInteger
 		 * @param r a BigInteger to store the result of the operation
 		 * 
 		 */
-    private function bitwiseTo(a : BigInteger, op : Function, r : BigInteger) : Void{
+    public function bitwiseTo(a : BigInteger, op : Function, r : BigInteger) : Void{
         var i : Int;
         var f : Int;
         var m : Int = Math.min(a.t, t);
@@ -891,7 +890,7 @@ class BigInteger
         r.clamp();
     }
     
-    private function op_and(x : Int, y : Int) : Int{return x & y;
+    public function op_and(x : Int, y : Int) : Int{return x & y;
     }
     public function and(a : BigInteger) : BigInteger{
         var r : BigInteger = new BigInteger();
@@ -899,7 +898,7 @@ class BigInteger
         return r;
     }
     
-    private function op_or(x : Int, y : Int) : Int{return x | y;
+    public function op_or(x : Int, y : Int) : Int{return x | y;
     }
     public function or(a : BigInteger) : BigInteger{
         var r : BigInteger = new BigInteger();
@@ -907,7 +906,7 @@ class BigInteger
         return r;
     }
     
-    private function op_xor(x : Int, y : Int) : Int{return x ^ y;
+    public function op_xor(x : Int, y : Int) : Int{return x ^ y;
     }
     public function xor(a : BigInteger) : BigInteger{
         var r : BigInteger = new BigInteger();
@@ -915,7 +914,7 @@ class BigInteger
         return r;
     }
     
-    private function op_andnot(x : Int, y : Int) : Int{return x & ~y;
+    public function op_andnot(x : Int, y : Int) : Int{return x & ~y;
     }
     public function andNot(a : BigInteger) : BigInteger{
         var r : BigInteger = new BigInteger();
@@ -960,7 +959,7 @@ class BigInteger
 		 * @return index of lowet 1-bit in x, x < 2^31
 		 * 
 		 */
-    private function lbit(x : Int) : Int{
+    public function lbit(x : Int) : Int{
         if (x == 0)             return -1;
         var r : Int = 0;
         if ((x & 0xffff) == 0) {x >>= 16;r += 16;
@@ -994,7 +993,7 @@ class BigInteger
 		 * @return number of 1 bits in x
 		 * 
 		 */
-    private function cbit(x : Int) : Int{
+    public function cbit(x : Int) : Int{
         var r : Int = 0;
         while (x != 0){x &= x - 1;++r;
         }
@@ -1036,7 +1035,7 @@ class BigInteger
 		 * @return this op (1<<n)
 		 * 
 		 */
-    private function changeBit(n : Int, op : Function) : BigInteger{
+    public function changeBit(n : Int, op : Function) : BigInteger{
         var r : BigInteger = BigInteger.ONE.shiftLeft(n);
         bitwiseTo(r, op, r);
         return r;
@@ -1075,7 +1074,7 @@ class BigInteger
 		 * @param r = this + a
 		 * 
 		 */
-    private function addTo(a : BigInteger, r : BigInteger) : Void{
+    public function addTo(a : BigInteger, r : BigInteger) : Void{
         var i : Int = 0;
         var c : Int = 0;
         var m : Int = Math.min(a.t, t);
@@ -1187,7 +1186,7 @@ class BigInteger
 		 * @param n
 		 * 
 		 */
-    private function dMultiply(n : Int) : Void{
+    public function dMultiply(n : Int) : Void{
         a[t] = am(0, n - 1, this, 0, 0, t);
         ++t;
         clamp();
@@ -1201,7 +1200,7 @@ class BigInteger
 		 * @param w
 		 * 
 		 */
-    private function dAddOffset(n : Int, w : Int) : Void{
+    public function dAddOffset(n : Int, w : Int) : Void{
         while (t <= w){
             a[t++] = 0;
         }
@@ -1210,7 +1209,8 @@ class BigInteger
             a[w] -= DV;
             if (++w >= t) {
                 a[t++] = 0;
-            }++;a[w];
+            }
+            ++a[w];
         }
     }
     
@@ -1231,7 +1231,7 @@ class BigInteger
 		 * @param r = lower n words of "this * a", a.t <= n
 		 * 
 		 */
-    private function multiplyLowerTo(a : BigInteger, n : Int, r : BigInteger) : Void{
+    public function multiplyLowerTo(a : BigInteger, n : Int, r : BigInteger) : Void{
         var i : Int = Math.min(t + a.t, n);
         r.s = 0;  // assumes a, this >= 0  
         r.t = i;
@@ -1255,7 +1255,7 @@ class BigInteger
 		 * @param r = "this * a" without lower n words, n > 0
 		 * 
 		 */
-    private function multiplyUpperTo(a : BigInteger, n : Int, r : BigInteger) : Void{
+    public function multiplyUpperTo(a : BigInteger, n : Int, r : BigInteger) : Void{
         --n;
         var i : Int = r.t = t + a.t - n;
         r.s = 0;  // assumes a,this >= 0  
@@ -1435,7 +1435,7 @@ class BigInteger
 		 * @return this % n, n < 2^DB
 		 * 
 		 */
-    private function modInt(n : Int) : Int{
+    public function modInt(n : Int) : Int{
         if (n <= 0)             return 0;
         var d : Int = DV % n;
         var r : Int = ((s < 0)) ? n - 1 : 0;
@@ -1574,7 +1574,7 @@ class BigInteger
 		 * @return true if probably prime (HAC 4.24, Miller-Rabin)
 		 * 
 		 */
-    private function millerRabin(t : Int) : Bool{
+    public function millerRabin(t : Int) : Bool{
         var n1 : BigInteger = subtract(BigInteger.ONE);
         var k : Int = n1.getLowestSetBit();
         if (k <= 0) {

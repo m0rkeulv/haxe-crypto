@@ -23,7 +23,7 @@ class ARC4 implements IPRNG implements IStreamCipher
     private var i : Int = 0;
     private var j : Int = 0;
     private var S : ByteArray;
-    private inline var psize : Int = 256;
+    static private inline var psize : Int = 256;
     public function new(key : ByteArray = null)
     {
         S = new ByteArray();
@@ -78,7 +78,7 @@ class ARC4 implements IPRNG implements IStreamCipher
         var i : Int = 0;
         if (S != null) {
             for (i in 0...S.length){
-                S[i] = Math.random() * 256;
+                S[i] = Std.random(256);
             }
             S.length = 0;
             S = null;

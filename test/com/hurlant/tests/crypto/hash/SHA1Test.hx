@@ -17,7 +17,7 @@ import com.hurlant.util.Hex;
 
 import com.hurlant.util.ByteArray;
 
-class SHA1Test
+class SHA1Test extends BaseTestCase
 {
     
     /**

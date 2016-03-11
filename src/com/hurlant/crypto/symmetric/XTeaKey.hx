@@ -9,6 +9,7 @@
 package com.hurlant.crypto.symmetric;
 
 
+import com.hurlant.util.Std2;
 import com.hurlant.crypto.prng.Random;
 import com.hurlant.util.Memory;
 
@@ -30,10 +31,10 @@ class XTeaKey implements ISymmetricKey
 		 */
     public static function parseKey(K : String) : XTeaKey{
         var a : ByteArray = new ByteArray();
-        a.writeUnsignedInt(parseInt(K.substr(0, 8), 16));
-        a.writeUnsignedInt(parseInt(K.substr(8, 8), 16));
-        a.writeUnsignedInt(parseInt(K.substr(16, 8), 16));
-        a.writeUnsignedInt(parseInt(K.substr(24, 8), 16));
+        a.writeUnsignedInt(Std2.parseInt(K.substr(0, 8), 16));
+        a.writeUnsignedInt(Std2.parseInt(K.substr(8, 8), 16));
+        a.writeUnsignedInt(Std2.parseInt(K.substr(16, 8), 16));
+        a.writeUnsignedInt(Std2.parseInt(K.substr(24, 8), 16));
         a.position = 0;
         return new XTeaKey(a);
     }
@@ -81,7 +82,6 @@ class XTeaKey implements ISymmetricKey
         var r : Random = new Random();
         for (i in 0...k.length){
             k[i] = r.nextByte();
-            ;
         }
         k = null;
         Memory.gc();

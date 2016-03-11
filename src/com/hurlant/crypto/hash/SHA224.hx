@@ -13,7 +13,7 @@ import com.hurlant.crypto.hash.SHA256;
 
 class SHA224 extends SHA256
 {
-    private function new()
+    public function new()
     {
         super();
         h = [

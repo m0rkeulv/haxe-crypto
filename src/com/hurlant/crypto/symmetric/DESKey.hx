@@ -183,7 +183,7 @@ class DESKey implements ISymmetricKey
         for (j in 0...56){
             l = pc1[j];
             
-            pc1m[j] = ((key[off + (l >>> 3)] & bytebit[l & 07]) != 0);
+            pc1m.set(j, ((key.get(off + (l >>> 3)) & bytebit[l & 7]) != 0));
         }
         
         for (i in 0...16){

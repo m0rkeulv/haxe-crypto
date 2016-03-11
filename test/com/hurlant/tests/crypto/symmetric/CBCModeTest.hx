@@ -20,7 +20,7 @@ import com.hurlant.util.Hex;
 
 import com.hurlant.util.ByteArray;
 
-class CBCModeTest
+class CBCModeTest extends BaseTestCase
 {
     
     /**

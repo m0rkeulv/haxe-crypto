@@ -11,7 +11,6 @@ package com.hurlant.crypto.symmetric;
 
 
 import com.hurlant.util.ByteArray;
-import com.hurlant.crypto.tls.TLSError;
 
 class TLSPad implements IPad
 {

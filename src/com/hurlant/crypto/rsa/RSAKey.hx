@@ -12,12 +12,12 @@
 package com.hurlant.crypto.rsa;
 
 
+import com.hurlant.util.Std2;
 import com.hurlant.crypto.prng.Random;
 import com.hurlant.math.BigInteger;
 import com.hurlant.util.Memory;
 
 import com.hurlant.util.ByteArray;
-import com.hurlant.crypto.tls.TLSError;
 
 /**
 	 * Current limitations:
@@ -66,10 +66,10 @@ class RSAKey {
     public static function parsePrivateKey(N:String, E:String, D:String,
                                            P:String = null, Q:String = null, DMP1:String = null, DMQ1:String = null, IQMP:String = null):RSAKey {
         if (P == null) {
-            return new RSAKey(new BigInteger(N, 16, true), parseInt(E, 16), new BigInteger(D, 16, true));
+            return new RSAKey(new BigInteger(N, 16, true), Std2.parseInt(E, 16), new BigInteger(D, 16, true));
         }
         else {
-            return new RSAKey(new BigInteger(N, 16, true), parseInt(E, 16), new BigInteger(D, 16, true),
+            return new RSAKey(new BigInteger(N, 16, true), Std2.parseInt(E, 16), new BigInteger(D, 16, true),
             new BigInteger(P, 16, true), new BigInteger(Q, 16, true),
             new BigInteger(DMP1, 16, true), new BigInteger(DMQ1, 16, true),
             new BigInteger(IQMP, 16, true));

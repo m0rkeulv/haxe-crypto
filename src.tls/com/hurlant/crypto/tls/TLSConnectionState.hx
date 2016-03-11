@@ -7,9 +7,7 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.tls;
-
-import com.hurlant.crypto.tls.TLSError;
+package
 
 
 import com.hurlant.util.ByteArray;

@@ -9,7 +9,7 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.tls;
+package
 
 
 import com.hurlant.crypto.hash.MD5;

@@ -9,7 +9,7 @@
 package com.hurlant.util.der;
 
 
-class Set extends Sequence implements IAsn1Type
+class Set extends Sequence
 {
     public function new(type : Int = 0x31, length : Int = 0x00)
     {

@@ -40,7 +40,7 @@ class PEM
         if (der == null)             return null;
         var obj : Dynamic = DER.parse(der);
         if (Std.is(obj, Array)) {
-            var arr : Array<Dynamic> = try cast(obj, Array</*AS3HX WARNING no type*/>) catch(e:Dynamic) null;
+            var arr : Array<Dynamic> = try cast(obj, Array<Dynamic>) catch(e:Dynamic) null;
             // arr[0] is Version. should be 0. should be checked. shoulda woulda coulda.
             return new RSAKey(
             arr[1],   // N  
@@ -74,7 +74,7 @@ class PEM
         if (der == null)             return null;
         var obj : Dynamic = DER.parse(der);
         if (Std.is(obj, Array)) {
-            var arr : Array<Dynamic> = try cast(obj, Array</*AS3HX WARNING no type*/>) catch(e:Dynamic) null;
+            var arr : Array<Dynamic> = try cast(obj, Array<Dynamic>) catch(e:Dynamic) null;
             // arr[0] = [ <some crap that means "rsaEncryption">, null ]; ( apparently, that's an X-509 Algorithm Identifier.
             if (Std.string(arr[0][0]) != OID.RSA_ENCRYPTION) {
                 return null;
@@ -83,7 +83,7 @@ class PEM
             arr[1].position = 0;  // there's a 0x00 byte up front. find out why later. like, read a spec.  
             obj = DER.parse(arr[1]);
             if (Std.is(obj, Array)) {
-                arr = try cast(obj, Array</*AS3HX WARNING no type*/>) catch(e:Dynamic) null;
+                arr = try cast(obj, Array<Dynamic>) catch(e:Dynamic) null;
                 // arr[0] = modulus
                 // arr[1] = public expt.
                 return new RSAKey(arr[0], arr[1]);

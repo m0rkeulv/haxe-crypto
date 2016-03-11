@@ -68,10 +68,11 @@ class MD2 implements IHash
         var savedLength : Int = src.length;
         
         // 3.1 Step 1. Padding
-        var i : Int = (16 - src.length % 16) || 16;
+        var i : Int = (16 - src.length % 16);
+        if (i == 0) i = 16;
         do{
-            src[src.length] = i;
-        }        while ((src.length % 16 != 0));
+            src.set(src.length, i);
+        } while ((src.length % 16) != 0);
         
         // 3.2 Step 2. Checksum
         var len : Int = src.length;
@@ -80,7 +81,8 @@ class MD2 implements IHash
         i = 0;
         while (i < len){
             for (j in 0...16){
-                L = checksum[j] ^= S[src[i + j] ^ L];
+                checksum.set(j, checksum.get(j) ^ S[src[i + j] ^ L]);
+                L = checksum[j];
             }
             i += 16;
         }
@@ -104,7 +106,8 @@ class MD2 implements IHash
             for (j in 0...18){
                 /* Round j. */
                 for (k in 0...48){
-                    X[k] = t = X[k] ^ S[t];
+                    t = X[k] ^ S[t];
+                    X.set(k, t);
                 }
                 t = (t + j) & 0xff;
             }

@@ -40,7 +40,7 @@ class Base64
     public static function encodeByteArray(data : ByteArray) : String{
         var out : ByteArray = new ByteArray();
         //Presetting the length keep the memory smaller and optimize speed since there is no "grow" needed
-        out.length = (2 + data.length - ((data.length + 2) % 3)) * 4 / 3;  //Preset length //1.6 to 1.5 ms  
+        out.length = Std.int((2 + data.length - ((data.length + 2) % 3)) * 4 / 3);  //Preset length //1.6 to 1.5 ms
         var i : Int = 0;
         var r : Int = data.length % 3;
         var len : Int = data.length - r;
@@ -48,33 +48,33 @@ class Base64
         var outPos : Int = 0;
         while (i < len){
             //Read 3 Characters (8bit * 3 = 24 bits)
-            c = data[as3hx.Compat.parseInt(i++)] << 16 | data[as3hx.Compat.parseInt(i++)] << 8 | data[as3hx.Compat.parseInt(i++)];
+            c = data[Std2.parseInt(i++)] << 16 | data[Std2.parseInt(i++)] << 8 | data[Std2.parseInt(i++)];
             
-            out[as3hx.Compat.parseInt(outPos++)] = _encodeChars[as3hx.Compat.parseInt(c >>> 18)];
-            out[as3hx.Compat.parseInt(outPos++)] = _encodeChars[as3hx.Compat.parseInt(c >>> 12 & 0x3f)];
-            out[as3hx.Compat.parseInt(outPos++)] = _encodeChars[as3hx.Compat.parseInt(c >>> 6 & 0x3f)];
-            out[as3hx.Compat.parseInt(outPos++)] = _encodeChars[as3hx.Compat.parseInt(c & 0x3f)];
+            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c >>> 18)];
+            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c >>> 12 & 0x3f)];
+            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c >>> 6 & 0x3f)];
+            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c & 0x3f)];
         }  //Need two "=" padding  
         
         
         
         if (r == 1) {
             //Read one char, write two chars, write padding
-            c = data[as3hx.Compat.parseInt(i)];
+            c = data[Std2.parseInt(i)];
             
-            out[as3hx.Compat.parseInt(outPos++)] = _encodeChars[as3hx.Compat.parseInt(c >>> 2)];
-            out[as3hx.Compat.parseInt(outPos++)] = _encodeChars[as3hx.Compat.parseInt((c & 0x03) << 4)];
-            out[as3hx.Compat.parseInt(outPos++)] = 61;
-            out[as3hx.Compat.parseInt(outPos++)] = 61;
+            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c >>> 2)];
+            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt((c & 0x03) << 4)];
+            out[Std2.parseInt(outPos++)] = 61;
+            out[Std2.parseInt(outPos++)] = 61;
         }
         //Need one "=" padding
         else if (r == 2) {
-            c = data[as3hx.Compat.parseInt(i++)] << 8 | data[as3hx.Compat.parseInt(i)];
+            c = data[Std2.parseInt(i++)] << 8 | data[Std2.parseInt(i)];
             
-            out[as3hx.Compat.parseInt(outPos++)] = _encodeChars[as3hx.Compat.parseInt(c >>> 10)];
-            out[as3hx.Compat.parseInt(outPos++)] = _encodeChars[as3hx.Compat.parseInt(c >>> 4 & 0x3f)];
-            out[as3hx.Compat.parseInt(outPos++)] = _encodeChars[as3hx.Compat.parseInt((c & 0x0f) << 2)];
-            out[as3hx.Compat.parseInt(outPos++)] = 61;
+            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c >>> 10)];
+            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c >>> 4 & 0x3f)];
+            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt((c & 0x0f) << 2)];
+            out[Std2.parseInt(outPos++)] = 61;
         }
         
         return out.readUTFBytes(out.length);
@@ -93,39 +93,39 @@ class Base64
         var outPos : Int = 0;
         while (i < len){
             //c1
-            c1 = _decodeChars[as3hx.Compat.parseInt(byteString[i++])];
+            c1 = _decodeChars[Std2.parseInt(byteString[i++])];
             if (c1 == -1) 
                 break  //c2  ;
             
             
             
-            c2 = _decodeChars[as3hx.Compat.parseInt(byteString[i++])];
+            c2 = _decodeChars[Std2.parseInt(byteString[i++])];
             if (c2 == -1) 
                 break;
             
-            byteString[as3hx.Compat.parseInt(outPos++)] = (c1 << 2) | ((c2 & 0x30) >> 4);
+            byteString[Std2.parseInt(outPos++)] = (c1 << 2) | ((c2 & 0x30) >> 4);
             
             //c3
-            c3 = byteString[as3hx.Compat.parseInt(i++)];
+            c3 = byteString[Std2.parseInt(i++)];
             if (c3 == 61) 
                 break;
             
-            c3 = _decodeChars[as3hx.Compat.parseInt(c3)];
+            c3 = _decodeChars[Std2.parseInt(c3)];
             if (c3 == -1) 
                 break;
             
-            byteString[as3hx.Compat.parseInt(outPos++)] = ((c2 & 0x0f) << 4) | ((c3 & 0x3c) >> 2);
+            byteString[Std2.parseInt(outPos++)] = ((c2 & 0x0f) << 4) | ((c3 & 0x3c) >> 2);
             
             //c4
-            c4 = byteString[as3hx.Compat.parseInt(i++)];
+            c4 = byteString[Std2.parseInt(i++)];
             if (c4 == 61) 
                 break;
             
-            c4 = _decodeChars[as3hx.Compat.parseInt(c4)];
+            c4 = _decodeChars[Std2.parseInt(c4)];
             if (c4 == -1) 
                 break;
             
-            byteString[as3hx.Compat.parseInt(outPos++)] = ((c3 & 0x03) << 6) | c4;
+            byteString[Std2.parseInt(outPos++)] = ((c3 & 0x03) << 6) | c4;
         }
         byteString.length = outPos;
         byteString.position = 0;

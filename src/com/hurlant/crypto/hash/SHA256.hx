@@ -48,12 +48,12 @@ class SHA256 extends SHABase implements IHash
         return 32;
     }
     
-    override private function core(x : Array<Dynamic>, len : Int) : Array<Dynamic>{
+    override private function core(x : Array<Int>, len : Int) : Array<Int>{
         /* append padding */
         x[len >> 5] |= 0x80 << (24 - len % 32);
         x[((len + 64 >> 9) << 4) + 15] = len;
         
-        var w : Array<Dynamic> = [];
+        var w : Array<Int> = [];
         var a : Int = h[0];
         var b : Int = h[1];
         var c : Int = h[2];
@@ -76,7 +76,7 @@ class SHA256 extends SHABase implements IHash
             
             for (j in 0...64){
                 if (j < 16) {
-                    w[j] = x[i + j] || 0;
+                    w[j] = x[i + j];
                 }
                 else {
                     var s0 : Int = rrol(w[j - 15], 7) ^ rrol(w[j - 15], 18) ^ (w[j - 15] >>> 3);

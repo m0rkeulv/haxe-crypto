@@ -81,7 +81,7 @@ class TLSPRF
     
     // XXX HORRIBLY SLOW. REWRITE.
     public function nextBytes(buffer : IDataOutput, length : Int) : Void{
-        while (length--){
+        while (length-- > 0){
             buffer.writeByte(nextByte());
         }
     }

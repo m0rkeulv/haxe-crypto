@@ -16,7 +16,7 @@ import com.hurlant.math.BigInteger;
 
 import com.hurlant.util.ByteArray;
 
-class BigIntegerTest
+class BigIntegerTest extends BaseTestCase
 {
     
     @:meta(Test())

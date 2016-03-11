@@ -19,7 +19,7 @@ import com.hurlant.util.Hex;
 
 import com.hurlant.util.ByteArray;
 
-class CFB8ModeTest
+class CFB8ModeTest extends BaseTestCase
 {
     
     /**

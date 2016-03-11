@@ -18,7 +18,7 @@ import com.hurlant.util.der.PEM;
 
 import com.hurlant.util.ByteArray;
 
-class RSAKeyTest
+class RSAKeyTest extends BaseTestCase
 {
     
     @:meta(Test())

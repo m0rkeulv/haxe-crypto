@@ -62,10 +62,10 @@ class DER
                 // treat as an array
                 var p : Int = der.position;
                 var o : Sequence = new Sequence(type, len);
-                var arrayStruct : Array<Dynamic> = try cast(structure, Array</*AS3HX WARNING no type*/>) catch(e:Dynamic) null;
+                var arrayStruct : Array<Dynamic> = try cast(structure, Array<Dynamic>) catch(e:Dynamic) null;
                 if (arrayStruct != null) {
                     // copy the array, as we destroy it later.
-                    arrayStruct = arrayStruct.concat();
+                    arrayStruct = arrayStruct.slice(0);
                 }
                 while (der.position < p + len){
                     var tmpStruct : Dynamic = null;
@@ -167,7 +167,7 @@ class DER
     private static function getLengthOfNextElement(b : ByteArray) : Int{
         var p : Int = b.position;
         // length
-        b.position++;
+        b.position = b.position + 1;
         var len : Int = b.readUnsignedByte();
         if (len >= 0x80) {
             // long form of length

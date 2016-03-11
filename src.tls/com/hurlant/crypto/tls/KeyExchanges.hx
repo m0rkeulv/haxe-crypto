@@ -7,7 +7,7 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.tls;
+package
 
 
 class KeyExchanges

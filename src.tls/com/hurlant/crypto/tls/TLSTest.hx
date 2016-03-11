@@ -6,7 +6,7 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.tls;
+package
 
 import com.hurlant.crypto.tls.MyCert;
 import com.hurlant.crypto.tls.MyKey;

@@ -1,24 +1,23 @@
 /**
- * TLSEvent
+ * SSLEvent
  * 
  * This is used by TLSEngine to let the application layer know
  * when we're ready for sending, or have received application data
- * Copyright (c) 2007 Henri Torgemane
+ * This Event was created by Bobby Parker to support SSL 3.0.
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.tls;
+package
 
 
 import com.hurlant.util.Event;
 import com.hurlant.util.ByteArray;
 
-class TLSEvent extends Event
+class SSLEvent extends Event
 {
     
     public static inline var DATA : String = "data";
     public static inline var READY : String = "ready";
-    public static inline var PROMPT_ACCEPT_CERT : String = "promptAcceptCert";
     
     public var data : ByteArray;
     

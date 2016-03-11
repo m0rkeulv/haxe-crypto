@@ -32,8 +32,8 @@ class SHABase implements IHash
     
     public function hash(src : ByteArray) : ByteArray
     {
-        var savedLength : Int = src.length;
-        var savedEndian : String = src.endian;
+        var savedLength = src.length;
+        var savedEndian = src.endian;
         
         src.endian = Endian.BIG_ENDIAN;
         var len : Int = savedLength * 8;
@@ -43,15 +43,15 @@ class SHABase implements IHash
         }  // convert ByteArray to an array of uint  
         
         src.position = 0;
-        var a : Array<Dynamic> = [];
+        var a : Array<Int> = [];
         var i : Int = 0;
         while (i < src.length){
             a.push(src.readUnsignedInt());
             i += 4;
         }
-        var h : Array<Dynamic> = core(a, len);
+        var h = core(a, len);
         var out : ByteArray = new ByteArray();
-        var words : Int = getHashSize() / 4;
+        var words : Int = Std.int(getHashSize() / 4);
         for (i in 0...words){
             out.writeUnsignedInt(h[i]);
         }  // unpad, to leave the source untouched.  
@@ -60,7 +60,7 @@ class SHABase implements IHash
         src.endian = savedEndian;
         return out;
     }
-    private function core(x : Array<Dynamic>, len : Int) : Array<Dynamic>{
+    private function core(x : Array<Int>, len : Int) : Array<Int>{
         return null;
     }
     

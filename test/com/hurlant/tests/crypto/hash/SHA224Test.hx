@@ -17,7 +17,7 @@ import com.hurlant.util.Hex;
 
 import com.hurlant.util.ByteArray;
 
-class SHA224Test
+class SHA224Test extends BaseTestCase
 {
     
     /**
@@ -47,7 +47,7 @@ class SHA224Test
     public function longSha224() : Void{
         var src : ByteArray = new ByteArray();
         var a : Int = "a".charCodeAt(0);
-        for (i in 0...1e6){
+        for (i in 0...Std.int(1e6)){
             src[i] = a;
         }
         var sha224 : SHA224 = new SHA224();

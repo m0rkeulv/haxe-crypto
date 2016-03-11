@@ -41,8 +41,8 @@ class ObjectIdentifier implements IAsn1Type {
         // first byte = 40*value1 + value2
         var o:Int = b.readUnsignedByte();
         var a:Array<Dynamic> = [];
-        a.push(Int(o / 40));
-        a.push(Int(o % 40));
+        a.push(Std.int(o / 40));
+        a.push(Std.int(o % 40));
         var v:Int = 0;
         while (b.bytesAvailable > 0) {
             o = b.readUnsignedByte();

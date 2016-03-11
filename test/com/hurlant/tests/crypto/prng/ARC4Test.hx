@@ -17,7 +17,7 @@ import com.hurlant.util.Hex;
 
 import com.hurlant.util.ByteArray;
 
-class ARC4Test
+class ARC4Test extends BaseTestCase
 {
     
     /**

@@ -7,23 +7,24 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.tls;
-
+package
 
 
 import com.hurlant.util.Event;
-import com.hurlant.crypto.cert.X509Certificate;
+import com.hurlant.util.ByteArray;
 
-class TLSSocketEvent extends Event
+class TLSEvent extends Event
 {
     
+    public static inline var DATA : String = "data";
+    public static inline var READY : String = "ready";
     public static inline var PROMPT_ACCEPT_CERT : String = "promptAcceptCert";
     
-    public var cert : X509Certificate;
+    public var data : ByteArray;
     
-    public function new(cert : X509Certificate = null)
+    public function new(type : String, data : ByteArray = null)
     {
-        super(PROMPT_ACCEPT_CERT, false, false);
-        this.cert = cert;
+        this.data = data;
+        super(type, false, false);
     }
 }

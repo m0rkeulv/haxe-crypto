@@ -15,7 +15,7 @@ import com.hurlant.util.Hex;
 
 import com.hurlant.util.ByteArray;
 
-class HexTest
+class HexTest extends BaseTestCase
 {
     
     @:meta(Test())

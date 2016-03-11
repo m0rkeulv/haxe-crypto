@@ -27,13 +27,13 @@ class SHA1 extends SHABase implements IHash
         return HASH_SIZE;
     }
     
-    override private function core(x : Array<Dynamic>, len : Int) : Array<Dynamic>
+    override private function core(x : Array<Int>, len : Int) : Array<Int>
     {
         /* append padding */
         x[len >> 5] |= 0x80 << (24 - len % 32);
         x[((len + 64 >> 9) << 4) + 15] = len;
         
-        var w : Array<Dynamic> = [];
+        var w : Array<Int> = [];
         var a : Int = 0x67452301;  //1732584193;  
         var b : Int = 0xEFCDAB89;  //-271733879;  
         var c : Int = 0x98BADCFE;  //-1732584194;  
@@ -51,7 +51,7 @@ class SHA1 extends SHABase implements IHash
             
             for (j in 0...80){
                 if (j < 16) {
-                    w[j] = x[i + j] || 0;
+                    w[j] = x[i + j];
                 }
                 else {
                     w[j] = rol(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);

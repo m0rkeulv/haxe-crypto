@@ -21,7 +21,7 @@ import com.hurlant.util.Hex;
 
 import com.hurlant.util.ByteArray;
 
-class HMACTest
+class HMACTest extends com.hurlant.tests.BaseTestCase
 {
     
     /**

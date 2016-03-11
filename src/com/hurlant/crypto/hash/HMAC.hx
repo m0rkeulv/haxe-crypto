@@ -33,7 +33,7 @@ class HMAC implements IHMAC
     
     public function getHashSize() : Int{
         if (bits != 0) {
-            return bits / 8;
+            return Std.int(bits / 8);
         }
         else {
             return hash.getHashSize();
@@ -71,7 +71,7 @@ class HMAC implements IHMAC
         outerKey.writeBytes(innerHash);
         var outerHash : ByteArray = hash.hash(outerKey);
         if (bits > 0 && bits < 8 * outerHash.length) {
-            outerHash.length = bits / 8;
+            outerHash.length = Std.int(bits / 8);
         }
         return outerHash;
     }

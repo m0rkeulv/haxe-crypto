@@ -19,7 +19,7 @@ import com.hurlant.util.Hex;
 
 import com.hurlant.util.ByteArray;
 
-class OFBModeTest
+class OFBModeTest extends BaseTestCase
 {
     
     /**

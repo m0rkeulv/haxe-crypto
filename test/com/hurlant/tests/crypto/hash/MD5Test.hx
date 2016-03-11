@@ -17,7 +17,7 @@ import com.hurlant.util.Hex;
 
 import com.hurlant.util.ByteArray;
 
-class MD5Test
+class MD5Test extends BaseTestCase
 {
     
     /**
