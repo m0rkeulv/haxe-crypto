@@ -21,7 +21,7 @@ class HaxeCryptoTests {
     static function main() {
         var tr = new TestRunner();
         //tr.add(new HMACTest());
-        //tr.add(new MD2Test());
+        tr.add(new MD2Test());
         //tr.add(new MD5Test());
         //tr.add(new SHA1Test());
         //tr.add(new SHA224Test());
