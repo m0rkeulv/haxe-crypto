@@ -12,12 +12,14 @@
 package com.hurlant.crypto.rsa;
 
 
+import com.hurlant.util.Function;
 import com.hurlant.util.Std2;
 import com.hurlant.crypto.prng.Random;
 import com.hurlant.math.BigInteger;
 import com.hurlant.util.Memory;
 
 import com.hurlant.util.ByteArray;
+
 
 /**
 	 * Current limitations:
@@ -60,7 +62,7 @@ class RSAKey {
     }
 
     public static function parsePublicKey(N:String, E:String):RSAKey {
-        return new RSAKey(new BigInteger(N, 16, true), parseInt(E, 16));
+        return new RSAKey(new BigInteger(N, 16, true), Std2.parseInt(E, 16));
     }
 
     public static function parsePrivateKey(N:String, E:String, D:String,
@@ -77,7 +79,7 @@ class RSAKey {
     }
 
     public function getBlockSize():Int {
-        return (n.bitLength() + 7) / 8;
+        return Std.int((n.bitLength() + 7) / 8);
     }
 
     public function dispose():Void {

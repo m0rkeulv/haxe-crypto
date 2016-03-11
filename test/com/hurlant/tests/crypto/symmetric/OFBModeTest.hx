@@ -102,6 +102,7 @@ class OFBModeTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

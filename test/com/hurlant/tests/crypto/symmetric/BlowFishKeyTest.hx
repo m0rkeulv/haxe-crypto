@@ -148,6 +148,7 @@ class BlowFishKeyTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

@@ -78,6 +78,7 @@ class HexTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

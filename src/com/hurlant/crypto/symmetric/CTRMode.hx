@@ -50,7 +50,7 @@ class CTRMode extends IVMode implements IMode
                 src[i + j] ^= Xenc[j];
             }
             
-            j = blockSize - 1;
+            var j = blockSize - 1;
             while (j >= 0){
                 X[j]++;
                 if (X[j] != 0) 

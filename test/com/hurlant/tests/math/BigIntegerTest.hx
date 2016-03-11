@@ -157,6 +157,7 @@ class BigIntegerTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

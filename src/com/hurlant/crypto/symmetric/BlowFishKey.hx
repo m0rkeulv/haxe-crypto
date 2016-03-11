@@ -328,8 +328,8 @@ class BlowFishKey implements ISymmetricKey
         
         var i : Int = 1;
         while (i < ROUNDS){
-            xr ^= cast((xl), F) ^ P[i];
-            xl ^= cast((xr), F) ^ P[i + 1];
+            xr ^= F(xl) ^ P[i + 0];
+            xl ^= F(xr) ^ P[i + 1];
             i += 2;
         }
         

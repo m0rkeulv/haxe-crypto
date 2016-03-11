@@ -14,6 +14,10 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
         throw new Error('Not implemented');
     }
 
+    public function writeMultiByte(str:String, encoding:String):String {
+        throw new Error('Not implemented');
+    }
+
     public function readUnsignedInt():Int {
         throw new Error('Not implemented');
     }
@@ -35,6 +39,10 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
     }
 
     public function writeBytes(input:ByteArray, offset:Int = -1, length:Int = -1) {
+        throw new Error('Not implemented');
+    }
+
+    public function readUTFBytes(length:Int):String {
         throw new Error('Not implemented');
     }
 
@@ -94,11 +102,11 @@ class ByteArrayData implements IDataOutput implements IDataInput {
         throw new Error('Not implemented');
     }
 
-    public function set(index:Int, value:Int) {
+    public function set(index:Int, value:Int):Int {
         throw new Error('Not implemented');
     }
 
-    public function get(index:Int) {
+    public function get(index:Int):Int {
         throw new Error('Not implemented');
     }
 

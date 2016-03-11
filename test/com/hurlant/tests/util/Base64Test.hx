@@ -88,6 +88,7 @@ class Base64Test extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

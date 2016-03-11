@@ -57,6 +57,7 @@ class SHA256Test extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

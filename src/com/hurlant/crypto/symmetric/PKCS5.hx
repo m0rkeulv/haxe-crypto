@@ -34,7 +34,7 @@ class PKCS5 implements IPad
         var i : Int = c;
         while (i > 0){
             var v : Int = a[a.length - 1];
-            a.length--;
+            a.length = a.length - 1;
             if (c != v)                 throw new Error("PKCS#5:unpad: Invalid padding value. expected [" + c + "], found [" + v + "]");
             i--;
         }  // that is all.  

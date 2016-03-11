@@ -31,6 +31,7 @@ class ArrayUtilTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

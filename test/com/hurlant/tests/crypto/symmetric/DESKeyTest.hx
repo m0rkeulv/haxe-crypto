@@ -109,6 +109,7 @@ class DESKeyTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

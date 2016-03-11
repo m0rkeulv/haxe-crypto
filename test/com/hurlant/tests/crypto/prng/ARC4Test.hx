@@ -57,6 +57,7 @@ class ARC4Test extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

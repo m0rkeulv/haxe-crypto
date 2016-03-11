@@ -148,6 +148,7 @@ class RSAKeyTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

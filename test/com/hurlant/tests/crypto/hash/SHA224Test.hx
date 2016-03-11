@@ -58,6 +58,7 @@ class SHA224Test extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

@@ -197,6 +197,7 @@ class SHA1Test extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

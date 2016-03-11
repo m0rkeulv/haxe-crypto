@@ -1213,6 +1213,7 @@ class AESKeyTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

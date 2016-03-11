@@ -165,6 +165,7 @@ class CBCModeTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

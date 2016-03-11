@@ -53,6 +53,7 @@ class TripleDESKeyTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

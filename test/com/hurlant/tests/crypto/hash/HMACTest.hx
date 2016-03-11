@@ -192,6 +192,7 @@ class HMACTest extends com.hurlant.tests.BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

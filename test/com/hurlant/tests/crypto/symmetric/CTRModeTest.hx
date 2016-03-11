@@ -112,6 +112,7 @@ class CTRModeTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

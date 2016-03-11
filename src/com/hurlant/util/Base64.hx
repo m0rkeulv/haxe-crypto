@@ -48,33 +48,33 @@ class Base64
         var outPos : Int = 0;
         while (i < len){
             //Read 3 Characters (8bit * 3 = 24 bits)
-            c = data[Std2.parseInt(i++)] << 16 | data[Std2.parseInt(i++)] << 8 | data[Std2.parseInt(i++)];
+            c = data[(i++)] << 16 | data[(i++)] << 8 | data[(i++)];
             
-            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c >>> 18)];
-            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c >>> 12 & 0x3f)];
-            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c >>> 6 & 0x3f)];
-            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c & 0x3f)];
+            out[(outPos++)] = _encodeChars[(c >>> 18)];
+            out[(outPos++)] = _encodeChars[(c >>> 12 & 0x3f)];
+            out[(outPos++)] = _encodeChars[(c >>> 6 & 0x3f)];
+            out[(outPos++)] = _encodeChars[(c & 0x3f)];
         }  //Need two "=" padding  
         
         
         
         if (r == 1) {
             //Read one char, write two chars, write padding
-            c = data[Std2.parseInt(i)];
+            c = data[i];
             
-            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c >>> 2)];
-            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt((c & 0x03) << 4)];
-            out[Std2.parseInt(outPos++)] = 61;
-            out[Std2.parseInt(outPos++)] = 61;
+            out[(outPos++)] = _encodeChars[(c >>> 2)];
+            out[(outPos++)] = _encodeChars[((c & 0x03) << 4)];
+            out[(outPos++)] = 61;
+            out[(outPos++)] = 61;
         }
         //Need one "=" padding
         else if (r == 2) {
-            c = data[Std2.parseInt(i++)] << 8 | data[Std2.parseInt(i)];
+            c = data[(i++)] << 8 | data[(i)];
             
-            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c >>> 10)];
-            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt(c >>> 4 & 0x3f)];
-            out[Std2.parseInt(outPos++)] = _encodeChars[Std2.parseInt((c & 0x0f) << 2)];
-            out[Std2.parseInt(outPos++)] = 61;
+            out[(outPos++)] = _encodeChars[(c >>> 10)];
+            out[(outPos++)] = _encodeChars[(c >>> 4 & 0x3f)];
+            out[(outPos++)] = _encodeChars[((c & 0x0f) << 2)];
+            out[(outPos++)] = 61;
         }
         
         return out.readUTFBytes(out.length);
@@ -93,39 +93,39 @@ class Base64
         var outPos : Int = 0;
         while (i < len){
             //c1
-            c1 = _decodeChars[Std2.parseInt(byteString[i++])];
+            c1 = _decodeChars[(byteString[i++])];
             if (c1 == -1) 
-                break  //c2  ;
+                break;  //c2
             
             
             
-            c2 = _decodeChars[Std2.parseInt(byteString[i++])];
+            c2 = _decodeChars[(byteString[i++])];
             if (c2 == -1) 
                 break;
             
-            byteString[Std2.parseInt(outPos++)] = (c1 << 2) | ((c2 & 0x30) >> 4);
+            byteString[(outPos++)] = (c1 << 2) | ((c2 & 0x30) >> 4);
             
             //c3
-            c3 = byteString[Std2.parseInt(i++)];
+            c3 = byteString[(i++)];
             if (c3 == 61) 
                 break;
             
-            c3 = _decodeChars[Std2.parseInt(c3)];
+            c3 = _decodeChars[(c3)];
             if (c3 == -1) 
                 break;
             
-            byteString[Std2.parseInt(outPos++)] = ((c2 & 0x0f) << 4) | ((c3 & 0x3c) >> 2);
+            byteString[(outPos++)] = ((c2 & 0x0f) << 4) | ((c3 & 0x3c) >> 2);
             
             //c4
-            c4 = byteString[Std2.parseInt(i++)];
+            c4 = byteString[(i++)];
             if (c4 == 61) 
                 break;
             
-            c4 = _decodeChars[Std2.parseInt(c4)];
+            c4 = _decodeChars[(c4)];
             if (c4 == -1) 
                 break;
             
-            byteString[Std2.parseInt(outPos++)] = ((c3 & 0x03) << 6) | c4;
+            byteString[(outPos++)] = ((c3 & 0x03) << 6) | c4;
         }
         byteString.length = outPos;
         byteString.position = 0;

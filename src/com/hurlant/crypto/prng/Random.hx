@@ -30,7 +30,7 @@ class Random {
         pool = new ByteArray();
         pptr = 0;
         while (pptr < psize) {
-            var t:Int = 65536 * Math.random();
+            var t:Int = Std.random(65536);
             pool[pptr++] = t >>> 8;
             pool[pptr++] = t & 255;
         }
@@ -40,7 +40,7 @@ class Random {
 
     public function seed(x:Int = 0):Void {
         if (x == 0) {
-            x = Date.now().getTime();
+            x = Std.int(Date.now().getTime());
         }
         pool[pptr++] ^= (x >> 0) & 255;
         pool[pptr++] ^= (x >> 8) & 255;
@@ -60,7 +60,7 @@ class Random {
 
 
     public function nextBytes(buffer:ByteArray, length:Int):Void {
-        while (length--) {
+        while (length-- > 0) {
             buffer.writeByte(nextByte());
         }
     }
@@ -80,7 +80,7 @@ class Random {
 
     public function dispose():Void {
         for (i in 0...pool.length) {
-            pool[i] = Math.random() * 256;
+            pool[i] = Std.random(256);
         }
         pool.length = 0;
         pool = null;

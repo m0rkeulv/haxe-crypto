@@ -75,6 +75,7 @@ class CFB8ModeTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

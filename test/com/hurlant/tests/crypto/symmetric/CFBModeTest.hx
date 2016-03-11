@@ -101,6 +101,7 @@ class CFBModeTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

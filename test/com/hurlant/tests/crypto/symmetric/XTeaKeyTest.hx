@@ -62,6 +62,7 @@ class XTeaKeyTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

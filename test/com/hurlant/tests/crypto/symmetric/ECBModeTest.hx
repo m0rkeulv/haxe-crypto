@@ -161,6 +161,7 @@ class ECBModeTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

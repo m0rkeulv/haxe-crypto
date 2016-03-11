@@ -13,6 +13,8 @@
  */
 package com.hurlant.math;
 
+import com.hurlant.util.Std2;
+import com.hurlant.util.Function;
 import com.hurlant.math.ClassicReduction;
 import com.hurlant.math.IReduction;
 import com.hurlant.math.MontgomeryReduction;
@@ -66,7 +68,8 @@ class BigInteger
         }
         if (Std.is(value, ByteArray)) {
             var array : ByteArray = try cast(value, ByteArray) catch(e:Dynamic) null;
-            var length : Int = radix || (array.length - array.position);
+            var length : Int = radix;
+            if (length == 0) length = (array.length - array.position);
             fromArray(array, length, unsigned);
         }
     }
@@ -425,7 +428,7 @@ class BigInteger
     public function subTo(v : BigInteger, r : BigInteger) : Void{
         var i : Int = 0;
         var c : Int = 0;
-        var m : Int = Math.min(v.t, t);
+        var m : Int = Std.int(Math.min(v.t, t));
         while (i < m){
             c += a[i] - v.a[i];
             r.a[i++] = c & DM;
@@ -649,8 +652,8 @@ class BigInteger
     }
     
     public function intAt(str : String, index : Int) : Int{
-        var i : Float = parseInt(str.charAt(index), 36);
-        return (Math.isNaN(i)) ? -1 : i;
+        var i : Float = Std2.parseInt(str.charAt(index), 36);
+        return Std.int((Math.isNaN(i)) ? -1 : i);
     }
     
     public function nbi() : Dynamic{
@@ -670,7 +673,7 @@ class BigInteger
     // The stuff below is useful for decryption and key generation
     
     public static var lowprimes : Array<Dynamic> = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509];
-    public static var lplim : Int = (1 << 26) / lowprimes[lowprimes.length - 1];
+    public static var lplim : Int = Std.int((1 << 26) / lowprimes[lowprimes.length - 1]);
     
     
     public function clone() : BigInteger{
@@ -790,19 +793,18 @@ class BigInteger
                 if (s.charAt(i) == "-" && sigNum() == 0) {
                     mi = true;
                 }
-                {++i;continue;
-                }
+                continue;
             }
             w = b * w + x;
             if (++j >= cs) {
-                dMultiply(d);
+                dMultiply(Std.int(d));
                 dAddOffset(w, 0);
                 j = 0;
                 w = 0;
             }
         }
         if (j > 0) {
-            dMultiply(Math.pow(b, j));
+            dMultiply(Std.int(Math.pow(b, j)));
             dAddOffset(w, 0);
         }
         if (mi) {

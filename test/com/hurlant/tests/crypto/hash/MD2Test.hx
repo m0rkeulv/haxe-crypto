@@ -53,6 +53,7 @@ class MD2Test extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

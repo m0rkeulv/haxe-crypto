@@ -229,7 +229,7 @@ class AESKey implements ISymmetricKey
         var tmp3 : Int;
         var tmp4 : Int;
         var idx : Int;
-        var Nk : Int = key.length / 4;
+        var Nk : Int = Std.int(key.length / 4);
         Nr = Nk + 6;
         
         for (idx in Nk...Nb * (Nr + 1)){
@@ -237,10 +237,10 @@ class AESKey implements ISymmetricKey
             tmp1 = key[4 * idx - 3];
             tmp2 = key[4 * idx - 2];
             tmp3 = key[4 * idx - 1];
-            if (!(idx % Nk)) {
+            if ((idx % Nk) == 0) {
                 tmp4 = tmp3;
                 tmp3 = Sbox[tmp0];
-                tmp0 = Sbox[tmp1] ^ Rcon[idx / Nk];
+                tmp0 = Sbox[tmp1] ^ Rcon[Std.int(idx / Nk)];
                 tmp1 = Sbox[tmp2];
                 tmp2 = Sbox[tmp4];
             }
@@ -295,7 +295,7 @@ class AESKey implements ISymmetricKey
         addRoundKey(key, Nr * Nb * 4);
         invShiftRows();
         round = Nr;
-        while (round--){
+        while (round-- > 0){
             addRoundKey(key, round * Nb * 4);
             if (round != 0) {
                 invMixSubColumns();

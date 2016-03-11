@@ -23,12 +23,12 @@ class Hex
 		 * Any whitespace characters are ignored.
 		 */
     public static function toArray(hex : String) : ByteArray{
-        hex = hex.replace(new EReg('^0x|\\s|:', "gm"), "");
+        hex = new EReg('^0x|\\s|:', "gm").replace(hex, "");
         var a : ByteArray = new ByteArray();
         if ((hex.length & 1) == 1)             hex = "0" + hex;
         var i : Int = 0;
         while (i < hex.length){
-            a[i / 2] = parseInt(hex.substr(i, 2), 16);
+            a[Std.int(i / 2)] = Std2.parseInt(hex.substr(i, 2), 16);
             i += 2;
         }
         return a;

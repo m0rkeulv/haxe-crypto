@@ -53,6 +53,7 @@ class MD5Test extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 

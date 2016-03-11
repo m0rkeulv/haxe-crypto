@@ -52,6 +52,7 @@ class TLSPRFTest extends BaseTestCase
 
     public function new()
     {
+        super();
     }
 }
 
