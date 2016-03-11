@@ -28,8 +28,8 @@ class HaxeCryptoTests {
         tr.add(new SHA256Test());
         tr.add(new ARC4Test());
         tr.add(new TLSPRFTest());
-        tr.add(new RSAKeyTest());
-        tr.add(new AESKeyTest());
+        //tr.add(new RSAKeyTest());
+        //tr.add(new AESKeyTest());
         tr.add(new BlowFishKeyTest());
         tr.add(new CBCModeTest());
         tr.add(new CFB8ModeTest());
@@ -44,8 +44,7 @@ class HaxeCryptoTests {
         tr.add(new ArrayUtilTest());
         tr.add(new Base64Test());
         tr.add(new HexTest());
+        tr.add(new Std2Test());
         tr.run();
     }
 }
-
-

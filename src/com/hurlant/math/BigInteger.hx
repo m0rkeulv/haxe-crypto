@@ -748,7 +748,8 @@ class BigInteger
 
     static public function getLN2(): Float {
         //return Math.LN2;
-        throw new Error('Not implemented Math.LN2');
+        //throw new Error('Not implemented Math.LN2');
+        return 0.6931471805599453;
     }
     
     /**
