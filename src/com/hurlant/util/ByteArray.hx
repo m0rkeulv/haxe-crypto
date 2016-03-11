@@ -9,6 +9,15 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
 
     public function new() { this = new ByteArrayData(); }
 
+    static public function fromBytes(bytes:Bytes):ByteArray {
+        var out = new ByteArray();
+        for (n in 0 ... bytes.length) out.writeByte(bytes.get(n));
+        out.position = 0;
+        return out;
+    }
+
+    public function getBytes():Bytes { return this.getBytes(); }
+
     public function readBytes(output:ByteArray, offset:Int, length:Int) { return this.readBytes(output, offset, length); }
 
     public function readMultiByte(length:Int, encoding:String):String {
@@ -68,7 +77,7 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
     }
 
     private function get_bytesAvailable():Int {
-        return this.length - this.position;
+        return this.bytesAvailable;
     }
 
     private function set_endian(value:Endian):Endian {
@@ -100,13 +109,15 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     }
 
     private function ensureLength(elength:Int) {
-        if (_data.length < elength) {
-            var newlength = Std.int(Math.max(_data.length * 2, elength));
+        var oldLength = this._length;
+        this._length = Std.int(Math.max(this._length, elength));
+
+        if (_data.length < this._length) {
+            var newData = Bytes.alloc(Std.int(Math.max(_data.length * 2, this._length)));
             var oldData = _data;
-            _data = Bytes.alloc(newlength);
-            _data.blit(0, oldData, 0, oldData.length);
+            newData.blit(0, oldData, 0, oldLength);
+            _data = newData;
         }
-        this._length = elength;
     }
 
     public function readBytes(output:ByteArray, offset:Int, length:Int) {
@@ -127,11 +138,17 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     }
 
     public function readUnsignedByte():Int {
-        return get(this.getUpdatePos(1)) & 0xFF;
+        ensureWrite(1);
+        var result = get(this._position) & 0xFF;
+        this._position += 1;
+        return result;
     }
 
     public function readUnsignedInt():UInt {
-        return bswap32Endian(this._data.getInt32(getUpdatePos(4)));
+        ensureWrite(4);
+        var result = bswap32Endian(this._data.getInt32(this.position));
+        this._position += 4;
+        return result;
     }
 
     public function set(index:Int, value:Int):Int {
@@ -156,7 +173,7 @@ class ByteArrayData implements IDataOutput implements IDataInput {
 
     public function writeMultiByte(str:String, encoding:String) {
         for (n in 0 ... str.length) {
-            writeByte(str.charCodeAt(n));
+            writeUnsignedByte(str.charCodeAt(n));
         }
     }
 
@@ -177,19 +194,25 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     }
 
     public function writeUnsignedByte(value:Int) {
-        this._data.set(getUpdatePos(1), value);
+        ensureWrite(1);
+        this._data.set(this._position, value);
+        this._position += 1;
     }
 
     public function writeUnsignedShort(value:Int) {
-        this._data.setUInt16(getUpdatePos(2), bswap16Endian(value));
+        ensureWrite(2);
+        this._data.setUInt16(this._position, bswap16Endian(value));
+        this._position += 2;
     }
 
     public function writeUnsignedInt(value:Int) {
-        this._data.setInt32(getUpdatePos(4), bswap32Endian(value));
+        ensureWrite(4);
+        this._data.setInt32(this._position, bswap32Endian(value));
+        this._position += 4;
     }
 
     private function get_position():Int {
-        return _position;
+        return this._position;
     }
 
     private function get_length():Int {
@@ -209,11 +232,8 @@ class ByteArrayData implements IDataOutput implements IDataInput {
         return this.length - this.position;
     }
 
-    private function getUpdatePos(count:Int):Int {
+    private function ensureWrite(count:Int) {
         ensureLength(this._position + count);
-        var out = this._position;
-        this._position += count;
-        return out;
     }
 
     private function bswap32Endian(value:Int):Int {
@@ -230,5 +250,11 @@ class ByteArrayData implements IDataOutput implements IDataInput {
 
     private function bswap16(value:Int):Int {
         return ((value & 0xFF) << 8) | ((value >> 8) & 0xFF);
+    }
+
+    public function getBytes():Bytes {
+        var out = Bytes.alloc(length);
+        out.blit(0, this._data, 0, length);
+        return out;
     }
 }

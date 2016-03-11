@@ -16,16 +16,16 @@ class Hex
 {
     
     /**
-		 * Generates byte-array from given hexadecimal string
-		 *
-		 * Supports straight and colon-laced hex (that means 23:03:0e:f0, but *NOT* 23:3:e:f0)
-		 * The first nibble (hex digit) may be omitted.
-		 * Any whitespace characters are ignored.
-		 */
+     * Generates byte-array from given hexadecimal string
+     *
+     * Supports straight and colon-laced hex (that means 23:03:0e:f0, but *NOT* 23:3:e:f0)
+     * The first nibble (hex digit) may be omitted.
+     * Any whitespace characters are ignored.
+     */
     public static function toArray(hex : String) : ByteArray{
         hex = new EReg('^0x|\\s|:', "gm").replace(hex, "");
         var a : ByteArray = new ByteArray();
-        if ((hex.length & 1) == 1)             hex = "0" + hex;
+        if ((hex.length & 1) == 1) hex = "0" + hex;
         var i : Int = 0;
         while (i < hex.length){
             a[Std.int(i / 2)] = Std2.parseInt(hex.substr(i, 2), 16);
@@ -69,6 +69,7 @@ class Hex
     public static function fromString(str : String, colons : Bool = false, charSet : String = "utf-8") : String{
         var a : ByteArray = new ByteArray();
         a.writeMultiByte(str, charSet);
+        a.position = 0;
         return fromArray(a, colons);
     }
     

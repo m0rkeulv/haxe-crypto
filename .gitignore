@@ -3,3 +3,4 @@ docs/validation_errors.log
 *.iws
 *.ipr
 *.js
+/.idea

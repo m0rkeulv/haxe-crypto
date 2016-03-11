@@ -22,89 +22,75 @@ package com.hurlant.crypto.hash;
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Endian;
 
-class MD5 implements IHash
-{
-    public static inline var HASH_SIZE : Int = 16;
-    public var pad_size : Int = 48;
-    
-    public function getInputSize() : Int
-    {
+class MD5 implements IHash {
+    public static inline var HASH_SIZE = 16;
+    public var pad_size = 48;
+
+    public function getInputSize():Int {
         return 64;
     }
-    
-    public function getHashSize() : Int
-    {
+
+    public function getHashSize():Int {
         return HASH_SIZE;
     }
-    
-    public function getPadSize() : Int
-    {
+
+    public function getPadSize():Int {
         return pad_size;
     }
-    
-    public function hash(src : ByteArray) : ByteArray
-    {
-        var len : Int = src.length * 8;
+
+    public function hash(src:ByteArray):ByteArray {
+        var len = src.length * 8;
         var savedEndian = src.endian;
         // pad to nearest int.
-        while (src.length % 4 != 0) src.set(src.length, 0); // convert ByteArray to an array of uint
-        
+        while ((src.length % 4) != 0) src.set(src.length, 0); // convert ByteArray to an array of uint
+
         src.position = 0;
-        var a : Array<Dynamic> = [];
         src.endian = Endian.LITTLE_ENDIAN;
-        var i : Int = 0;
-        while (i < src.length){
+        var a = [];
+        var i = 0;
+        while (src.bytesAvailable > 0) {
             a.push(src.readUnsignedInt());
-            i += 4;
         }
-        var h : Array<Dynamic> = core_md5(a, len);
-        var out : ByteArray = new ByteArray();
+        var h = core_md5(a, len);
+        var out = new ByteArray();
         out.endian = Endian.LITTLE_ENDIAN;
-        for (i in 0...4){
-            out.writeUnsignedInt(h[i]);
-        }  // restore length!  
-        
+        for (i in 0...4) out.writeUnsignedInt(h[i]);
+        out.position = 0;
+
         src.length = Std.int(len / 8);
         src.endian = savedEndian;
-        
+
         return out;
     }
-    
-    private function core_md5(x : Array<Dynamic>, len : Int) : Array<Dynamic>{
+
+    private function core_md5(x:Array<Int>, len:Int):Array<Int> {
+        var maxoffset = (((len + 64) >>> 9) << 4) + 14;
+        if (x.length < maxoffset) x.push(0);
+        while ((x.length % 16) != 0) x.push(0);
+
         /* append padding */
         x[len >> 5] |= 0x80 << ((len) % 32);
         x[(((len + 64) >>> 9) << 4) + 14] = len;
-        
-        var a : Int = 0x67452301;  // 1732584193;  
-        var b : Int = 0xEFCDAB89;  //-271733879;  
-        var c : Int = 0x98BADCFE;  //-1732584194;  
-        var d : Int = 0x10325476;  // 271733878;  
-        
-        var i : Int = 0;
-        while (i < x.length){
-            for (mm in 0 ... 16) x[i + 0] = x[i + 0] | 0;
-            //x[i + 0] ||= 0;
-            //x[i + 1] ||= 0;
-            //x[i + 2] ||= 0;
-            //x[i + 3] ||= 0;
-            //x[i + 4] ||= 0;
-            //x[i + 5] ||= 0;
-            //x[i + 6] ||= 0;
-            //x[i + 7] ||= 0;
-            //x[i + 8] ||= 0;
-            //x[i + 9] ||= 0;
-            //x[i + 10] ||= 0;
-            //x[i + 11] ||= 0;
-            //x[i + 12] ||= 0;
-            //x[i + 13] ||= 0;
-            //x[i + 14] ||= 0;
-            //x[i + 15] ||= 0;
-            
-            var olda : Int = a;
-            var oldb : Int = b;
-            var oldc : Int = c;
-            var oldd : Int = d;
-            
+
+        var a = 0x67452301; // 1732584193;
+        var b = 0xEFCDAB89; //-271733879;
+        var c = 0x98BADCFE; //-1732584194;
+        var d = 0x10325476; // 271733878;
+
+        //return [a, b, c, d];
+
+        // 2864cac2
+        // b0ec524b
+        // 251e40f4
+        // 9d95b76b
+
+        var i = 0;
+        while (i < x.length) {
+            var olda = a;
+            var oldb = b;
+            var oldc = c;
+            var oldd = d;
+
             a = ff(a, b, c, d, x[i + 0], 7, 0xD76AA478);
             d = ff(d, a, b, c, x[i + 1], 12, 0xE8C7B756);
             c = ff(c, d, a, b, x[i + 2], 17, 0x242070DB);
@@ -121,7 +107,7 @@ class MD5 implements IHash
             d = ff(d, a, b, c, x[i + 13], 12, 0xFD987193);
             c = ff(c, d, a, b, x[i + 14], 17, 0xA679438E);
             b = ff(b, c, d, a, x[i + 15], 22, 0x49B40821);
-            
+
             a = gg(a, b, c, d, x[i + 1], 5, 0xf61e2562);
             d = gg(d, a, b, c, x[i + 6], 9, 0xc040b340);
             c = gg(c, d, a, b, x[i + 11], 14, 0x265e5a51);
@@ -138,7 +124,7 @@ class MD5 implements IHash
             d = gg(d, a, b, c, x[i + 2], 9, 0xfcefa3f8);
             c = gg(c, d, a, b, x[i + 7], 14, 0x676f02d9);
             b = gg(b, c, d, a, x[i + 12], 20, 0x8d2a4c8a);
-            
+
             a = hh(a, b, c, d, x[i + 5], 4, 0xfffa3942);
             d = hh(d, a, b, c, x[i + 8], 11, 0x8771f681);
             c = hh(c, d, a, b, x[i + 11], 16, 0x6d9d6122);
@@ -155,7 +141,7 @@ class MD5 implements IHash
             d = hh(d, a, b, c, x[i + 12], 11, 0xe6db99e5);
             c = hh(c, d, a, b, x[i + 15], 16, 0x1fa27cf8);
             b = hh(b, c, d, a, x[i + 2], 23, 0xc4ac5665);
-            
+
             a = ii(a, b, c, d, x[i + 0], 6, 0xf4292244);
             d = ii(d, a, b, c, x[i + 7], 10, 0x432aff97);
             c = ii(c, d, a, b, x[i + 14], 15, 0xab9423a7);
@@ -172,48 +158,58 @@ class MD5 implements IHash
             d = ii(d, a, b, c, x[i + 11], 10, 0xbd3af235);
             c = ii(c, d, a, b, x[i + 2], 15, 0x2ad7d2bb);
             b = ii(b, c, d, a, x[i + 9], 21, 0xeb86d391);
-            
+
             a += olda;
             b += oldb;
             c += oldc;
             d += oldd;
+
+            //a = addme(a, olda);
+            //b = addme(b, oldb);
+            //c = addme(c, oldc);
+            //d = addme(d, oldd);
             i += 16;
         }
+
         return [a, b, c, d];
     }
-    
+
     /*
-		 * Bitwise rotate a 32-bit number to the left.
-		 */
-    private function rol(num : Int, cnt : Int) : Int
-    {
+     * Bitwise rotate a 32-bit number to the left.
+     */
+
+    private function rol(num:Int, cnt:Int):Int {
         return (num << cnt) | (num >>> (32 - cnt));
     }
-    
+
     /*
-		 * These functions implement the four basic operations the algorithm uses.
-		 */
-    private function cmn(q : Int, a : Int, b : Int, x : Int, s : Int, t : Int) : Int{
+     * These functions implement the four basic operations the algorithm uses.
+     */
+
+    private function cmn(q:Int, a:Int, b:Int, x:Int, s:Int, t:Int):Int {
         return rol(a + q + x + t, s) + b;
     }
-    private function ff(a : Int, b : Int, c : Int, d : Int, x : Int, s : Int, t : Int) : Int{
+
+    private function ff(a:Int, b:Int, c:Int, d:Int, x:Int, s:Int, t:Int):Int {
         return cmn((b & c) | ((~b) & d), a, b, x, s, t);
     }
-    private function gg(a : Int, b : Int, c : Int, d : Int, x : Int, s : Int, t : Int) : Int{
+
+    private function gg(a:Int, b:Int, c:Int, d:Int, x:Int, s:Int, t:Int):Int {
         return cmn((b & d) | (c & (~d)), a, b, x, s, t);
     }
-    private function hh(a : Int, b : Int, c : Int, d : Int, x : Int, s : Int, t : Int) : Int{
+
+    private function hh(a:Int, b:Int, c:Int, d:Int, x:Int, s:Int, t:Int):Int {
         return cmn(b ^ c ^ d, a, b, x, s, t);
     }
-    private function ii(a : Int, b : Int, c : Int, d : Int, x : Int, s : Int, t : Int) : Int{
+
+    private function ii(a:Int, b:Int, c:Int, d:Int, x:Int, s:Int, t:Int):Int {
         return cmn(c ^ (b | (~d)), a, b, x, s, t);
     }
-    
-    public function toString() : String{
+
+    public function toString():String {
         return "md5";
     }
 
-    public function new()
-    {
+    public function new() {
     }
 }

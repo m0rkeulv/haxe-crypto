@@ -22,7 +22,7 @@ class HaxeCryptoTests {
         var tr = new TestRunner();
         //tr.add(new HMACTest());
         tr.add(new MD2Test());
-        //tr.add(new MD5Test());
+        tr.add(new MD5Test());
         //tr.add(new SHA1Test());
         //tr.add(new SHA224Test());
         //tr.add(new SHA256Test());
@@ -43,7 +43,7 @@ class HaxeCryptoTests {
         //tr.add(new BigIntegerTest());
         //tr.add(new ArrayUtilTest());
         //tr.add(new Base64Test());
-        tr.add(new HexTest());
+        //tr.add(new HexTest());
         //tr.add(new Std2Test());
         tr.run();
     }
