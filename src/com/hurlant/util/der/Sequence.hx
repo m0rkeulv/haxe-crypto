@@ -33,6 +33,12 @@ class Sequence implements IAsn1Type {
         return data[index];
     }
 
+    public function pushStr(name:String, value:Dynamic):Sequence {
+        this.push(value);
+        this.setStr(name, value);
+        return this;
+    }
+
     public function setStr(index:String, value:Dynamic):Dynamic {
         return strData[index] = value;
     }

@@ -48,18 +48,13 @@ class SequenceType extends ASN1Type {
                 }
             }
             return val;
-        }
-        else {
+        } else {
             // sequenceOf
             val = [];
             while (left > 0) {
                 v = childType.fromDER(s, left);
-                if (v == null) {
-                    throw new Error("couldn't parse DER stream.");
-                }
-                else {
-                    val.push(v);
-                }
+                if (v == null) throw new Error("couldn't parse DER stream.");
+                val.push(v);
                 left = length - s.position + p;
             }
             return val;

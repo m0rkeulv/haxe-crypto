@@ -1,5 +1,6 @@
 package com.hurlant.util.asn1.type;
 
+import haxe.Int32;
 import com.hurlant.util.asn1.type.StringType;
 
 class BMPStringType extends StringType {

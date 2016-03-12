@@ -15,37 +15,37 @@ import com.hurlant.util.ByteArray;
  */
 class ASN1Type {
     // Universal types and tag numbers
-    public static var CHOICE:Int32 = -2;
-    public static var ANY:Int32 = -1;
-    public static inline var RESERVED:Int32 = 0;
-    public static inline var BOOLEAN:Int32 = 1;
-    public static inline var INTEGER:Int32 = 2;
-    public static inline var BIT_STRING:Int32 = 3;
-    public static inline var OCTET_STRING:Int32 = 4;
-    public static inline var NULL:Int32 = 5;
-    public static inline var OID:Int32 = 6;
-    public static inline var ODT:Int32 = 7;
-    public static inline var EXTERNAL:Int32 = 8;
-    public static inline var REAL:Int32 = 9;
-    public static inline var ENUMERATED:Int32 = 10;
-    public static inline var EMBEDDED:Int32 = 11;
-    public static inline var UTF8STRING:Int32 = 12;
-    public static inline var ROID:Int32 = 13;
-    public static inline var SEQUENCE:Int32 = 16;
-    public static inline var SET:Int32 = 17;
-    public static inline var NUMERIC_STRING:Int32 = 18;
-    public static inline var PRINTABLE_STRING:Int32 = 19;
-    public static inline var TELETEX_STRING:Int32 = 20;
-    public static inline var VIDEOTEX_STRING:Int32 = 21;
-    public static inline var IA5_STRING:Int32 = 22;
-    public static inline var UTC_TIME:Int32 = 23;
-    public static inline var GENERALIZED_TIME:Int32 = 24;
-    public static inline var GRAPHIC_STRING:Int32 = 25;
-    public static inline var VISIBLE_STRING:Int32 = 26;
-    public static inline var GENERAL_STRING:Int32 = 27;
-    public static inline var UNIVERSAL_STRING:Int32 = 28;
-    public static inline var BMP_STRING:Int32 = 30;
-    public static inline var UNSTRUCTURED_NAME:Int32 = 31; // ??? no clue.
+    public static var CHOICE = -2;
+    public static var ANY = -1;
+    public static inline var RESERVED = 0;
+    public static inline var BOOLEAN = 1;
+    public static inline var INTEGER = 2;
+    public static inline var BIT_STRING = 3;
+    public static inline var OCTET_STRING = 4;
+    public static inline var NULL = 5;
+    public static inline var OID = 6;
+    public static inline var ODT = 7;
+    public static inline var EXTERNAL = 8;
+    public static inline var REAL = 9;
+    public static inline var ENUMERATED = 10;
+    public static inline var EMBEDDED = 11;
+    public static inline var UTF8STRING = 12;
+    public static inline var ROID = 13;
+    public static inline var SEQUENCE = 16;
+    public static inline var SET = 17;
+    public static inline var NUMERIC_STRING = 18;
+    public static inline var PRINTABLE_STRING = 19;
+    public static inline var TELETEX_STRING = 20;
+    public static inline var VIDEOTEX_STRING = 21;
+    public static inline var IA5_STRING = 22;
+    public static inline var UTC_TIME = 23;
+    public static inline var GENERALIZED_TIME = 24;
+    public static inline var GRAPHIC_STRING = 25;
+    public static inline var VISIBLE_STRING = 26;
+    public static inline var GENERAL_STRING = 27;
+    public static inline var UNIVERSAL_STRING = 28;
+    public static inline var BMP_STRING = 30;
+    public static inline var UNSTRUCTURED_NAME = 31; // ??? no clue.
 
     // Classes of tags
     public static inline var UNIVERSAL = 0;
@@ -95,14 +95,13 @@ class ASN1Type {
     // ok, time to parse some shit
 
     /**
-		 * Read an ASN-1 value from a ByteArray and return it
-		 * If we can't read a value that matches our type, we return null;
-		 * 
-		 * @param s  a ByteArray containing some DER-encoded ASN-1 values.
-		 * @return   an ASN1Value object representing the value read. or null.
-		 * 
-		 */
-
+     * Read an ASN-1 value from a ByteArray and return it
+     * If we can't read a value that matches our type, we return null;
+     *
+     * @param s  a ByteArray containing some DER-encoded ASN-1 values.
+     * @return   an ASN1Value object representing the value read. or null.
+     *
+     */
     public function fromDER(s:ByteArray, size:Int32):Dynamic {
         var p:Int32 = s.position; // We'll reset if things go wrong.
         var length:Int32;
