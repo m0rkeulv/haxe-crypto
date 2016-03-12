@@ -9,13 +9,11 @@
 package com.hurlant.crypto.symmetric;
 
 
-import com.hurlant.util.Hex;
 import com.hurlant.util.ArrayUtil;
 import com.hurlant.util.Std2;
 import com.hurlant.util.Memory;
 
 import com.hurlant.util.ByteArray;
-
 
 class XTeaKey implements ISymmetricKey {
     static private inline var NUM_ROUNDS = 64;
@@ -30,6 +28,7 @@ class XTeaKey implements ISymmetricKey {
     /**
      * K is an hex string with 32 digits.
      */
+
     public static function parseKey(K:String):XTeaKey {
         var a = new ByteArray();
         a.writeUnsignedInt(Std2.parseInt(K.substr(0, 8), 16));

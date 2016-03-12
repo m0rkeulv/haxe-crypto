@@ -19,17 +19,15 @@ import com.hurlant.util.ByteArray;
 import com.hurlant.util.Memory;
 
 /**
-	 * ECB mode.
-	 * This uses a padding and a symmetric key.
-	 * If no padding is given, PKCS#5 is used.
-	 */
-class ECBMode implements IMode implements ICipher
-{
-    private var key : ISymmetricKey;
-    private var padding : IPad;
-    
-    public function new(key : ISymmetricKey, padding : IPad = null)
-    {
+ * ECB mode.
+ * This uses a padding and a symmetric key.
+ * If no padding is given, PKCS#5 is used.
+ */
+class ECBMode implements IMode implements ICipher {
+    private var key:ISymmetricKey;
+    private var padding:IPad;
+
+    public function new(key:ISymmetricKey, padding:IPad = null) {
         this.key = key;
         if (padding == null) {
             padding = new PKCS5(key.getBlockSize());
@@ -39,19 +37,19 @@ class ECBMode implements IMode implements ICipher
         }
         this.padding = padding;
     }
-    
-    public function getBlockSize() : Int{
+
+    public function getBlockSize():Int {
         return key.getBlockSize();
     }
-    
-    public function encrypt(src : ByteArray) : Void{
+
+    public function encrypt(src:ByteArray):Void {
         padding.pad(src);
         src.position = 0;
-        var blockSize : Int = key.getBlockSize();
-        var tmp : ByteArray = new ByteArray();
-        var dst : ByteArray = new ByteArray();
-        var i : Int = 0;
-        while (i < src.length){
+        var blockSize:Int = key.getBlockSize();
+        var tmp:ByteArray = new ByteArray();
+        var dst:ByteArray = new ByteArray();
+        var i:Int = 0;
+        while (i < src.length) {
             tmp.length = 0;
             src.readBytes(tmp, 0, blockSize);
             key.encrypt(tmp);
@@ -61,22 +59,23 @@ class ECBMode implements IMode implements ICipher
         src.length = 0;
         src.writeBytes(dst);
     }
-    public function decrypt(src : ByteArray) : Void{
+
+    public function decrypt(src:ByteArray):Void {
         src.position = 0;
-        var blockSize : Int = key.getBlockSize();
-        
+        var blockSize:Int = key.getBlockSize();
+
         // sanity check.
         if (src.length % blockSize != 0) {
             throw new Error("ECB mode cipher length must be a multiple of blocksize " + blockSize);
         }
-        
-        var tmp : ByteArray = new ByteArray();
-        var dst : ByteArray = new ByteArray();
-        var i : Int = 0;
-        while (i < src.length){
+
+        var tmp:ByteArray = new ByteArray();
+        var dst:ByteArray = new ByteArray();
+        var i:Int = 0;
+        while (i < src.length) {
             tmp.length = 0;
             src.readBytes(tmp, 0, blockSize);
-            
+
             key.decrypt(tmp);
             dst.writeBytes(tmp);
             i += blockSize;
@@ -85,13 +84,15 @@ class ECBMode implements IMode implements ICipher
         src.length = 0;
         src.writeBytes(dst);
     }
-    public function dispose() : Void{
+
+    public function dispose():Void {
         key.dispose();
         key = null;
         padding = null;
         Memory.gc();
     }
-    public function toString() : String{
+
+    public function toString():String {
         return Std.string(key) + "-ecb";
     }
 }

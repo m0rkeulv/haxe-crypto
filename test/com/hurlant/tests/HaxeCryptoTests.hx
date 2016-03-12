@@ -36,15 +36,16 @@ class HaxeCryptoTests {
         tr.add(new BlowFishKeyTest());
         tr.add(new BigIntegerTest());
         tr.add(new DESKeyTest());
+        tr.add(new AESKeyTest());
+
+
+        //tr.add(new ECBModeTest());
 
         //tr.add(new RSAKeyTest());
-        //tr.add(new AESKeyTest());
         //tr.add(new CFB8ModeTest());
         //tr.add(new CBCModeTest());
         //tr.add(new CFBModeTest());
         //tr.add(new CTRModeTest());
-        //tr.add(new DESKeyTest());
-        //tr.add(new ECBModeTest());
         //tr.add(new OFBModeTest());
         //tr.add(new TripleDESKeyTest());
         tr.run();
