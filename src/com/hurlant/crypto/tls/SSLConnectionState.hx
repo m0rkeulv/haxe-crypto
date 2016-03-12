@@ -60,22 +60,12 @@ class SSLConnectionState implements IConnectionState {
         // decompression is a nop.
 
         if (cipherType == BulkCiphers.STREAM_CIPHER) {
-            if (bulkCipher == BulkCiphers.NULL) {
-                // no-op
-
-            }
-            else {
-                cipher.decrypt(p);
-            }
+            if (bulkCipher != BulkCiphers.NULL) cipher.decrypt(p);
         }
         else {
             p.position = 0;
             // block cipher
-            if (bulkCipher == BulkCiphers.NULL) {
-
-
-            }
-            else {
+            if (bulkCipher != BulkCiphers.NULL) {
                 var nextIV:ByteArray = new ByteArray();
                 nextIV.writeBytes(p, p.length - CIPHER_IV.length, CIPHER_IV.length);
                 p.position = 0;
@@ -103,9 +93,7 @@ class SSLConnectionState implements IConnectionState {
             // compare "mac" with the last X bytes of p.
             var mac_received:ByteArray = new ByteArray();
             mac_received.writeBytes(p, len, mac.getHashSize());
-            if (ArrayUtil.equals(mac_enc, mac_received)) {
-                // happy happy joy joy
-            } else {
+            if (!ArrayUtil.equals(mac_enc, mac_received)) {
                 throw new TLSError("Bad Mac Data", TLSError.bad_record_mac);
             }
             p.length = len;
@@ -134,27 +122,20 @@ class SSLConnectionState implements IConnectionState {
             data.writeShort(p.length);
 
             // The data
-            if (p.length != 0) {
-                data.writeBytes(p);
-            } // trace("data for the MAC: " + Hex.fromArray(data));
-
+            if (p.length != 0) data.writeBytes(p);
+            // trace("data for the MAC: " + Hex.fromArray(data));
 
             mac_enc = mac.compute(MAC_write_secret, data);
             // trace("MAC: " + Hex.fromArray( mac_enc ));
             p.position = p.length;
             p.writeBytes(mac_enc);
-        } // trace("Record to encrypt: " + Hex.fromArray(p));
+        }
 
-
+        // trace("Record to encrypt: " + Hex.fromArray(p));
         p.position = 0;
         if (cipherType == BulkCiphers.STREAM_CIPHER) {
             // stream cipher
-            if (bulkCipher == BulkCiphers.NULL) {
-                // no-op
-            }
-            else {
-                cipher.encrypt(p);
-            }
+            if (bulkCipher != BulkCiphers.NULL) cipher.encrypt(p);
         } else {
             // block cipher
             cipher.encrypt(p);

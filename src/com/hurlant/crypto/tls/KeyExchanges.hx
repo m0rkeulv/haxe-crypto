@@ -9,8 +9,8 @@
  */
 package com.hurlant.crypto.tls;
 
-
 import haxe.Int32;
+
 class KeyExchanges {
     public static inline var NULL = 0;
     public static inline var RSA = 1;
@@ -22,8 +22,5 @@ class KeyExchanges {
 
     public static function useRSA(p:Int32):Bool {
         return (p == RSA);
-    }
-
-    public function new() {
     }
 }

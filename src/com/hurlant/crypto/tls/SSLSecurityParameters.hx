@@ -103,20 +103,20 @@ class SSLSecurityParameters implements ISecurityParameters {
 
     public function setPreMasterSecret(secret:ByteArray):Void {
         /* Warning! Following code may cause madness
-				 Tread not here, unless ye be men of valor.
-			
-			***** Official Prophylactic Comment ******
-				(to protect the unwary...this code actually works, that's all you need to know)
-			
-			This does two things, computes the master secret, and generates the keyBlock
-			
-			
-			To compute the master_secret, the following algorithm is used.
-			 for SSL 3, this means
-			 master = MD5( premaster + SHA1('A' + premaster + client_random + server_random ) ) +
-						MD5( premaster + SHA1('BB' + premaster + client_random + server_random ) ) +
-						MD5( premaster + SHA1('CCC' + premaster + client_random + server_random ) )
-			*/
+             Tread not here, unless ye be men of valor.
+
+        ***** Official Prophylactic Comment ******
+            (to protect the unwary...this code actually works, that's all you need to know)
+
+        This does two things, computes the master secret, and generates the keyBlock
+
+
+        To compute the master_secret, the following algorithm is used.
+         for SSL 3, this means
+         master = MD5( premaster + SHA1('A' + premaster + client_random + server_random ) ) +
+                    MD5( premaster + SHA1('BB' + premaster + client_random + server_random ) ) +
+                    MD5( premaster + SHA1('CCC' + premaster + client_random + server_random ) )
+        */
         var tempHashA:ByteArray = new ByteArray(); // temporary hash, gets reused a lot
         var tempHashB:ByteArray = new ByteArray(); // temporary hash, gets reused a lot
 
@@ -226,12 +226,11 @@ class SSLSecurityParameters implements ISecurityParameters {
         var sideBytes:ByteArray = new ByteArray();
         if (side == TLSEngine.CLIENT) {
             sideBytes.writeUnsignedInt(0x434C4E54);
-        }
-        else {
+        } else {
             sideBytes.writeUnsignedInt(0x53525652);
-        } // Do the SHA1 part of the routine first
+        }
 
-
+        // Do the SHA1 part of the routine first
         masterSecret.position = 0;
         k.writeBytes(handshakeMessages);
         k.writeBytes(sideBytes);
@@ -282,70 +281,60 @@ class SSLSecurityParameters implements ISecurityParameters {
         return null;
     }
 
-    public function getConnectionStates():Dynamic {
-
-        if (masterSecret != null) {
-            // so now, I have to derive the actual keys from the keyblock that I generated in setPremasterSecret.
-            // for MY purposes, I need RSA-AES 128/256 + SHA
-            // so I'm gonna have keylen = 32, minlen = 32, mac_length = 20, iv_length = 16
-            // but...I can get this data from the settings returned in the constructor when this object is
-            // It strikes me that TLS does this more elegantly...
-
-            var mac_length:Int32 = try cast(hashSize, Float) catch (e:Dynamic) null;
-            var key_length:Int32 = try cast(keySize, Float) catch (e:Dynamic) null;
-            var iv_length:Int32 = try cast(IVSize, Float) catch (e:Dynamic) null;
-
-            var client_write_MAC:ByteArray = new ByteArray();
-            var server_write_MAC:ByteArray = new ByteArray();
-            var client_write_key:ByteArray = new ByteArray();
-            var server_write_key:ByteArray = new ByteArray();
-            var client_write_IV:ByteArray = new ByteArray();
-            var server_write_IV:ByteArray = new ByteArray();
-
-            // Derive the keys from the keyblock
-            // Get the MACs first
-            keyBlock.position = 0;
-            keyBlock.readBytes(client_write_MAC, 0, mac_length);
-            keyBlock.readBytes(server_write_MAC, 0, mac_length);
-
-            // keyBlock.position is now at MAC_length * 2
-            // then get the keys
-            keyBlock.readBytes(client_write_key, 0, key_length);
-            keyBlock.readBytes(server_write_key, 0, key_length);
-
-            // keyBlock.position is now at (MAC_length * 2) + (keySize * 2)
-            // and then the IVs
-            keyBlock.readBytes(client_write_IV, 0, iv_length);
-            keyBlock.readBytes(server_write_IV, 0, iv_length);
-
-            // reset this in case it's needed, for some reason or another, but I doubt it
-            keyBlock.position = 0;
-
-            var client_write:SSLConnectionState = new SSLConnectionState(
-            bulkCipher, cipherType, macAlgorithm,
-            client_write_MAC, client_write_key, client_write_IV);
-            var server_write:SSLConnectionState = new SSLConnectionState(
-            bulkCipher, cipherType, macAlgorithm,
-            server_write_MAC, server_write_key, server_write_IV);
-
-            if (entity == TLSEngine.CLIENT) {
-                return {
-                    read : server_write,
-                    write : client_write
-                };
-            }
-            else {
-                return {
-                    read : client_write,
-                    write : server_write
-                };
-            }
+    public function getConnectionStates():SSLConnectionStateRW {
+        if (masterSecret == null) {
+            return new SSLConnectionStateRW(new SSLConnectionState(), new SSLConnectionState());
         }
-        else {
-            return {
-                read : new SSLConnectionState(),
-                write : new SSLConnectionState()
-            };
+        // so now, I have to derive the actual keys from the keyblock that I generated in setPremasterSecret.
+        // for MY purposes, I need RSA-AES 128/256 + SHA
+        // so I'm gonna have keylen = 32, minlen = 32, mac_length = 20, iv_length = 16
+        // but...I can get this data from the settings returned in the constructor when this object is
+        // It strikes me that TLS does this more elegantly...
+
+        var mac_length:Int32 = try cast(hashSize, Float) catch (e:Dynamic) null;
+        var key_length:Int32 = try cast(keySize, Float) catch (e:Dynamic) null;
+        var iv_length:Int32 = try cast(IVSize, Float) catch (e:Dynamic) null;
+
+        var client_write_MAC = new ByteArray();
+        var server_write_MAC = new ByteArray();
+        var client_write_key = new ByteArray();
+        var server_write_key = new ByteArray();
+        var client_write_IV = new ByteArray();
+        var server_write_IV = new ByteArray();
+
+        // Derive the keys from the keyblock
+        // Get the MACs first
+        keyBlock.position = 0;
+        keyBlock.readBytes(client_write_MAC, 0, mac_length);
+        keyBlock.readBytes(server_write_MAC, 0, mac_length);
+
+        // keyBlock.position is now at MAC_length * 2
+        // then get the keys
+        keyBlock.readBytes(client_write_key, 0, key_length);
+        keyBlock.readBytes(server_write_key, 0, key_length);
+
+        // keyBlock.position is now at (MAC_length * 2) + (keySize * 2)
+        // and then the IVs
+        keyBlock.readBytes(client_write_IV, 0, iv_length);
+        keyBlock.readBytes(server_write_IV, 0, iv_length);
+
+        // reset this in case it's needed, for some reason or another, but I doubt it
+        keyBlock.position = 0;
+
+        var client_write = new SSLConnectionState(
+            bulkCipher, cipherType, macAlgorithm,
+            client_write_MAC, client_write_key, client_write_IV
+        );
+
+        var server_write = new SSLConnectionState(
+            bulkCipher, cipherType, macAlgorithm,
+            server_write_MAC, server_write_key, server_write_IV
+        );
+
+        if (entity == TLSEngine.CLIENT) {
+            return new SSLConnectionStateRW(server_write, client_write);
+        } else {
+            return new SSLConnectionStateRW(client_write, server_write);
         }
     }
 }

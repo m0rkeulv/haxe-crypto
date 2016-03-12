@@ -29,7 +29,6 @@ class XTeaKey implements ISymmetricKey {
     /**
      * K is an hex string with 32 digits.
      */
-
     public static function parseKey(K:String):XTeaKey {
         var a = new ByteArray();
         a.writeUnsignedInt(Std2.parseInt(K.substr(0, 8), 16));

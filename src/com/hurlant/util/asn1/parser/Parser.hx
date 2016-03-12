@@ -1,4 +1,5 @@
 package com.hurlant.util.asn1.parser;
+import com.hurlant.util.asn1.type.SequenceTypeItem;
 import haxe.Int32;
 import com.hurlant.util.asn1.type.UTF8StringType;
 import com.hurlant.util.asn1.type.UTCTimeType;
@@ -104,12 +105,8 @@ class Parser {
         return new PrintableStringType(size, size2);
     }
 
-    static public function sequence():ASN1Type {
-        var a:Array<Dynamic> = [];
-        for (i in 0...p.length) {
-            a[i] = p[i];
-        }
-        return new SequenceType(a);
+    static public function sequence(p:Array<SequenceTypeItem>):ASN1Type {
+        return new SequenceType(a.slice(0));
     }
 
     static public function sequenceOf(t:ASN1Type, min:Int32 = Int.MIN_VALUE, max:Int32 = Int.MAX_VALUE):ASN1Type {

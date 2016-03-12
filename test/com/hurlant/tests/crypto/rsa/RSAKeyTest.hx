@@ -90,35 +90,6 @@ class RSAKeyTest extends BaseTestCase {
         assert(rsa != null);
     }
 
-    /*
-    public function test_adobeSample() {
-        var myPEMPublicKeyString = (
-            "-----BEGIN PUBLIC KEY-----" +
-            "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALHpyYTN96rMbkQB" +
-            "gIoB9vH2AN47NN1YXoKxAaqpEkafQdPUw41p4gTrA0r04acE" +
-            "m3GaWUA4YROCSKgJnvii0UsCAwEAAQ==" +
-            "-----END PUBLIC KEY-----"
-        );
-
-        // Put data to be encrypted into a byte array
-        var data = Hex.toArray(Hex.fromString("MyInputString"));
-
-        // Destination ByteArray that will contain the encrypted data
-        var encryptedResult = new ByteArray();
-
-        // Set up the RSAKey and encrypt the data
-        var rsa = PEM.readRSAPublicKey(myPEMPublicKeyString);
-        rsa.encrypt(data, encryptedResult, data.length);
-
-        // Convert the encrypted data into a hex encoded string for transport
-        // The other side of the connection can convert the hex back into
-        // binary before decrypting
-        var hexEncryptedResult = Hex.fromArray(encryptedResult);
-        assertTrue(hexEncryptedResult.length > 5);
-    }
-    */
-
-    /*
     public function test_longText() {
         var pem = (
             "-----BEGIN RSA PRIVATE KEY-----\n" +
@@ -146,5 +117,31 @@ class RSAKeyTest extends BaseTestCase {
         var txt2 = Hex.toString(Hex.fromArray(dst2));
         assert(txt, txt2);
     }
-*/
+
+    public function test_adobeSample() {
+        var myPEMPublicKeyString = (
+            "-----BEGIN PUBLIC KEY-----" +
+            "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALHpyYTN96rMbkQB" +
+            "gIoB9vH2AN47NN1YXoKxAaqpEkafQdPUw41p4gTrA0r04acE" +
+            "m3GaWUA4YROCSKgJnvii0UsCAwEAAQ==" +
+            "-----END PUBLIC KEY-----"
+        );
+
+        // Put data to be encrypted into a byte array
+        var data = Hex.toArray(Hex.fromString("MyInputString"));
+
+        // Destination ByteArray that will contain the encrypted data
+        var encryptedResult = new ByteArray();
+
+        // Set up the RSAKey and encrypt the data
+        var rsa = PEM.readRSAPublicKey(myPEMPublicKeyString);
+        rsa.encrypt(data, encryptedResult, data.length);
+
+        // Convert the encrypted data into a hex encoded string for transport
+        // The other side of the connection can convert the hex back into
+        // binary before decrypting
+        var hexEncryptedResult = Hex.fromArray(encryptedResult);
+        assertTrue(hexEncryptedResult.length > 5);
+    }
+
 }

@@ -16,15 +16,14 @@ class OIDType extends ASN1Type {
     }
 
     /**
-		 * I'm tempted to return fully defined OIDType objects
-		 * Altough that's a little bit weird.
-		 *  
-		 * @param s
-		 * @param length
-		 * @return 
-		 * 
-		 */
-
+     * I'm tempted to return fully defined OIDType objects
+     * Altough that's a little bit weird.
+     *
+     * @param s
+     * @param length
+     * @return
+     *
+     */
     override private function fromDERContent(s:ByteArray, length:Int32):Dynamic {
         var p:Int32 = s.position;
         // parse stuff

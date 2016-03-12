@@ -12,6 +12,7 @@
 package com.hurlant.crypto.tls;
 
 
+import com.hurlant.util.ArrayUtil;
 import com.hurlant.crypto.prng.Random;
 import haxe.Int32;
 import com.hurlant.crypto.cert.X509Certificate;
@@ -118,6 +119,37 @@ class TLSEngine extends EventDispatcher {
 
     private function new(config:TLSConfig, iStream:IDataInput, oStream:IDataOutput, otherIdentity:String = null) {
         super();
+
+        handshakeHandlersClient = new Map<Int, Dynamic>();
+        handshakeHandlersClient[0] = parseHandshakeHello;
+        handshakeHandlersClient[1] = notifyStateError;
+        handshakeHandlersClient[2] = parseHandshakeServerHello;
+        handshakeHandlersClient[11] = loadCertificates;
+        handshakeHandlersClient[12] = parseServerKeyExchange;
+        handshakeHandlersClient[13] = setStateRespondWithCertificate;
+        handshakeHandlersClient[14] = sendClientAck;
+        handshakeHandlersClient[15] = notifyStateError;
+        handshakeHandlersClient[16] = notifyStateError;
+        handshakeHandlersClient[20] = verifyHandshake;
+
+        handshakeHandlersServer = new Map<Int, Dynamic>();
+        handshakeHandlersServer[0 ] = notifyStateError;
+        handshakeHandlersServer[1 ] = parseHandshakeClientHello;
+        handshakeHandlersServer[2 ] = notifyStateError;
+        handshakeHandlersServer[11 ] = loadCertificates;
+        handshakeHandlersServer[12 ] = notifyStateError;
+        handshakeHandlersServer[13 ] = notifyStateError;
+        handshakeHandlersServer[14 ] = notifyStateError;
+        handshakeHandlersServer[15 ] = notifyStateError;
+        handshakeHandlersServer[16 ] = parseHandshakeClientKeyExchange;
+        handshakeHandlersServer[20 ] = verifyHandshake;
+
+        protocolHandlers = new Map<Int, Dynamic>();
+        protocolHandlers[23] = parseApplicationData;
+        protocolHandlers[22] = parseHandshake;
+        protocolHandlers[21] = parseAlert;
+        protocolHandlers[20] = parseChangeCipherSpec;
+
         _entity = config.entity;
         _config = config;
         _iStream = iStream;
@@ -256,14 +288,7 @@ class TLSEngine extends EventDispatcher {
 
     // Protocol handler map, provides a mapping of protocol types to individual packet handlers
 
-    private var protocolHandlers:Dynamic = null;
-    //private var protocolHandlers:Dynamic = {
-    //    23 : parseApplicationData,
-    //    22 : parseHandshake,
-    //    21 : parseAlert,
-    //    20 : parseChangeCipherSpec,
-    //    
-    //    }; // PROTOCOL_CHANGE_CIPHER_SPEC  
+    private var protocolHandlers:Map<Int, Dynamic> = null;
 
     /**
      * Modified to support the notion of a handler map(see above ), since it makes for better clarity (IMHO of course).
@@ -302,44 +327,16 @@ class TLSEngine extends EventDispatcher {
     private static inline var HANDSHAKE_FINISHED = 20;
 
     // Server handshake handler map
-    private var handshakeHandlersServer:Dynamic = null;
-    //private var handshakeHandlersServer:Dynamic = {
-    //    0 : notifyStateError,
-    //    1 : parseHandshakeClientHello,
-    //    2 : notifyStateError,
-    //    11 : loadCertificates,
-    //    12 : notifyStateError,
-    //    13 : notifyStateError,
-    //    14 : notifyStateError,
-    //    15 : notifyStateError,
-    //    16 : parseHandshakeClientKeyExchange,
-    //    20 : verifyHandshake
-    //    // HANDSHAKE_FINISHED  ,
-    //
-    //};
+    private var handshakeHandlersServer:Map<Int, Dynamic> = null;
 
 // Client handshake handler map
-    private var handshakeHandlersClient:Dynamic = null;
-    //private var handshakeHandlersClient:Dynamic = {
-    //0 : parseHandshakeHello,
-    //1 : notifyStateError,
-    //2 : parseHandshakeServerHello,
-    //11 : loadCertificates,
-    //12 : parseServerKeyExchange,
-    //13 : setStateRespondWithCertificate,
-    //14 : sendClientAck,
-    //15 : notifyStateError,
-    //16 : notifyStateError,
-    //20 : verifyHandshake
-    //// HANDSHAKE_FINISHED  ,
-    //
-    //};
+    private var handshakeHandlersClient:Map<Int, Dynamic> = null;
     private var _entityHandshakeHandlers:Dynamic;
     private var _handshakeCanContinue:Bool = true; // For handling cases where I might need to pause processing during a handshake (cert issues, etc.).  
     private var _handshakeQueue:Array<Dynamic> = [];
     /**
-		 * The handshake is always started by the client.
-		 */
+     * The handshake is always started by the client.
+     */
 
     private function startHandshake():Void {
         _state = STATE_NEGOTIATING;
@@ -348,9 +345,9 @@ class TLSEngine extends EventDispatcher {
     }
 
     /**
-		 * Handle the incoming handshake packet.
-		 * 
-		 */
+     * Handle the incoming handshake packet.
+     *
+     */
 
     private function parseHandshake(p:ByteArray):ByteArray {
 
@@ -397,18 +394,17 @@ class TLSEngine extends EventDispatcher {
     }
 
     /**
-		 * Throw an error when the detected handshake state isn't a valid state for the given entity type (client vs. server, etc. ).
-		 * This really should abort the handshake, since there's no case in which a server should EVER be confused about the type of entity it is. BP
-		 */
+     * Throw an error when the detected handshake state isn't a valid state for the given entity type (client vs. server, etc. ).
+     * This really should abort the handshake, since there's no case in which a server should EVER be confused about the type of entity it is. BP
+     */
 
     private function notifyStateError(rec:ByteArray):Void {
         throw new TLSError("Invalid handshake state for a TLS Entity type of " + _entity, TLSError.internal_error);
     }
 
     /**
-		 * two unimplemented functions
-		 */
-
+     * two unimplemented functions
+     */
     private function parseClientKeyExchange(rec:ByteArray):Void {
         throw new TLSError("ClientKeyExchange is currently unimplemented!", TLSError.internal_error);
     }
@@ -446,8 +442,8 @@ class TLSEngine extends EventDispatcher {
     // enforceClient/enforceServer removed in favor of state-driven function maps
 
     /**
-		 * Handle a HANDSHAKE_HELLO
-		 */
+     * Handle a HANDSHAKE_HELLO
+     */
 
     private function parseHandshakeHello(rec:ByteArray):Void {
         if (_state != STATE_READY) {
@@ -459,8 +455,8 @@ class TLSEngine extends EventDispatcher {
     }
 
     /**
-		 * Handle a HANDSHAKE_CLIENT_KEY_EXCHANGE
-		 */
+     * Handle a HANDSHAKE_CLIENT_KEY_EXCHANGE
+     */
 
     private function parseHandshakeClientKeyExchange(rec:ByteArray):Void {
         if (_securityParameters.useRSA) {
@@ -483,8 +479,8 @@ class TLSEngine extends EventDispatcher {
     }
 
     /** 
-		 * Handle HANDSHAKE_SERVER_HELLO - client-side
-		 */
+     * Handle HANDSHAKE_SERVER_HELLO - client-side
+     */
 
     private function parseHandshakeServerHello(rec:IDataInput):Void {
 
@@ -822,12 +818,10 @@ class TLSEngine extends EventDispatcher {
     }
 
     /**
-		 * Vaguely gross function that parses a RSA key out of a certificate.
-		 * 
-		 * As long as that certificate looks just the way we expect it to.
-		 * 
-		 */
-
+     * Vaguely gross function that parses a RSA key out of a certificate.
+     *
+     * As long as that certificate looks just the way we expect it to.
+     */
     private function loadCertificates(rec:ByteArray):Void {
         var tmp:Int32 = rec.readByte();
         var certs_len:Int32 = (tmp << 16) | rec.readShort();

@@ -92,15 +92,15 @@ class Sequence implements IAsn1Type {
     /////////
 
     public function findAttributeValue(oid:String):IAsn1Type {
-        for (set/* AS3HX WARNING could not determine type for var: set exp: EIdent(data) type: null */ in data) {
+        for (set in data) {
             if (Std.is(set, Set)) {
-                var child:Dynamic = set[0];
+                var child = cast(set, Set).get(0);
                 if (Std.is(child, Sequence)) {
-                    var tmp:Dynamic = child[0];
+                    var tmp = cast(child, Sequence).get(0);
                     if (Std.is(tmp, ObjectIdentifier)) {
-                        var id:ObjectIdentifier = cast(tmp, ObjectIdentifier);
-                        if (Std.string(id) == oid) {
-                            return cast(child[1], IAsn1Type);
+                        var id = cast(tmp, ObjectIdentifier);
+                        if (id.toString() == oid) {
+                            return cast(child.get(1), IAsn1Type);
                         }
                     }
                 }

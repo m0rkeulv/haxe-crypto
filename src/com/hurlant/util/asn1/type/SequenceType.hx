@@ -6,13 +6,13 @@ import com.hurlant.util.Error;
 import com.hurlant.util.ByteArray;
 
 class SequenceType extends ASN1Type {
-    public var children:Array<Dynamic>;
+    public var children:Array<SequenceTypeItem>;
     public var childType:ASN1Type;
 
-    public function new(p:Dynamic = null) {
+    public function new(p:Array<SequenceTypeItem>) {
         super(ASN1Type.SEQUENCE);
         if (Std.is(p, Array)) {
-            children = cast(p, Array<Dynamic>);
+            children = cast(p, Array<SequenceTypeItem>);
         } else {
             childType = cast(p, ASN1Type);
         }
@@ -33,16 +33,11 @@ class SequenceType extends ASN1Type {
                     var child:ASN1Type = children[i][name];
                     v = child.fromDER(s, left);
                     if (v == null) {
-                        if (child.optional) {
-                            // do nothing. it's okay not to find it.
-
-                        }
-                        else {
+                        if (!child.optional) {
                             s.position = p;
                             return null;
                         }
-                    }
-                    else {
+                    } else {
                         Reflect.setField(val, name, v);
                         if (child.extract) {
                             var bin:ByteArray = new ByteArray();

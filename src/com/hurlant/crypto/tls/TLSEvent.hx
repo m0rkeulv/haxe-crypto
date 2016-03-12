@@ -14,7 +14,6 @@ import com.hurlant.util.Event;
 import com.hurlant.util.ByteArray;
 
 class TLSEvent extends Event {
-
     public static inline var DATA = "data";
     public static inline var READY = "ready";
     public static inline var PROMPT_ACCEPT_CERT = "promptAcceptCert";
