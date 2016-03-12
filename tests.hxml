@@ -1,14 +1,28 @@
+-debug
 -cp src
 -cp test
 -main com.hurlant.tests.HaxeCryptoTests
+
+--each
+
+#--next
+#-php tests.php
+#--next
+#-neko tests.n
+
 #-D astcpp
 #-D cppast
 #-php tests.php
--js tests.js
 #-swf tests.swf
-#-java tests.java
 #-cpp tests.cpp
 #-neko tests.n
+
+-js tests.js
+-cmd node tests.js
+
+#-java tests.java
+#-cmd java -jar tests.java/HaxeCryptoTests-Debug.jar
+
 
 #--next
 #

@@ -5,10 +5,10 @@ docs/validation_errors.log
 *.js
 *.n
 /.idea
-/tests.js
-/tests.cpp
-/tests.cs
-/tests.java
-/tests.php
-/tests.n
-/tests.swf
+/tests.js*
+/tests.cpp*
+/tests.cs*
+/tests.java*
+/tests.php*
+/tests.n*
+/tests.swf*

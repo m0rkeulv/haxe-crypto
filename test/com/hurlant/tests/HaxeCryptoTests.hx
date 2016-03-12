@@ -6,6 +6,7 @@
 package com.hurlant.tests;
 
 
+import com.hurlant.crypto.prng.Random;
 import com.hurlant.tests.crypto.CryptoTest;
 import haxe.unit.TestRunner;
 import com.hurlant.tests.crypto.hash.*;
@@ -22,7 +23,6 @@ class HaxeCryptoTests {
         //trace(a.toString(10));
         //return;
         //assert(a.toString(10), "112374128763487126349871263984761238");
-
 
         var tr = new TestRunner();
         tr.add(new Std2Test());
@@ -49,6 +49,7 @@ class HaxeCryptoTests {
         tr.add(new OFBModeTest());
         tr.add(new ECBModeTest());
         tr.add(new CryptoTest());
+
 
         //tr.add(new BigIntegerTest());
         //tr.add(new RSAKeyTest());

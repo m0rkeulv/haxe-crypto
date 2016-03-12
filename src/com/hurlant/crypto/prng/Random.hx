@@ -25,14 +25,14 @@ class Random {
     private var pptr:Int32;
     private var seeded:Bool = false;
 
-    public function new(prng:Class<IPRNG> = null) {
-        if (prng == null) prng = ARC4;
-        state = cast(Type.createInstance(prng, []), IPRNG);
+    public function new(prng:Void -> IPRNG = null) {
+        if (prng == null) prng = function() { return new ARC4(); };
+        state = prng();
         psize = state.getPoolSize();
         pool = new ByteArray();
         pptr = 0;
         while (pptr < psize) {
-            var t:Int32 = Std.random(65536);
+            var t:Int32 = Std.random(0xFFFF + 1);
             pool[pptr++] = (t >>> 8) & 0xFF;
             pool[pptr++] = (t >>> 0) & 0xFF;
         }

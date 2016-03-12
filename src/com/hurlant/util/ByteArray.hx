@@ -218,9 +218,20 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     public function writeUnsignedInt(value:Int32) {
         ensureWrite(4);
         //trace(value + " -> " + bswap32Endian(value) + " -> " + this._data);
-        this._data.setInt32(this._position, bswap32Endian(value));
+        //trace(this._position + " : " + this._length + " : " + this._data.length);
+        this._set32(this._position, bswap32Endian(value));
         //trace(value + " -> " + bswap32Endian(value) + " -> " + this._data);
         this._position += 4;
+    }
+
+    private inline function _set32(pos:Int, v:Int32) {
+        this._data.setInt32(pos, v);
+        /*
+        this._data.set(pos + 0, v >> 0);
+        this._data.set(pos + 1, v >> 8);
+        this._data.set(pos + 2, v >> 16);
+        this._data.set(pos + 3, v >>> 24);
+        */
     }
 
     private function get_position():Int32 {
