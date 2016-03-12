@@ -34,9 +34,7 @@ class ECBMode implements IMode implements ICipher {
         this.padding = padding;
     }
 
-    public function getBlockSize():Int {
-        return key.getBlockSize();
-    }
+    public function getBlockSize():Int { return key.getBlockSize(); }
 
     public function encrypt(src:ByteArray):Void {
         padding.pad(src);
@@ -57,17 +55,16 @@ class ECBMode implements IMode implements ICipher {
     }
 
     public function decrypt(src:ByteArray):Void {
+        var blockSize = key.getBlockSize();
+
         src.position = 0;
-        var blockSize:Int = key.getBlockSize();
 
         // sanity check.
-        if (src.length % blockSize != 0) {
-            throw new Error("ECB mode cipher length must be a multiple of blocksize " + blockSize);
-        }
+        if (src.length % blockSize != 0) throw new Error("ECB mode cipher length must be a multiple of blocksize " + blockSize);
 
         var tmp = new ByteArray();
         var dst = new ByteArray();
-        var i:Int = 0;
+        var i = 0;
         while (i < src.length) {
             tmp.length = 0;
             src.readBytes(tmp, 0, blockSize);

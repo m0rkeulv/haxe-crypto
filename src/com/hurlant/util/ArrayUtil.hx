@@ -7,7 +7,7 @@ class ArrayUtil {
         return true;
     }
 
-    public static function disposeArray(k:Array<Dynamic>) {
+    public static function secureDisposeIntArray(k:Array<Int>) {
         if (k == null) return;
         var r = new Random();
         for (i in 0...k.length) k[i] = r.nextByte();

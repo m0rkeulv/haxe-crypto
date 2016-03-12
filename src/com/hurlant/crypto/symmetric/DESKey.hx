@@ -41,8 +41,8 @@ class DESKey implements ISymmetricKey {
     }
 
     public function dispose():Void {
-        ArrayUtil.disposeArray(encKey);
-        ArrayUtil.disposeArray(decKey);
+        ArrayUtil.secureDisposeIntArray(encKey);
+        ArrayUtil.secureDisposeIntArray(decKey);
         ArrayUtil.secureDisposeByteArray(key);
         encKey = null;
         decKey = null;

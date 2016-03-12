@@ -43,8 +43,8 @@ class HaxeCryptoTests {
         tr.add(new CFBModeTest());
         tr.add(new CTRModeTest());
         tr.add(new OFBModeTest());
+        tr.add(new ECBModeTest());
 
-        //tr.add(new ECBModeTest());
         //tr.add(new RSAKeyTest());
         tr.run();
     }

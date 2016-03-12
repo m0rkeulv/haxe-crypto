@@ -46,10 +46,10 @@ class TripleDESKey extends DESKey {
 
     override public function dispose():Void {
         super.dispose();
-        ArrayUtil.disposeArray(encKey2);
-        ArrayUtil.disposeArray(encKey3);
-        ArrayUtil.disposeArray(decKey2);
-        ArrayUtil.disposeArray(decKey3);
+        ArrayUtil.secureDisposeIntArray(encKey2);
+        ArrayUtil.secureDisposeIntArray(encKey3);
+        ArrayUtil.secureDisposeIntArray(decKey2);
+        ArrayUtil.secureDisposeIntArray(decKey3);
         encKey2 = encKey3 = null;
         decKey2 = decKey3 = null;
         Memory.gc();

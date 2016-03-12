@@ -92,6 +92,13 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
         return this.length = value;
     }
 
+    public function clone():ByteArray {
+        var out = new ByteArray();
+        out.writeBytes(this);
+        out.position = 0;
+        return out;
+    }
+
     @:arrayAccess public function get(index:Int):Int { return this.get(index); }
     @:arrayAccess public function set(index:Int, value:Int):Int { return this.set(index, value); }
 }
@@ -192,6 +199,7 @@ class ByteArrayData implements IDataOutput implements IDataInput {
         for (n in 0 ... length) {
             this.writeByte(input[offset + n]);
         }
+        //this.position = 0;
     }
 
     public function writeUnsignedByte(value:Int) {
@@ -228,6 +236,7 @@ class ByteArrayData implements IDataOutput implements IDataInput {
 
     private function set_length(value:Int):Int {
         ensureLength(value);
+        if (this._position > value) this._position = value;
         return this._length = value;
     }
 

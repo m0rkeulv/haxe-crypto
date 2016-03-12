@@ -76,7 +76,7 @@ class XTeaKey implements ISymmetricKey {
 
     public function dispose():Void {
         //private var k:Array;
-        ArrayUtil.disposeArray(k);
+        ArrayUtil.secureDisposeIntArray(k);
         k = null;
         Memory.gc();
     }

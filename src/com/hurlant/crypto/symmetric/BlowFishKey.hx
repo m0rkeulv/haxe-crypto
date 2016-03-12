@@ -54,11 +54,11 @@ class BlowFishKey implements ISymmetricKey {
 
     public function dispose():Void {
         var i:Int = 0;
-        ArrayUtil.disposeArray(S0);
-        ArrayUtil.disposeArray(S1);
-        ArrayUtil.disposeArray(S2);
-        ArrayUtil.disposeArray(S3);
-        ArrayUtil.disposeArray(P);
+        ArrayUtil.secureDisposeIntArray(S0);
+        ArrayUtil.secureDisposeIntArray(S1);
+        ArrayUtil.secureDisposeIntArray(S2);
+        ArrayUtil.secureDisposeIntArray(S3);
+        ArrayUtil.secureDisposeIntArray(P);
         ArrayUtil.secureDisposeByteArray(key);
         S0 = null;
         S1 = null;
