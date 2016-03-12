@@ -81,4 +81,18 @@ class Std2 {
     static public function bswap16(value:Int):Int {
         return ((value & 0xFF) << 8) | ((value >>> 8) & 0xFF);
     }
+
+    /*
+     * Bitwise rotate a 32-bit number to the right.
+     */
+    static public function rrol(num:UInt, cnt:Int):UInt {
+        return (num << (32 - cnt)) | (num >>> cnt);
+    }
+
+    /*
+     * Bitwise rotate a 32-bit number to the left.
+     */
+    static public function rol(num:Int, cnt:Int):UInt {
+        return (num << cnt) | (num >>> (32 - cnt));
+    }
 }

@@ -35,9 +35,7 @@ class SHABase implements IHash {
         src.endian = Endian.BIG_ENDIAN;
         var len:Int = savedLength * 8;
         // pad to nearest int.
-        while ((src.length % 4) != 0) {
-            src[src.length] = 0;
-        } // convert ByteArray to an array of uint
+        while ((src.length % 4) != 0) src[src.length] = 0;
 
         src.position = 0;
         var a:Array<Int> = [];

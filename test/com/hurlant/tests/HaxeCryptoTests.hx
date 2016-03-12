@@ -28,10 +28,9 @@ class HaxeCryptoTests {
         tr.add(new Base64Test());
         tr.add(new ArrayUtilTest());
         tr.add(new XTeaKeyTest());
-
-        //tr.add(new SHA1Test());
-        //tr.add(new SHA224Test());
-        //tr.add(new SHA256Test());
+        tr.add(new SHA1Test());
+        tr.add(new SHA224Test());
+        tr.add(new SHA256Test());
 
         //tr.add(new HMACTest());
         //tr.add(new TLSPRFTest());

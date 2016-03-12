@@ -9,9 +9,9 @@ class BaseTestCase extends haxe.unit.TestCase {
 
     public inline function assert(a:Dynamic, ?b:Dynamic, ?pos:PosInfos) {
         if (b == null) {
-            assertEquals(a, true, pos);
+            assertEquals(true, a, pos);
         } else {
-            assertEquals(a, b, pos);
+            assertEquals(b, a, pos);
         }
 
         /*

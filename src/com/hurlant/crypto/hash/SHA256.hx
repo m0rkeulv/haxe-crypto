@@ -18,6 +18,8 @@
  */
 package com.hurlant.crypto.hash;
 
+import haxe.Int32;
+import com.hurlant.util.Std2;
 import com.hurlant.crypto.hash.SHABase;
 
 class SHA256 extends SHABase implements IHash {
@@ -36,52 +38,47 @@ class SHA256 extends SHABase implements IHash {
         0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
     ];
 
-    public function new() {
-        super();
-
-    }
-
-    override public function getHashSize():Int {
-        return 32;
-    }
+    override public function getHashSize():Int { return 32; }
 
     override private function core(x:Array<Int>, len:Int):Array<Int> {
         /* append padding */
         x[len >> 5] |= 0x80 << (24 - len % 32);
         x[((len + 64 >> 9) << 4) + 15] = len;
 
-        var w:Array<Int> = [];
-        var a:Int = h[0];
-        var b:Int = h[1];
-        var c:Int = h[2];
-        var d:Int = h[3];
-        var e:Int = h[4];
-        var f:Int = h[5];
-        var g:Int = h[6];
-        var h:Int = h[7];
+        for (n in 0 ... x.length) x[n] |= 0;
 
-        var i:Int = 0;
+        var w = [];
+        var a = h[0];
+        var b = h[1];
+        var c = h[2];
+        var d = h[3];
+        var e = h[4];
+        var f = h[5];
+        var g = h[6];
+        var h = h[7];
+
+        var i = 0;
         while (i < x.length) {
-            var olda:Int = a;
-            var oldb:Int = b;
-            var oldc:Int = c;
-            var oldd:Int = d;
-            var olde:Int = e;
-            var oldf:Int = f;
-            var oldg:Int = g;
-            var oldh:Int = h;
+            var olda = a;
+            var oldb = b;
+            var oldc = c;
+            var oldd = d;
+            var olde = e;
+            var oldf = f;
+            var oldg = g;
+            var oldh = h;
 
             for (j in 0...64) {
                 if (j < 16) {
                     w[j] = x[i + j];
                 }
                 else {
-                    var s0:Int = rrol(w[j - 15], 7) ^ rrol(w[j - 15], 18) ^ (w[j - 15] >>> 3);
-                    var s1:Int = rrol(w[j - 2], 17) ^ rrol(w[j - 2], 19) ^ (w[j - 2] >>> 10);
+                    var s0 = rrol(w[j - 15], 7) ^ rrol(w[j - 15], 18) ^ (w[j - 15] >>> 3);
+                    var s1 = rrol(w[j - 2], 17) ^ rrol(w[j - 2], 19) ^ (w[j - 2] >>> 10);
                     w[j] = w[j - 16] + s0 + w[j - 7] + s1;
                 }
-                var t2:Int = (rrol(a, 2) ^ rrol(a, 13) ^ rrol(a, 22)) + ((a & b) ^ (a & c) ^ (b & c));
-                var t1:Int = h + (rrol(e, 6) ^ rrol(e, 11) ^ rrol(e, 25)) + ((e & f) ^ (g & ~e)) + k[j] + w[j];
+                var t2 = (rrol(a, 2) ^ rrol(a, 13) ^ rrol(a, 22)) + ((a & b) ^ (a & c) ^ (b & c));
+                var t1 = h + (rrol(e, 6) ^ rrol(e, 11) ^ rrol(e, 25)) + ((e & f) ^ (g & ~e)) + k[j] + w[j];
                 h = g;
                 g = f;
                 f = e;
@@ -91,27 +88,19 @@ class SHA256 extends SHABase implements IHash {
                 b = a;
                 a = t1 + t2;
             }
-            a += olda;
-            b += oldb;
-            c += oldc;
-            d += oldd;
-            e += olde;
-            f += oldf;
-            g += oldg;
-            h += oldh;
+            a = (a + olda) | 0;
+            b = (b + oldb) | 0;
+            c = (c + oldc) | 0;
+            d = (d + oldd) | 0;
+            e = (e + olde) | 0;
+            f = (f + oldf) | 0;
+            g = (g + oldg) | 0;
+            h = (h + oldh) | 0;
             i += 16;
         }
         return [a, b, c, d, e, f, g, h];
     }
 
-    /*
-     * Bitwise rotate a 32-bit number to the right.
-     */
-    private function rrol(num:Int, cnt:Int):Int {
-        return (num << (32 - cnt)) | (num >>> cnt);
-    }
-
-    override public function toString():String {
-        return "sha256";
-    }
+    private inline function rrol(num:Int, cnt:Int):UInt { return Std2.rrol(num, cnt); }
+    override public function toString():String { return "sha256"; }
 }

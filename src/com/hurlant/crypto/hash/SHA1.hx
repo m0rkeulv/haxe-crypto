@@ -15,6 +15,7 @@
  */
 package com.hurlant.crypto.hash;
 
+import com.hurlant.util.Std2;
 import com.hurlant.crypto.hash.SHABase;
 
 
@@ -26,17 +27,10 @@ class SHA1 extends SHABase implements IHash {
     }
 
     override private function core(x:Array<Int>, len:Int):Array<Int> {
-        /* append padding */
-        var maxoffset = (((len + 64) >>> 9) << 4) + 15;
-        if (x.length < maxoffset) x.push(0);
-        while ((x.length % 16) != 0) x.push(0);
-
         x[len >> 5] |= 0x80 << (24 - len % 32);
         x[((len + 64 >> 9) << 4) + 15] = len;
 
-        //trace(x);
-
-        //trace(x);
+        for (n in 0 ... x.length) x[n] |= 0;
 
         var w:Array<Int> = [];
         var a = 0x67452301; //1732584193;
@@ -47,7 +41,6 @@ class SHA1 extends SHABase implements IHash {
 
         var i:Int = 0;
         while (i < x.length) {
-
             var olda = a;
             var oldb = b;
             var oldc = c;
@@ -61,29 +54,25 @@ class SHA1 extends SHABase implements IHash {
                 else {
                     w[j] = rol(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
                 }
-                var t:Int = rol(a, 5) + ft(j, b, c, d) + e + w[j] + kt(j);
+                var t = rol(a, 5) + ft(j, b, c, d) + e + w[j] + kt(j);
                 e = d;
                 d = c;
                 c = rol(b, 30);
                 b = a;
                 a = t;
             }
-            a += olda;
-            b += oldb;
-            c += oldc;
-            d += oldd;
-            e += olde;
+            a = (a + olda) | 0;
+            b = (b + oldb) | 0;
+            c = (c + oldc) | 0;
+            d = (d + oldd) | 0;
+            e = (e + olde) | 0;
             i += 16;
         }
         return [a, b, c, d, e];
     }
 
-    /*
-     * Bitwise rotate a 32-bit number to the left.
-     */
-
-    private function rol(num:Int, cnt:Int):Int {
-        return (num << cnt) | (num >>> (32 - cnt));
+    private function rol(num:Int, cnt:Int):UInt {
+        return Std2.rol(num, cnt);
     }
 
     /*
@@ -101,7 +90,8 @@ class SHA1 extends SHABase implements IHash {
     /*
      * Determine the appropriate additive constant for the current iteration
      */
-    private function kt(t:Int):Int {
+
+    private function kt(t:UInt):UInt {
         return ((t < 20)) ? 0x5A827999 : ((t < 40)) ? 0x6ED9EBA1 : ((t < 60)) ? 0x8F1BBCDC : 0xCA62C1D6;
     }
 
