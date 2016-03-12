@@ -6,7 +6,8 @@
 package com.hurlant.tests;
 
 
-import com.hurlant.crypto.prng.Random;
+import com.hurlant.tests.crypto.rsa.RSAKeyTest;
+import com.hurlant.tests.math.BigIntegerTest;
 import com.hurlant.tests.crypto.CryptoTest;
 import haxe.unit.TestRunner;
 import com.hurlant.tests.crypto.hash.*;
@@ -50,8 +51,7 @@ class HaxeCryptoTests {
         tr.add(new ECBModeTest());
         tr.add(new CryptoTest());
 
-
-        //tr.add(new BigIntegerTest());
+        tr.add(new BigIntegerTest());
         //tr.add(new RSAKeyTest());
         //tr.add(new TLSTest());
 

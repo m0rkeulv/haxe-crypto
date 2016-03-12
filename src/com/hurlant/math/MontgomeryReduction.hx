@@ -57,8 +57,8 @@ class MontgomeryReduction implements IReduction {
         }
         for (i in 0...m.t) {
             // faster way of calculating u0 = x[i]*mp mod DV
-            var j:Int32 = x.a[i] & 0x7fff;
-            var u0:Int32 = (j * mpl + (((j * mph + (x.a[i] >> 15) * mpl) & um) << 15)) & BigInteger.DM;
+            var j:Int32 = cast x.a[i] & 0x7fff;
+            var u0:Int32 = (j * mpl + (((j * mph + (cast x.a[i] >> 15) * mpl) & um) << 15)) & BigInteger.DM;
             // use am to combine the multiply-shift-add into one call
             j = i + m.t;
             x.a[j] += m.am(0, u0, x, i, 0, m.t);
