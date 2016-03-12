@@ -15,9 +15,25 @@ class Std2 {
         return -1;
     }
 
+    static public function parseHex(value:String):UInt {
+        var out:Int = 0;
+        //trace(value);
+        for (n in 0 ... value.length) {
+            var c = value.charAt(n);
+            var cc = value.charCodeAt(n);
+            var digit = getDigit(cc);
+            if (digit < 0 || digit >= 16) throw new Error('Invalid digit $digit');
+
+            out = out << 4;
+            out |= digit;
+        }
+        return out;
+    }
+
     static public function parseInt(value:String, radix:Int = 10):Int {
         if (value.substr(0, 1) == '-') return -parseInt(value.substr(1), radix);
-        var out = 0;
+        if (radix == 16) return parseHex(value);
+        var out:Int = 0;
         //trace(value);
         for (n in 0 ... value.length) {
             var c = value.charAt(n);

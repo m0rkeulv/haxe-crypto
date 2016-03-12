@@ -101,6 +101,7 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     public var length(get, set):Int;
     public var bytesAvailable(get, never):Int;
     public var endian:Endian = Endian.BIG_ENDIAN;
+    //public var endian:Endian = Endian.LITTLE_ENDIAN;
     private var _data:Bytes = Bytes.alloc(16);
     private var _length:Int = 0;
     private var _position:Int = 0;
