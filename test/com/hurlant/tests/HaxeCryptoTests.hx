@@ -31,14 +31,14 @@ class HaxeCryptoTests {
         tr.add(new SHA1Test());
         tr.add(new SHA224Test());
         tr.add(new SHA256Test());
+        tr.add(new HMACTest());
+        tr.add(new TLSPRFTest());
+        tr.add(new BlowFishKeyTest());
 
-        //tr.add(new HMACTest());
-        //tr.add(new TLSPRFTest());
         //tr.add(new RSAKeyTest());
         //tr.add(new AESKeyTest());
-        //tr.add(new BlowFishKeyTest());
-        //tr.add(new CBCModeTest());
         //tr.add(new CFB8ModeTest());
+        //tr.add(new CBCModeTest());
         //tr.add(new CFBModeTest());
         //tr.add(new CTRModeTest());
         //tr.add(new DESKeyTest());

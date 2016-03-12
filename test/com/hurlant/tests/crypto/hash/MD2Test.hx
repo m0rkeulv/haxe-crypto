@@ -20,7 +20,7 @@ class MD2Test extends BaseTestCase {
      * Test Vectors grabbed from
      * http://www.faqs.org/rfcs/rfc1319.html
      */
-    public function test_md2():Void {
+    public function test_md2() {
         var srcs = [
             "",
             Hex.fromString("a"),
@@ -48,9 +48,5 @@ class MD2Test extends BaseTestCase {
             var digest = md2.hash(src);
             assertEquals(hashes[i], Hex.fromArray(digest));
         }
-    }
-
-    public function new() {
-        super();
     }
 }

@@ -17,12 +17,11 @@ import com.hurlant.util.Hex;
 import com.hurlant.util.ByteArray;
 
 class SHA224Test extends BaseTestCase {
-
     /**
      * Test vectors courtesy of
      * http://www.ietf.org/rfc/rfc3874.txt
      */
-    public function test_sha224():Void {
+    public function test_sha224() {
         var srcs = [
             Hex.fromString("abc"),
             Hex.fromString("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq")
@@ -40,7 +39,7 @@ class SHA224Test extends BaseTestCase {
         }
     }
 
-    public function test_longSha224():Void {
+    public function test_longSha224() {
         var src = new ByteArray();
         var a = "a".charCodeAt(0);
         for (i in 0...Std.int(1e6)) src[i] = a;
@@ -48,10 +47,6 @@ class SHA224Test extends BaseTestCase {
         var digest = sha224.hash(src);
         var hash = "20794655980c91d8bbb4c1ea97618a4bf03f42581948b2ee4ee7ad67";
         assert(Hex.fromArray(digest), hash);
-    }
-
-    public function new() {
-        super();
     }
 }
 

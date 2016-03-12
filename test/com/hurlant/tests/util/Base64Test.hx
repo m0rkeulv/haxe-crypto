@@ -16,11 +16,10 @@ import com.hurlant.util.Hex;
 import com.hurlant.util.ByteArray;
 
 class Base64Test extends BaseTestCase {
-
     /**
-		 * Test vectors from RFC 4648 (http://tools.ietf.org/html/rfc4648) and Wikipedia (http://en.wikipedia.org/wiki/Base64)
-		 */
-    public function test_vectors():Void {
+     * Test vectors from RFC 4648 (http://tools.ietf.org/html/rfc4648) and Wikipedia (http://en.wikipedia.org/wiki/Base64)
+     */
+    public function test_vectors() {
         var srcs = [
             "",
             "f",
@@ -77,10 +76,6 @@ class Base64Test extends BaseTestCase {
 
         assert(Base64.decode("Zm9v^^YmFy"), "foo");
         assert(ArrayUtil.equals(Base64.decodeToByteArray("Zm9v^^YmFy"), Hex.toArray(Hex.fromString("foo"))));
-    }
-
-    public function new() {
-        super();
     }
 }
 

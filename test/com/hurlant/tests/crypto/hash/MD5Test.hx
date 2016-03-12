@@ -9,7 +9,6 @@
 package com.hurlant.tests.crypto.hash;
 
 
-import haxe.crypto.Md5;
 import com.hurlant.tests.*;
 
 import com.hurlant.crypto.hash.MD5;
@@ -17,14 +16,12 @@ import com.hurlant.util.Hex;
 
 import com.hurlant.util.ByteArray;
 
-class MD5Test extends BaseTestCase
-{
-    
+class MD5Test extends BaseTestCase {
     /**
-		 * Test Vectors grabbed from
-		 * http://www.faqs.org/rfcs/rfc1321.html
-		 */
-    public function test_md5() : Void{
+     * Test Vectors grabbed from
+     * http://www.faqs.org/rfcs/rfc1321.html
+     */
+    public function test_md5() {
         var srcs = [
             Hex.fromString(""),
             Hex.fromString("a"),
@@ -46,17 +43,12 @@ class MD5Test extends BaseTestCase
         ];
 
         var md5 = new MD5();
-        for (i in 0...srcs.length){
+        for (i in 0...srcs.length) {
             var src = Hex.toArray(srcs[i]);
             var digest = md5.hash(src);
 
             assert(hashes[i], Hex.fromArray(digest));
         }
-    }
-
-    public function new()
-    {
-        super();
     }
 }
 

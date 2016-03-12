@@ -17,7 +17,6 @@ import com.hurlant.util.Hex;
 import com.hurlant.util.ByteArray;
 
 class ARC4Test extends BaseTestCase {
-
     /**
      * Sad test vectors pilfered from
      * http://en.wikipedia.org/wiki/RC4
@@ -54,10 +53,6 @@ class ARC4Test extends BaseTestCase {
             out = Hex.fromArray(pt);
             assert(pts[i], out);
         }
-    }
-
-    public function new() {
-        super();
     }
 }
 

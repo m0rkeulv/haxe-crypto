@@ -17,17 +17,13 @@ import com.hurlant.util.Hex;
 import com.hurlant.util.ByteArray;
 
 class XTeaKeyTest extends BaseTestCase {
-    public function new() {
-        super();
-    }
-
-    public function test_getBlockSize():Void {
+    public function test_getBlockSize() {
         var tea = new XTeaKey(Hex.toArray("deadbabecafebeefdeadbabecafebeef"));
         //var tea = XTeaKey.parseKey("deadbabecafebeefdeadbabecafebeef");
         assert(tea.getBlockSize(), 8);
     }
 
-    public function test_vectors():Void {
+    public function test_vectors() {
         // blah.
         // can't find working test vectors.
         // algorithms should not get published without vectors :(
