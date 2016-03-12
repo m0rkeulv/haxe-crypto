@@ -50,21 +50,14 @@ class XTeaKeyTest extends BaseTestCase {
             var key = Hex.toArray(keys[i]);
             var pt = Hex.toArray(pts[i]);
             var tea = new XTeaKey(key);
+            //var tea = XTeaKey.parseKey(pts[i]);
             tea.encrypt(pt);
             var out = Hex.fromArray(pt);
-            trace('---------------');
-            trace('---------------');
-            trace(tea);
-            trace(cts[i]);
-            trace(out);
             assert(cts[i], out);
             // now go back to plaintext.
             pt.position = 0;
             tea.decrypt(pt);
             out = Hex.fromArray(pt);
-            trace('+++++++++++++++++');
-            trace(pts[i]);
-            trace(out);
             assert(pts[i], out);
         }
     }

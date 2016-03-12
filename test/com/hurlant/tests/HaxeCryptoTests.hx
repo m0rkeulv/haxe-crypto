@@ -20,18 +20,20 @@ import com.hurlant.tests.util.*;
 class HaxeCryptoTests {
     static function main() {
         var tr = new TestRunner();
+        tr.add(new Std2Test());
         tr.add(new MD2Test());
         tr.add(new MD5Test());
         tr.add(new ARC4Test());
         tr.add(new HexTest());
-        tr.add(new Std2Test());
         tr.add(new Base64Test());
         tr.add(new ArrayUtilTest());
+        tr.add(new XTeaKeyTest());
 
         //tr.add(new SHA1Test());
-        //tr.add(new HMACTest());
         //tr.add(new SHA224Test());
         //tr.add(new SHA256Test());
+
+        //tr.add(new HMACTest());
         //tr.add(new TLSPRFTest());
         //tr.add(new RSAKeyTest());
         //tr.add(new AESKeyTest());
@@ -44,7 +46,6 @@ class HaxeCryptoTests {
         //tr.add(new ECBModeTest());
         //tr.add(new OFBModeTest());
         //tr.add(new TripleDESKeyTest());
-        //tr.add(new XTeaKeyTest());
         //tr.add(new BigIntegerTest());
         tr.run();
     }

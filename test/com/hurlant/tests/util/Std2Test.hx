@@ -58,4 +58,22 @@ class Std2Test extends BaseTestCase {
         ba.endian = Endian.LITTLE_ENDIAN;
         assertEquals(0x55443322, ba.readUnsignedInt());
     }
+
+    public function test_byteArray3() {
+        var ba = new ByteArray();
+        ba[ba.length] = 0xFF;
+        ba[ba.length] = 0x22;
+        assertEquals(0, ba.position);
+        assertEquals(2, ba.length);
+        assertEquals(0xFF, ba[0]);
+        assertEquals(0x22, ba[1]);
+    }
+
+    public function test_bswap() {
+        assertEquals(0x11223344, Std2.bswap32(0x44332211));
+        assertEquals(0x112233FF, Std2.bswap32(0xFF332211));
+        assertEquals(0xF4F3F2F1, Std2.bswap32(0xF1F2F3F4));
+        assertEquals(0x1122, Std2.bswap16(0x2211));
+        assertEquals(0x11FF, Std2.bswap16(0xFF11));
+    }
 }

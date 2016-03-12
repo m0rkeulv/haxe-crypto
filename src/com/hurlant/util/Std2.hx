@@ -47,6 +47,17 @@ class Std2 {
         return out;
     }
 
+    static public function toStringHex(value:Int):String {
+        if (value == 0) return '0';
+        var out = '';
+        while (value != 0) {
+            var c = DIGITS.charAt(value & 0xF);
+            out = c + out;
+            value = value >>> 4;
+        }
+        return out;
+    }
+
     static public function string(value:Int, radix:Int = 10):String {
         if (value < 0) return '-' + string(-value, radix);
         if (value == 0) return '0';
@@ -61,5 +72,13 @@ class Std2 {
 
     static public function min3(a:Float, b:Float, c:Float):Float {
         return Math.min(Math.min(a, b), c);
+    }
+
+    static public function bswap32(a:Int):Int {
+        return ((a & 0xFF) << 24) | ((a & 0x0000ff00) << 8) | ((a & 0x00ff0000) >>> 8) | ((a >>> 24) & 0xFF);
+    }
+
+    static public function bswap16(value:Int):Int {
+        return ((value & 0xFF) << 8) | ((value >>> 8) & 0xFF);
     }
 }

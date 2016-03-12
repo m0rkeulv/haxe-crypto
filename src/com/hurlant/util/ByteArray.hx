@@ -208,7 +208,9 @@ class ByteArrayData implements IDataOutput implements IDataInput {
 
     public function writeUnsignedInt(value:Int) {
         ensureWrite(4);
+        //trace(value + " -> " + bswap32Endian(value) + " -> " + this._data);
         this._data.setInt32(this._position, bswap32Endian(value));
+        //trace(value + " -> " + bswap32Endian(value) + " -> " + this._data);
         this._position += 4;
     }
 
@@ -238,19 +240,11 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     }
 
     private function bswap32Endian(value:Int):Int {
-        return (this.endian == Endian.BIG_ENDIAN) ? bswap32(value) : value;
-    }
-
-    private function bswap32(a:Int):Int {
-        return (a << 24) | ((a & 0x0000ff00) << 8) | ((a & 0x00ff0000) >> 8) | (a >> 24);
+        return (this.endian == Endian.BIG_ENDIAN) ? Std2.bswap32(value) : value;
     }
 
     private function bswap16Endian(value:Int):Int {
-        return (this.endian == Endian.BIG_ENDIAN) ? bswap16(value) : value;
-    }
-
-    private function bswap16(value:Int):Int {
-        return ((value & 0xFF) << 8) | ((value >> 8) & 0xFF);
+        return (this.endian == Endian.BIG_ENDIAN) ? Std2.bswap16(value) : value;
     }
 
     public function getBytes():Bytes {

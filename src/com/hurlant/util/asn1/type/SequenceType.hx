@@ -11,7 +11,7 @@ class SequenceType extends ASN1Type {
     public function new(p:Dynamic = null) {
         super(ASN1Type.SEQUENCE);
         if (Std.is(p, Array)) {
-            children = try cast(p, Array</*AS3HX WARNING no type*/>) catch(e:Dynamic) null;
+            children = try cast(p, Array<Dynamic>) catch(e:Dynamic) null;
         }
         else {
             childType = try cast(p, ASN1Type) catch (e:Dynamic) null;

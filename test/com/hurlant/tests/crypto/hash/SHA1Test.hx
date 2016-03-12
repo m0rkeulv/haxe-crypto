@@ -167,7 +167,7 @@ class SHA1Test extends BaseTestCase {
         for (i in 0...srcs.length) {
             var src = Hex.toArray(srcs[i]);
             var digest = sha1.hash(src);
-            assert(Hex.fromArray(digest), hashes[i]);
+            assert(hashes[i], Hex.fromArray(digest));
         }
     }
 

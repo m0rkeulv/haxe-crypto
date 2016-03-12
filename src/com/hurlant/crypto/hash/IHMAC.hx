@@ -13,15 +13,14 @@ package com.hurlant.crypto.hash;
 
 import com.hurlant.util.ByteArray;
 
-interface IHMAC
-{
+interface IHMAC {
 
-    function getHashSize() : Int;
+    function getHashSize():Int;
     /**
-		 * Compute a HMAC using a key and some data.
-		 * It doesn't modify either, and returns a new ByteArray with the HMAC value.
-		 */
-    function compute(key : ByteArray, data : ByteArray) : ByteArray;
-    function dispose() : Void;
-    function toString() : String;
+     * Compute a HMAC using a key and some data.
+     * It doesn't modify either, and returns a new ByteArray with the HMAC value.
+     */
+    function compute(key:ByteArray, data:ByteArray):ByteArray;
+    function dispose():Void;
+    function toString():String;
 }
