@@ -4,6 +4,7 @@ docs/validation_errors.log
 *.ipr
 *.js
 *.n
+/deploy.zip
 /.idea
 /tests.js*
 /tests.cpp*
