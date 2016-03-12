@@ -104,23 +104,23 @@ class RSAKey {
         Memory.gc();
     }
 
-    public function encrypt(src:ByteArray, dst:ByteArray, length:Int32, pad:ByteArray -> Int -> Int -> Int -> ByteArray = null):Void {
+    public function encrypt(src:ByteArray, dst:ByteArray, length:Int32, pad:ByteArray -> Int32 -> Int32 -> Int32 -> ByteArray = null):Void {
         _encrypt(doPublic, src, dst, length, pad, 0x02);
     }
 
-    public function decrypt(src:ByteArray, dst:ByteArray, length:Int32, pad:BigInteger -> Int -> Int -> ByteArray = null):Void {
+    public function decrypt(src:ByteArray, dst:ByteArray, length:Int32, pad:BigInteger -> Int32 -> Int32 -> ByteArray = null):Void {
         _decrypt(doPrivate2, src, dst, length, pad, 0x02);
     }
 
-    public function sign(src:ByteArray, dst:ByteArray, length:Int32, pad:ByteArray -> Int -> Int -> Int -> ByteArray = null):Void {
+    public function sign(src:ByteArray, dst:ByteArray, length:Int32, pad:ByteArray -> Int32 -> Int32 -> Int32 -> ByteArray = null):Void {
         _encrypt(doPrivate2, src, dst, length, pad, 0x01);
     }
 
-    public function verify(src:ByteArray, dst:ByteArray, length:Int32, pad:BigInteger -> Int -> Int -> ByteArray = null):Void {
+    public function verify(src:ByteArray, dst:ByteArray, length:Int32, pad:BigInteger -> Int32 -> Int32 -> ByteArray = null):Void {
         _decrypt(doPublic, src, dst, length, pad, 0x01);
     }
 
-    private function _encrypt(op:BigInteger -> BigInteger, src:ByteArray, dst:ByteArray, length:Int32, pad:ByteArray -> Int -> Int -> Int -> ByteArray, padType:Int32):Void {
+    private function _encrypt(op:BigInteger -> BigInteger, src:ByteArray, dst:ByteArray, length:Int32, pad:ByteArray -> Int32 -> Int32 -> Int32 -> ByteArray, padType:Int32):Void {
         // adjust pad if needed
         if (pad == null) pad = pkcs1pad; // convert src to BigInteger
 
@@ -143,7 +143,7 @@ class RSAKey {
         }
     }
 
-    private function _decrypt(op:BigInteger -> BigInteger, src:ByteArray, dst:ByteArray, length:Int32, pad:BigInteger -> Int -> Int -> ByteArray, padType:Int32):Void {
+    private function _decrypt(op:BigInteger -> BigInteger, src:ByteArray, dst:ByteArray, length:Int32, pad:BigInteger -> Int32 -> Int32 -> ByteArray, padType:Int32):Void {
         // adjust pad if needed
         // src:BigInteger, n:Int32, type:Int32 = 0x02
         if (pad == null) {// convert src to BigInteger

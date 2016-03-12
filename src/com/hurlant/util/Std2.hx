@@ -10,9 +10,9 @@ class Std2 {
     static private var DIGITS = '0123456789abcdefghijklmnopqrstuvwxyz';
 
     static public function getDigit(charCode:Int32):Int32 {
-        if (charCode >=_C0 && charCode <= _C9) return charCode - _C0;
-        if (charCode >=_Cla && charCode <= _Clz) return (charCode - _Cla) + 10;
-        if (charCode >=_UA && charCode <= _UZ) return (charCode - _UA) + 10;
+        if (charCode >= _C0 && charCode <= _C9) return charCode - _C0;
+        if (charCode >= _Cla && charCode <= _Clz) return (charCode - _Cla) + 10;
+        if (charCode >= _UA && charCode <= _UZ) return (charCode - _UA) + 10;
         return -1;
     }
 
@@ -41,7 +41,6 @@ class Std2 {
             var cc = value.charCodeAt(n);
             var digit = getDigit(cc);
             if (digit < 0 || digit >= radix) throw new Error('Invalid digit $digit');
-
             out *= radix;
             out += digit;
         }
@@ -86,6 +85,7 @@ class Std2 {
     /*
      * Bitwise rotate a 32-bit number to the right.
      */
+
     static public function rrol(num:Int32, cnt:Int32):Int32 {
         return (num << (32 - cnt)) | (num >>> cnt);
     }
@@ -93,6 +93,7 @@ class Std2 {
     /*
      * Bitwise rotate a 32-bit number to the left.
      */
+
     static public function rol(num:Int32, cnt:Int32):Int32 {
         return (num << cnt) | (num >>> (32 - cnt));
     }
@@ -104,6 +105,7 @@ class Std2 {
      * @return number of 1 bits in x
      *
      */
+
     static public function cbit(x:Int32):Int32 {
         x = x - ((x >>> 1) & 0x55555555);
         x = (x & 0x33333333) + ((x >>> 2) & 0x33333333);
@@ -120,29 +122,49 @@ class Std2 {
      * @return index of lower 1-bit in x, x < 2^31
      *
      */
+
     static public function lbit(x:Int32):Int32 {
         if (x == 0) return -1;
         var r = 0;
         if ((x & 0xffff) == 0) { x = x >> 16; r += 16; }
-        if ((x & 0x00ff) == 0) { x = x >>  8; r +=  8; }
-        if ((x & 0x000f) == 0) { x = x >>  4; r +=  4; }
-        if ((x & 0x0003) == 0) { x = x >>  2; r +=  2; }
-        if ((x & 0x0001) == 0) { x = x >>  0; r +=  1; }
+        if ((x & 0x00ff) == 0) { x = x >> 8; r += 8; }
+        if ((x & 0x000f) == 0) { x = x >> 4; r += 4; }
+        if ((x & 0x0003) == 0) { x = x >> 2; r += 2; }
+        if ((x & 0x0001) == 0) { x = x >> 0; r += 1; }
         return r;
     }
 
     /**
      * returns bit length of the integer x
      */
+
     static public function nbits(x:Int32):Int32 {
         var r:Int32 = 1;
         var t:Int32;
-        if ((t = x >>> 16) != 0) {x = t;r += 16;}
-        if ((t = x >> 8) != 0) {x = t;r += 8;}
-        if ((t = x >> 4) != 0) {x = t;r += 4;}
-        if ((t = x >> 2) != 0) {x = t;r += 2;}
-        if ((t = x >> 1) != 0) {x = t;r += 1;}
+        if ((t = x >>> 16) != 0) { x = t; r += 16; }
+        if ((t = x >> 8) != 0) { x = t; r += 8; }
+        if ((t = x >> 4) != 0) { x = t; r += 4; }
+        if ((t = x >> 2) != 0) { x = t; r += 2; }
+        if ((t = x >> 1) != 0) { x = t; r += 1; }
         return r;
     }
+
+    static public function op_and(x:Int32, y:Int32):Int32 {
+        return x & y;
+    }
+
+    static public function op_or(x:Int32, y:Int32):Int32 {
+        return x | y;
+    }
+
+    static public function op_xor(x:Int32, y:Int32):Int32 {
+        return x ^ y;
+    }
+
+    static public function op_andnot(x:Int32, y:Int32):Int32 {
+        return x & ~y;
+    }
+
+
 
 }

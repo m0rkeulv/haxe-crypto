@@ -157,5 +157,4 @@ class BigIntegerTest extends BaseTestCase {
         b.position = 0;
         assert((new BigInteger(b, 0)).toString(10), "-298471293048701923847");
     }
-
 }

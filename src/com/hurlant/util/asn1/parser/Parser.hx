@@ -133,7 +133,7 @@ class Parser {
         return new UTCTimeType();
     }
 
-    static public function utf8String(size : Int = Int.MAX_VALUE, size2 : Int = 0) : UTF8StringType{
+    static public function utf8String(size : Int32 = Int.MAX_VALUE, size2 : Int32 = 0) : UTF8StringType{
         return new UTF8StringType(size, size2);
     }
 }

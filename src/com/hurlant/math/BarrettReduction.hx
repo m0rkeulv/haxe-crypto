@@ -30,6 +30,7 @@ class BarrettReduction implements IReduction {
      * @param r = x*y mod m; x != r
      *
      */
+
     public function mulTo(x:BigInteger, y:BigInteger, r:BigInteger):Void {
         x.multiplyTo(y, r);
         reduce(r);
@@ -41,6 +42,7 @@ class BarrettReduction implements IReduction {
      * @param r = x^2 mod m; x != r
      *
      */
+
     public function sqrTo(x:BigInteger, r:BigInteger):Void {
         x.squareTo(r);
         reduce(r);
@@ -60,6 +62,7 @@ class BarrettReduction implements IReduction {
      * @param x = x mod m (HAC 14.42)
      *
      */
+
     public function reduce(lx:BigInteger):Void {
         var x:BigInteger = lx;
         x.drShiftTo(m.t - 1, r2);

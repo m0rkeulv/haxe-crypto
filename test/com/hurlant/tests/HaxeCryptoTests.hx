@@ -6,6 +6,7 @@
 package com.hurlant.tests;
 
 
+import com.hurlant.math.BigInteger;
 import com.hurlant.tests.crypto.rsa.RSAKeyTest;
 import haxe.unit.TestRunner;
 import com.hurlant.tests.crypto.hash.*;
@@ -19,6 +20,12 @@ import com.hurlant.tests.util.*;
  */
 class HaxeCryptoTests {
     static function main() {
+        //var a = new BigInteger("112374128763487126349871263984761238", 10);
+        //trace(a.toString(10));
+        //return;
+        //assert(a.toString(10), "112374128763487126349871263984761238");
+
+
         var tr = new TestRunner();
         tr.add(new Std2Test());
         tr.add(new MD2Test());
@@ -44,8 +51,7 @@ class HaxeCryptoTests {
         tr.add(new OFBModeTest());
         tr.add(new ECBModeTest());
         //tr.add(new BigIntegerTest());
-
-        tr.add(new RSAKeyTest());
+        //tr.add(new RSAKeyTest());
         tr.run();
     }
 }

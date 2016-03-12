@@ -41,11 +41,11 @@ class Base64
         var out : ByteArray = new ByteArray();
         //Presetting the length keep the memory smaller and optimize speed since there is no "grow" needed
         out.length = Std.int((2 + data.length - ((data.length + 2) % 3)) * 4 / 3);  //Preset length //1.6 to 1.5 ms
-        var i : Int = 0;
-        var r : Int = data.length % 3;
-        var len : Int = data.length - r;
-        var c : Int;  //read (3) character AND write (4) characters  
-        var outPos : Int = 0;
+        var i : Int32 = 0;
+        var r : Int32 = data.length % 3;
+        var len : Int32 = data.length - r;
+        var c : Int32;  //read (3) character AND write (4) characters
+        var outPos : Int32 = 0;
         while (i < len){
             //Read 3 Characters (8bit * 3 = 24 bits)
             c = data[(i++)] << 16 | data[(i++)] << 8 | data[(i++)];
@@ -81,16 +81,16 @@ class Base64
     }
     
     public static function decodeToByteArray(str : String) : ByteArray{
-        var c1 : Int;
-        var c2 : Int;
-        var c3 : Int;
-        var c4 : Int;
-        var i : Int = 0;
-        var len : Int = str.length;
+        var c1 : Int32;
+        var c2 : Int32;
+        var c3 : Int32;
+        var c4 : Int32;
+        var i : Int32 = 0;
+        var len : Int32 = str.length;
         
         var byteString : ByteArray = new ByteArray();
         byteString.writeUTFBytes(str);
-        var outPos : Int = 0;
+        var outPos : Int32 = 0;
         while (i < len){
             //c1
             c1 = _decodeChars[(byteString[i++])];

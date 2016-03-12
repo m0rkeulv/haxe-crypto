@@ -9,42 +9,40 @@
 package com.hurlant.util.der;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
-class PrintableString implements IAsn1Type
-{
-    private var type : Int;
-    private var len : Int;
-    private var str : String;
-    
-    public function new(type : Int, length : Int)
-    {
+class PrintableString implements IAsn1Type {
+    private var type:Int32;
+    private var len:Int32;
+    private var str:String;
+
+    public function new(type:Int32, length:Int32) {
         this.type = type;
         this.len = length;
     }
-    
-    public function getLength() : Int
-    {
+
+    public function getLength():Int32 {
         return len;
     }
-    
-    public function getType() : Int
-    {
+
+    public function getType():Int32 {
         return type;
     }
-    
-    public function setString(s : String) : Void{
+
+    public function setString(s:String):Void {
         str = s;
     }
-    public function getString() : String{
+
+    public function getString():String {
         return str;
     }
-    
-    public function toString() : String{
+
+    public function toString():String {
         return DER.indent + str;
     }
-    
-    public function toDER() : ByteArray{
+
+    public function toDER():ByteArray {
         return null;
     }
 }

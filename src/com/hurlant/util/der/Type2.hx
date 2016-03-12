@@ -13,44 +13,44 @@ class Type2
     //  Reference Definition of MTS Parameter Upper Bounds
     
     //      Upper Bounds
-    public static inline var ub_name : Int = 32768;
-    public static inline var ub_common_name : Int = 64;
-    public static inline var ub_locality_name : Int = 128;
-    public static inline var ub_state_name : Int = 128;
-    public static inline var ub_organization_name : Int = 64;
-    public static inline var ub_organizational_unit_name : Int = 64;
-    public static inline var ub_title : Int = 64;
-    public static inline var ub_match : Int = 128;
+    public static inline var ub_name : Int32 = 32768;
+    public static inline var ub_common_name : Int32 = 64;
+    public static inline var ub_locality_name : Int32 = 128;
+    public static inline var ub_state_name : Int32 = 128;
+    public static inline var ub_organization_name : Int32 = 64;
+    public static inline var ub_organizational_unit_name : Int32 = 64;
+    public static inline var ub_title : Int32 = 64;
+    public static inline var ub_match : Int32 = 128;
     
-    public static inline var ub_emailaddress_length : Int = 128;
+    public static inline var ub_emailaddress_length : Int32 = 128;
     
-    public static inline var ub_common_name_length : Int = 64;
-    public static inline var ub_country_name_alpha_length : Int = 2;
-    public static inline var ub_country_name_numeric_length : Int = 3;
-    public static inline var ub_domain_defined_attributes : Int = 4;
-    public static inline var ub_domain_defined_attribute_type_length : Int = 8;
-    public static inline var ub_domain_defined_attribute_value_length : Int = 128;
-    public static inline var ub_domain_name_length : Int = 16;
-    public static inline var ub_extension_attributes : Int = 256;
-    public static inline var ub_e163_4_number_length : Int = 15;
-    public static inline var ub_e163_4_sub_address_length : Int = 40;
-    public static inline var ub_generation_qualifier_length : Int = 3;
-    public static inline var ub_given_name_length : Int = 16;
-    public static inline var ub_initials_length : Int = 5;
-    public static inline var ub_integer_options : Int = 256;
-    public static inline var ub_numeric_user_id_length : Int = 32;
-    public static inline var ub_organization_name_length : Int = 64;
-    public static inline var ub_organizational_unit_name_length : Int = 32;
-    public static inline var ub_organizational_units : Int = 4;
-    public static inline var ub_pds_name_length : Int = 16;
-    public static inline var ub_pds_parameter_length : Int = 30;
-    public static inline var ub_pds_physical_address_lines : Int = 6;
-    public static inline var ub_postal_code_length : Int = 16;
-    public static inline var ub_surname_length : Int = 40;
-    public static inline var ub_terminal_id_length : Int = 24;
-    public static inline var ub_unformatted_address_length : Int = 180;
-    public static inline var ub_x121_address_length : Int = 16;
-    public static inline var ub_pkcs9_string : Int = 255;  // see ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-9-v2/pkcs-9.pdf, ASN.1 module, pkcs-9-ub-pkcs9String  
+    public static inline var ub_common_name_length : Int32 = 64;
+    public static inline var ub_country_name_alpha_length : Int32 = 2;
+    public static inline var ub_country_name_numeric_length : Int32 = 3;
+    public static inline var ub_domain_defined_attributes : Int32 = 4;
+    public static inline var ub_domain_defined_attribute_type_length : Int32 = 8;
+    public static inline var ub_domain_defined_attribute_value_length : Int32 = 128;
+    public static inline var ub_domain_name_length : Int32 = 16;
+    public static inline var ub_extension_attributes : Int32 = 256;
+    public static inline var ub_e163_4_number_length : Int32 = 15;
+    public static inline var ub_e163_4_sub_address_length : Int32 = 40;
+    public static inline var ub_generation_qualifier_length : Int32 = 3;
+    public static inline var ub_given_name_length : Int32 = 16;
+    public static inline var ub_initials_length : Int32 = 5;
+    public static inline var ub_integer_options : Int32 = 256;
+    public static inline var ub_numeric_user_id_length : Int32 = 32;
+    public static inline var ub_organization_name_length : Int32 = 64;
+    public static inline var ub_organizational_unit_name_length : Int32 = 32;
+    public static inline var ub_organizational_units : Int32 = 4;
+    public static inline var ub_pds_name_length : Int32 = 16;
+    public static inline var ub_pds_parameter_length : Int32 = 30;
+    public static inline var ub_pds_physical_address_lines : Int32 = 6;
+    public static inline var ub_postal_code_length : Int32 = 16;
+    public static inline var ub_surname_length : Int32 = 40;
+    public static inline var ub_terminal_id_length : Int32 = 24;
+    public static inline var ub_unformatted_address_length : Int32 = 180;
+    public static inline var ub_x121_address_length : Int32 = 16;
+    public static inline var ub_pkcs9_string : Int32 = 255;  // see ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-9-v2/pkcs-9.pdf, ASN.1 module, pkcs-9-ub-pkcs9String
     
     // Note - upper bounds on TeletexString are measured in characters.
     // A significantly greater number of octets will be required to hold
@@ -59,7 +59,7 @@ class Type2
     // XXX ASN-1 was clearly invented to scare children.
     
     // yay for implicit upper bounds being explicitely specified.
-    public static var MAX : Int = Int.MAX_VALUE;
+    public static var MAX : Int32 = Int.MAX_VALUE;
     
     // PKIX specific OIDs
     public static inline var iso : String = "1";
@@ -223,7 +223,7 @@ class Type2
     public static var CertificateSerialNumber : ASN1Type = integer();
     
     // Directory string type, used extensively in Name types
-    public static var directoryString : Function = function(maxSize : Int) : ASN1Type{
+    public static var directoryString : Function = function(maxSize : Int32) : ASN1Type{
             return choice(
                     {
                         teletexString : teletexString(1, maxSize)
@@ -249,7 +249,7 @@ class Type2
         };
     
     // PKCS9 string value, handled for VMWare cases (and anyone with pkcs unstructured strings
-    public static var pkcs9string : Function = function(maxSize : Int) : ASN1Type{
+    public static var pkcs9string : Function = function(maxSize : Int32) : ASN1Type{
             return choice(
                     {
                         utf8String : utf8String(1, maxSize)
