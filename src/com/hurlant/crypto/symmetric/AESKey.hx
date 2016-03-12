@@ -340,23 +340,23 @@ class AESKey implements ISymmetricKey {
     // row2 - shifted left 2 and row3 - shifted left 3
 
     private function shiftRows():Void {
-        var tmp:Int;
+        var tmp:UInt;
 
         // just substitute row 0
-        state[0] = Reflect.field(Sbox, Std.string(state[0]));state[4] = Reflect.field(Sbox, Std.string(state[4]));
-        state[8] = Reflect.field(Sbox, Std.string(state[8]));state[12] = Reflect.field(Sbox, Std.string(state[12]));
+        state[0] = Sbox[state[0]]; state[4] = Sbox[state[4]];
+        state[8] = Sbox[state[8]]; state[12] = Sbox[state[12]];
 
         // rotate row 1
-        tmp = Reflect.field(Sbox, Std.string(state[1]));state[1] = Reflect.field(Sbox, Std.string(state[5]));
-        state[5] = Reflect.field(Sbox, Std.string(state[9]));state[9] = Reflect.field(Sbox, Std.string(state[13]));state[13] = tmp;
+        tmp = Sbox[state[1]]; state[1] = Sbox[state[5]];
+        state[5] = Sbox[state[9]]; state[9] = Sbox[state[13]]; state[13] = tmp;
 
         // rotate row 2
-        tmp = Reflect.field(Sbox, Std.string(state[2]));state[2] = Reflect.field(Sbox, Std.string(state[10]));state[10] = tmp;
-        tmp = Reflect.field(Sbox, Std.string(state[6]));state[6] = Reflect.field(Sbox, Std.string(state[14]));state[14] = tmp;
+        tmp = Sbox[state[2]]; state[2] = Sbox[state[10]]; state[10] = tmp;
+        tmp = Sbox[state[6]]; state[6] = Sbox[state[14]]; state[14] = tmp;
 
         // rotate row 3
-        tmp = Reflect.field(Sbox, Std.string(state[15]));state[15] = Reflect.field(Sbox, Std.string(state[11]));
-        state[11] = Reflect.field(Sbox, Std.string(state[7]));state[7] = Reflect.field(Sbox, Std.string(state[3]));state[3] = tmp;
+        tmp = Sbox[state[15]]; state[15] = Sbox[state[11]];
+        state[11] = Sbox[state[7]]; state[7] = Sbox[state[3]]; state[3] = tmp;
     }
 
     // restores columns in each of 4 rows
@@ -364,29 +364,29 @@ class AESKey implements ISymmetricKey {
     // row2 - shifted right 2 and row3 - shifted right 3
 
     private function invShiftRows():Void {
-        var tmp:Int;
+        var tmp:UInt;
 
         // restore row 0
-        state[0] = Reflect.field(InvSbox, Std.string(state[0]));state[4] = Reflect.field(InvSbox, Std.string(state[4]));
-        state[8] = Reflect.field(InvSbox, Std.string(state[8]));state[12] = Reflect.field(InvSbox, Std.string(state[12]));
+        state[0] = InvSbox[state[0]]; state[4] = InvSbox[state[4]];
+        state[8] = InvSbox[state[8]]; state[12] = InvSbox[state[12]];
 
         // restore row 1
-        tmp = Reflect.field(InvSbox, Std.string(state[13]));state[13] = Reflect.field(InvSbox, Std.string(state[9]));
-        state[9] = Reflect.field(InvSbox, Std.string(state[5]));state[5] = Reflect.field(InvSbox, Std.string(state[1]));state[1] = tmp;
+        tmp = InvSbox[state[13]]; state[13] = InvSbox[state[9]];
+        state[9] = InvSbox[state[5]]; state[5] = InvSbox[state[1]]; state[1] = tmp;
 
         // restore row 2
-        tmp = Reflect.field(InvSbox, Std.string(state[2]));state[2] = Reflect.field(InvSbox, Std.string(state[10]));state[10] = tmp;
-        tmp = Reflect.field(InvSbox, Std.string(state[6]));state[6] = Reflect.field(InvSbox, Std.string(state[14]));state[14] = tmp;
+        tmp = InvSbox[state[2]]; state[2] = InvSbox[state[10]]; state[10] = tmp;
+        tmp = InvSbox[state[6]]; state[6] = InvSbox[state[14]]; state[14] = tmp;
 
         // restore row 3
-        tmp = Reflect.field(InvSbox, Std.string(state[3]));state[3] = Reflect.field(InvSbox, Std.string(state[7]));
-        state[7] = Reflect.field(InvSbox, Std.string(state[11]));state[11] = Reflect.field(InvSbox, Std.string(state[15]));state[15] = tmp;
+        tmp = InvSbox[state[3]]; state[3] = InvSbox[state[7]];
+        state[7] = InvSbox[state[11]]; state[11] = InvSbox[state[15]]; state[15] = tmp;
     }
 
     // recombine and mix each row in a column
 
     private function mixSubColumns():Void {
-        tmp.length = 0;
+        tmp.length=0;
 
         // mixing column 0
         tmp[0] = Xtime2Sbox[state[0]] ^ Xtime3Sbox[state[5]] ^ Sbox[state[10]] ^ Sbox[state[15]];
@@ -403,8 +403,8 @@ class AESKey implements ISymmetricKey {
         // mixing column 2
         tmp[8] = Xtime2Sbox[state[8]] ^ Xtime3Sbox[state[13]] ^ Sbox[state[2]] ^ Sbox[state[7]];
         tmp[9] = Sbox[state[8]] ^ Xtime2Sbox[state[13]] ^ Xtime3Sbox[state[2]] ^ Sbox[state[7]];
-        tmp[10] = Sbox[state[8]] ^ Sbox[state[13]] ^ Xtime2Sbox[state[2]] ^ Xtime3Sbox[state[7]];
-        tmp[11] = Xtime3Sbox[state[8]] ^ Sbox[state[13]] ^ Sbox[state[2]] ^ Xtime2Sbox[state[7]];
+        tmp[10]  = Sbox[state[8]] ^ Sbox[state[13]] ^ Xtime2Sbox[state[2]] ^ Xtime3Sbox[state[7]];
+        tmp[11]  = Xtime3Sbox[state[8]] ^ Sbox[state[13]] ^ Sbox[state[2]] ^ Xtime2Sbox[state[7]];
 
         // mixing column 3
         tmp[12] = Xtime2Sbox[state[12]] ^ Xtime3Sbox[state[1]] ^ Sbox[state[6]] ^ Sbox[state[11]];
@@ -412,8 +412,8 @@ class AESKey implements ISymmetricKey {
         tmp[14] = Sbox[state[12]] ^ Sbox[state[1]] ^ Xtime2Sbox[state[6]] ^ Xtime3Sbox[state[11]];
         tmp[15] = Xtime3Sbox[state[12]] ^ Sbox[state[1]] ^ Sbox[state[6]] ^ Xtime2Sbox[state[11]];
 
-        state.position = 0;
-        state.writeBytes(tmp, 0, Nb * 4);
+        state.position=0;
+        state.writeBytes(tmp, 0, Nb*4);
     }
 
     // restore and un-mix each row in a column

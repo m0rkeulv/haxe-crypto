@@ -35,6 +35,7 @@ class HaxeCryptoTests {
         tr.add(new TLSPRFTest());
         tr.add(new BlowFishKeyTest());
         tr.add(new BigIntegerTest());
+        tr.add(new DESKeyTest());
 
         //tr.add(new RSAKeyTest());
         //tr.add(new AESKeyTest());
