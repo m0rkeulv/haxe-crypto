@@ -22,7 +22,8 @@ class MozillaRootCertificates extends X509CertificateCollection
     public function new()
     {
         super();
-        super.addPEMCertificate("Verisign/RSA Secure Server CA",
+        super.addPEMCertificate(
+                "Verisign/RSA Secure Server CA",
                 // X500 Subject, for lookups.
                 "MF8xCzAJBgNVBAYTAlVTMSAwHgYDVQQKExdSU0EgRGF0YSBTZWN1cml0eSwgSW5jLjEuMCwGA1UE" +
                 "CxMlU2VjdXJlIFNlcnZlciBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eQ==",
@@ -39,7 +40,8 @@ class MozillaRootCertificates extends X509CertificateCollection
                 "hvcNAQECBQADfgBl3X7hsuyw4jrg7HFGmhkRuNPHoLQDQCYCPgmc4RKz0Vr2N6W3\n" +
                 "YQO2WxZpO8ZECAyIUwxrl0nHPjXcbLm7qt9cuzovk2C2qUtN8iD3zV9/ZHuO3ABc\n" +
                 "1/p3yjkWWW8O6tO1g39NTUJWdrTJXwT4OPjr0l91X817/OWOgHz8UA==\n" +
-                "-----END CERTIFICATE-----");
+                "-----END CERTIFICATE-----"
+        );
         super.addPEMCertificate("GTE CyberTrust Root CA",
                 // X500 Subject, for lookups.
                 "MEUxCzAJBgNVBAYTAlVTMRgwFgYDVQQKEw9HVEUgQ29ycG9yYXRpb24xHDAaBgNVBAMTE0dURSBD" +

@@ -9,51 +9,48 @@
 package com.hurlant.crypto.cert;
 
 
+class X509CertificateCollection {
+    private var _map:Map<String, X509Certificate>;
 
-class X509CertificateCollection
-{
-    
-    private var _map : Dynamic;
-    
-    public function new()
-    {
-        _map = { };
+    public function new() {
+        _map = new Map<String, X509Certificate>();
     }
-    
+
     /**
-		 * Mostly meant for built-in CA loading.
-		 * This entry-point allows to index CAs without parsing them.
-		 * 
-		 * @param name		A friendly name. not currently used
-		 * @param subject	base64 DER encoded Subject principal for the Cert
-		 * @param pem		PEM encoded certificate data
-		 * 
-		 */
-    public function addPEMCertificate(name : String, subject : String, pem : String) : Void{
-        Reflect.setField(_map, subject, new X509Certificate(pem));
+     * Mostly meant for built-in CA loading.
+     * This entry-point allows to index CAs without parsing them.
+     *
+     * @param name		A friendly name. not currently used
+     * @param subject	base64 DER encoded Subject principal for the Cert
+     * @param pem		PEM encoded certificate data
+     *
+     */
+
+    public function addPEMCertificate(name:String, subject:String, pem:String):Void {
+        _map[subject] = new X509Certificate(pem);
     }
-    
+
     /**
-		 * Adds a X509 certificate to the collection.
-		 * This call will force the certificate to be parsed.
-		 * 
-		 * @param cert		A X509 certificate
-		 * 
-		 */
-    public function addCertificate(cert : X509Certificate) : Void{
-        var subject : String = cert.getSubjectPrincipal();
-        Reflect.setField(_map, subject, cert);
+     * Adds a X509 certificate to the collection.
+     * This call will force the certificate to be parsed.
+     *
+     * @param cert		A X509 certificate
+     */
+
+    public function addCertificate(cert:X509Certificate):Void {
+        _map[cert.getSubjectPrincipal()] = cert;
     }
-    
+
     /**
-		 * Returns a X509 Certificate present in the collection, given
-		 * a base64 DER encoded X500 Subject principal
-		 * 
-		 * @param subject	A Base64 DER-encoded Subject principal
-		 * @return 			A matching certificate, or null.
-		 * 
-		 */
-    public function getCertificate(subject : String) : X509Certificate{
-        return Reflect.field(_map, subject);
+     * Returns a X509 Certificate present in the collection, given
+     * a base64 DER encoded X500 Subject principal
+     *
+     * @param subject	A Base64 DER-encoded Subject principal
+     * @return 			A matching certificate, or null.
+     *
+     */
+
+    public function getCertificate(subject:String):X509Certificate {
+        return _map[subject];
     }
 }

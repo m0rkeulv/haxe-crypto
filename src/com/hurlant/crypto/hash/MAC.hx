@@ -75,7 +75,10 @@ class MAC implements IHMAC {
                 pad_1.writeByte(0x36);
                 pad_2.writeByte(0x5c);
             }
-        } // Henri's conventions work just fine here..    /*
+        } // Henri's conventions work just fine here..
+
+        // Do some preliminary checking on stuff
+        /*
         if (key.length > hash.getInputSize()) {
             hashKey = hash.hash(key);
         } else {
@@ -85,8 +88,8 @@ class MAC implements IHMAC {
 
         while (hashKey.length < hash.getInputSize()) {
             hashKey[hashKey.length] = 0;
-        } // Do some preliminary checking on stuff
-
+        }
+        */
 
         innerKey.length = 0;
         outerKey.length = 0;
@@ -125,6 +128,6 @@ class MAC implements IHMAC {
     }
 
     public function toString():String {
-        return "mac-" + (bits > (0) ? bits + "-" : "") + Std.string(hash);
+        return "mac-" + (bits > (0) ? bits + "-" : "") + hash.toString();
     }
 }

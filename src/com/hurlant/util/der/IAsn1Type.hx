@@ -11,11 +11,8 @@ package com.hurlant.util.der;
 
 import com.hurlant.util.ByteArray;
 
-interface IAsn1Type
-{
-
-    function getType() : Int;
-    function getLength() : Int;
-    
-    function toDER() : ByteArray;
+interface IAsn1Type {
+    function getType():Int;
+    function getLength():Int;
+    function toDER():ByteArray;
 }

@@ -89,6 +89,6 @@ class ECBMode implements IMode implements ICipher {
     }
 
     public function toString():String {
-        return Std.string(key) + "-ecb";
+        return key.toString() + "-ecb";
     }
 }

@@ -18,68 +18,62 @@ import com.hurlant.util.Memory;
 
 import com.hurlant.util.ByteArray;
 
-class ARC4 implements IPRNG implements IStreamCipher
-{
-    private var i : Int = 0;
-    private var j : Int = 0;
-    private var S : ByteArray;
-    static private inline var psize : Int = 256;
-    public function new(key : ByteArray = null)
-    {
+class ARC4 implements IPRNG implements IStreamCipher {
+    private var i:Int = 0;
+    private var j:Int = 0;
+    private var S:ByteArray;
+    static private inline var psize:Int = 256;
+
+    public function new(key:ByteArray = null) {
         S = new ByteArray();
         if (key != null) {
             init(key);
         }
     }
-    public function getPoolSize() : Int{
+
+    public function getPoolSize():Int {
         return psize;
     }
-    public function init(key : ByteArray) : Void{
-        var i : Int;
-        var j : Int;
-        var t : Int;
-        for (i in 0...256){
-            S[i] = i;
-        }
-        j = 0;
-        for (i in 0...256){
+
+    public function init(key:ByteArray):Void {
+        for (i in 0...256) S[i] = i;
+        var j = 0;
+        for (i in 0...256) {
             j = (j + S[i] + key[i % key.length]) & 255;
-            t = S[i];
+            var t = S[i];
             S[i] = S[j];
             S[j] = t;
         }
         this.i = 0;
         this.j = 0;
     }
-    public function next() : Int{
-        var t : Int;
+
+    public function next():Int {
         i = (i + 1) & 255;
         j = (j + S[i]) & 255;
-        t = S[i];
+        var t = S[i];
         S[i] = S[j];
         S[j] = t;
         return S[(t + S[i]) & 255];
     }
-    
-    public function getBlockSize() : Int{
+
+    public function getBlockSize():Int {
         return 1;
     }
-    
-    public function encrypt(block : ByteArray) : Void{
-        var i : Int = 0;
-        while (i < block.length){
-            block[i++] ^= next();
-        }
+
+    public function encrypt(block:ByteArray):Void {
+        var i:Int = 0;
+        while (i < block.length) block[i++] ^= next();
     }
-    public function decrypt(block : ByteArray) : Void{
+
+    public function decrypt(block:ByteArray):Void {
         encrypt(block);
     }
-    public function dispose() : Void{
-        var i : Int = 0;
+
+    public function dispose():Void {
+        var i:Int = 0;
         if (S != null) {
-            for (i in 0...S.length){
-                S[i] = Std.random(256);
-            }
+            for (i in 0...S.length) S[i] = Std.random(256);
             S.length = 0;
             S = null;
         }
@@ -87,7 +81,8 @@ class ARC4 implements IPRNG implements IStreamCipher
         this.j = 0;
         Memory.gc();
     }
-    public function toString() : String{
+
+    public function toString():String {
         return "rc4";
     }
 }

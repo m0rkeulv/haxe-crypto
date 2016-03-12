@@ -9,7 +9,6 @@
 package com.hurlant.crypto.hash;
 
 
-import com.hurlant.util.Std2;
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Endian;
 

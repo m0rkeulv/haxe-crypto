@@ -11,6 +11,7 @@
  */
 package com.hurlant.crypto.prng;
 
+import com.hurlant.util.ArrayUtil;
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Memory;
 import com.hurlant.util.System;
@@ -31,21 +32,19 @@ class Random {
         pptr = 0;
         while (pptr < psize) {
             var t:Int = Std.random(65536);
-            pool[pptr++] = t >>> 8;
-            pool[pptr++] = t & 255;
+            pool[pptr++] = (t >>> 8) & 0xFF;
+            pool[pptr++] = (t >>> 0) & 0xFF;
         }
         pptr = 0;
         seed();
     }
 
     public function seed(x:Int = 0):Void {
-        if (x == 0) {
-            x = Std.int(Date.now().getTime());
-        }
-        pool[pptr++] ^= (x >> 0) & 255;
-        pool[pptr++] ^= (x >> 8) & 255;
-        pool[pptr++] ^= (x >> 16) & 255;
-        pool[pptr++] ^= (x >> 24) & 255;
+        if (x == 0) x = Std.int(Date.now().getTime());
+        pool[pptr++] ^= (x >>  0) & 0xFF;
+        pool[pptr++] ^= (x >>  8) & 0xFF;
+        pool[pptr++] ^= (x >> 16) & 0xFF;
+        pool[pptr++] ^= (x >> 24) & 0xFF;
         pptr %= psize;
         seeded = true;
     }
@@ -53,11 +52,8 @@ class Random {
     public function autoSeed():Void {
         // @TODO: Provide real seed stuff
         var data = System.getSecureRandomBytes(512);
-        while (data.bytesAvailable >= 4) {
-            seed(data.readUnsignedInt());
-        }
+        while (data.bytesAvailable >= 4) seed(data.readUnsignedInt());
     }
-
 
     public function nextBytes(buffer:ByteArray, length:Int):Void {
         while (length-- > 0) {
@@ -67,9 +63,7 @@ class Random {
 
     public function nextByte():Int {
         if (!ready) {
-            if (!seeded) {
-                autoSeed();
-            }
+            if (!seeded) autoSeed();
             state.init(pool);
             pool.length = 0;
             pptr = 0;
@@ -79,10 +73,7 @@ class Random {
     }
 
     public function dispose():Void {
-        for (i in 0...pool.length) {
-            pool[i] = Std.random(256);
-        }
-        pool.length = 0;
+        ArrayUtil.secureDisposeByteArray(pool);
         pool = null;
         state.dispose();
         state = null;
@@ -92,7 +83,7 @@ class Random {
     }
 
     public function toString():String {
-        return "random-" + Std.string(state);
+        return "random-" + state.toString();
     }
 }
 

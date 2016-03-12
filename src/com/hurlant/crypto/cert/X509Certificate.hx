@@ -30,31 +30,29 @@ import com.hurlant.util.der.Type2;
 
 import com.hurlant.util.ByteArray;
 
-
-class X509Certificate
-{
-    private var _loaded : Bool;
-    private var _param : Dynamic;
+class X509Certificate {
+    private var _loaded:Bool;
+    private var _param:Dynamic;
     //private var _obj:Object; // old ASN-1 parsing
-    private var _obj2 : Dynamic;  // new ASN-1 library  
-    
-    public function new(p : Dynamic)
-    {
+    private var _obj2:Dynamic; // new ASN-1 library
+
+    public function new(p:Dynamic) {
         _loaded = false;
         _param = p;
     }
-    private function load() : Void{
-        if (_loaded)             return;
-        var p : Dynamic = _param;
-        var b : ByteArray;
+
+    private function load():Void {
+        if (_loaded) return;
+        var p:Dynamic = _param;
+        var b:ByteArray;
         if (Std.is(p, String)) {
-            b = PEM.readCertIntoArray(try cast(p, String) catch(e:Dynamic) null);
+            b = PEM.readCertIntoArray(try cast(p, String) catch (e:Dynamic) null);
         }
         else if (Std.is(p, ByteArray)) {
             b = p;
         }
         if (b != null) {
-            var t1 : Int = Math.round(haxe.Timer.stamp() * 1000);
+            var t1:Int = Math.round(haxe.Timer.stamp() * 1000);
             //_obj = DER.parse(b, Type.TLS_CERT);
             //trace("Type 1 method: "+(getTimer()-t1)+"ms");
             //b.position = 0;
@@ -67,50 +65,48 @@ class X509Certificate
             throw new Error("Invalid x509 Certificate parameter: " + p);
         }
     }
-    public function isSigned(store : X509CertificateCollection, CAs : X509CertificateCollection, time : Date = null) : Bool{
+
+    public function isSigned(store:X509CertificateCollection, CAs:X509CertificateCollection, time:Date = null):Bool {
         load();
         // check timestamps first. cheapest.
-        if (time == null) {
-            time = Date.now();
-        }
-        var notBefore : Date = getNotBefore();
-        var notAfter : Date = getNotAfter();
-        if (time.getTime() < notBefore.getTime())             return false  // cert isn't born yet.  ;
-        if (time.getTime() > notAfter.getTime())             return false  // check signature.    // cert died of old age.  ;
-        
-        var subject : String = getIssuerPrincipal();
+        if (time == null) time = Date.now();
+        var notBefore = getNotBefore();
+        var notAfter = getNotAfter();
+        if (time.getTime() < notBefore.getTime()) return false // cert isn't born yet.  ;
+        if (time.getTime() > notAfter.getTime()) return false // check signature.    // cert died of old age.  ;
+
+        var subject = getIssuerPrincipal();
         // try from CA first, since they're treated better.
-        var parent : X509Certificate = CAs.getCertificate(subject);
-        var parentIsAuthoritative : Bool = false;
+        var parent = CAs.getCertificate(subject);
+        var parentIsAuthoritative = false;
         if (parent == null) {
             parent = store.getCertificate(subject);
-            if (parent == null) {
-                return false;
-            }
-        }
-        else {
+            if (parent == null) return false;
+        } else {
             parentIsAuthoritative = true;
         }
-        if (parent == this) {  // pathological case. avoid infinite loop  
+
+        if (parent == this) { // pathological case. avoid infinite loop
             return false;
         }
-        if (!(parentIsAuthoritative && parent.isSelfSigned(time)) &&
-            !parent.isSigned(store, CAs, time)) {
+        if (!(parentIsAuthoritative && parent.isSelfSigned(time)) && !parent.isSigned(store, CAs, time)) {
             return false;
         }
-        var key : RSAKey = parent.getPublicKey();
+        var key:RSAKey = parent.getPublicKey();
         return verifyCertificate(key);
     }
-    public function isSelfSigned(time : Date) : Bool{
+
+    public function isSelfSigned(time:Date):Bool {
         load();
-        
-        var key : RSAKey = getPublicKey();
+
+        var key:RSAKey = getPublicKey();
         return verifyCertificate(key);
     }
-    private function verifyCertificate(key : RSAKey) : Bool{
-        var algo : String = getAlgorithmIdentifier();
-        var hash : IHash;
-        var oid : String;
+
+    private function verifyCertificate(key:RSAKey):Bool {
+        var algo:String = getAlgorithmIdentifier();
+        var hash:IHash;
+        var oid:String;
         switch (algo)
         {
             case OID.SHA1_WITH_RSA_ENCRYPTION:
@@ -124,15 +120,15 @@ class X509Certificate
                 oid = OID.MD5_ALGORITHM;
             default:
                 return false;
-        }  //var data:ByteArray = _obj.signedCertificate_bin;  
-        
-        var data : ByteArray = _obj2.toBeSigned_bin;
-        var buf : ByteArray = new ByteArray();
+        } //var data:ByteArray = _obj.signedCertificate_bin;
+
+        var data:ByteArray = _obj2.toBeSigned_bin;
+        var buf:ByteArray = new ByteArray();
         //key.verify(_obj.encrypted, buf, _obj.encrypted.length);
         key.verify(_obj2.signature, buf, _obj2.signature.length);
         buf.position = 0;
         data = hash.hash(data);
-        var obj : Dynamic = DER.parse(buf, Type.RSA_SIGNATURE);
+        var obj = DER.parse(buf, Type.RSA_SIGNATURE);
         if (Std.string(obj.algorithm.algorithmId) != oid) {
             return false;
         }
@@ -141,7 +137,7 @@ class X509Certificate
         }
         return true;
     }
-    
+
     /**
 		 * This isn't used anywhere so far.
 		 * It would become useful if we started to offer facilities
@@ -152,9 +148,10 @@ class X509Certificate
 		 * @return 
 		 * 
 		 */
-    private function signCertificate(key : RSAKey, algo : String) : ByteArray{
-        var hash : IHash;
-        var oid : String;
+
+    private function signCertificate(key:RSAKey, algo:String):ByteArray {
+        var hash:IHash;
+        var oid:String;
         switch (algo)
         {
             case OID.SHA1_WITH_RSA_ENCRYPTION:
@@ -168,91 +165,92 @@ class X509Certificate
                 oid = OID.MD5_ALGORITHM;
             default:
                 return null;
-        }  //var data:ByteArray = _obj.signedCertificate_bin;  
-        
-        var data : ByteArray = _obj2.toBeSigned_bin;
+        } //var data:ByteArray = _obj.signedCertificate_bin;
+
+        var data:ByteArray = _obj2.toBeSigned_bin;
         data = hash.hash(data);
-        var seq1 : Sequence = new Sequence();
+        var seq1:Sequence = new Sequence();
         seq1[0] = new Sequence();
         seq1[0][0] = new ObjectIdentifier(0, 0, oid);
         seq1[0][1] = null;
         seq1[1] = new ByteString();
         seq1[1].writeBytes(data);
         data = seq1.toDER();
-        var buf : ByteArray = new ByteArray();
+        var buf:ByteArray = new ByteArray();
         key.sign(data, buf, data.length);
         return buf;
     }
-    
-    public function getPublicKey() : RSAKey{
+
+    public function getPublicKey():RSAKey {
         load();
         //var pk:ByteArray = _obj.signedCertificate.subjectPublicKeyInfo.subjectPublicKey as ByteArray;
-        var pk : ByteArray = try cast(_obj2.toBeSigned.subjectPublicKeyInfo.subjectPublicKey, ByteArray) catch(e:Dynamic) null;
+        var pk:ByteArray = try cast(_obj2.toBeSigned.subjectPublicKeyInfo.subjectPublicKey, ByteArray) catch (e:Dynamic) null;
         pk.position = 0;
-        var rsaKey : Dynamic = DER.parse(pk, [{
-                    name : "N"
-
-                }, {
-                    name : "E"
-
-                }]);
+        var rsaKey:Dynamic = DER.parse(pk, [{name : "N"}, {name : "E"}]);
         return new RSAKey(rsaKey.N, rsaKey.E.valueOf());
     }
-    
+
     /**
-		 * Returns a subject principal, as an opaque base64 string.
-		 * This is only used as a hash key for known certificates.
-		 * 
-		 * Note that this assumes X509 DER-encoded certificates are uniquely encoded,
-		 * as we look for exact matches between Issuer and Subject fields.
-		 * 
-		 */
-    public function getSubjectPrincipal() : String{
+     * Returns a subject principal, as an opaque base64 string.
+     * This is only used as a hash key for known certificates.
+     *
+     * Note that this assumes X509 DER-encoded certificates are uniquely encoded,
+     * as we look for exact matches between Issuer and Subject fields.
+     *
+     */
+
+    public function getSubjectPrincipal():String {
         load();
         //return Base64.encodeByteArray(_obj.signedCertificate.subject_bin);
         return Base64.encodeByteArray(_obj2.toBeSigned.subject_bin);
     }
+
     /**
-		 * Returns an issuer principal, as an opaque base64 string.
-		 * This is only used to quickly find matching parent certificates.
-		 * 
-		 * Note that this assumes X509 DER-encoded certificates are uniquely encoded,
-		 * as we look for exact matches between Issuer and Subject fields.
-		 * 
-		 */
-    public function getIssuerPrincipal() : String{
+     * Returns an issuer principal, as an opaque base64 string.
+     * This is only used to quickly find matching parent certificates.
+     *
+     * Note that this assumes X509 DER-encoded certificates are uniquely encoded,
+     * as we look for exact matches between Issuer and Subject fields.
+     *
+     */
+
+    public function getIssuerPrincipal():String {
         load();
         //return Base64.encodeByteArray(_obj.signedCertificate.issuer_bin);
         return Base64.encodeByteArray(_obj2.toBeSigned.issuer_bin);
     }
-    public function getAlgorithmIdentifier() : String{
+
+    public function getAlgorithmIdentifier():String {
         //return _obj.algorithmIdentifier.algorithmId.toString();
         return Std.string(_obj2.algorithm.algorithm);
     }
-    public function getNotBefore() : Date{
+
+    public function getNotBefore():Date {
         //return _obj.signedCertificate.validity.notBefore.date;
         return _obj2.toBeSigned.validity.notBefore.utcTime;
     }
-    public function getNotAfter() : Date{
+
+    public function getNotAfter():Date {
         //return _obj.signedCertificate.validity.notAfter.date;
         return _obj2.toBeSigned.validity.notAfter.utcTime;
     }
-    
-    public function getCommonName() : String{
+
+    public function getCommonName():String {
         //var subject:Sequence = _obj.signedCertificate.subject;
-        var subject : Array<Dynamic> = _obj2.toBeSigned.subject.sequence;
-        for (i in 0...subject.length){
-            var e : Dynamic = subject[i][0];
+        var subject:Array<Dynamic> = _obj2.toBeSigned.subject.sequence;
+        for (i in 0...subject.length) {
+            var e:Dynamic = subject[i][0];
             if (e.commonName) {
                 // not sure I like this.
-                var obj : Dynamic = e.commonName.value;
-                var val : Dynamic;
-                for (t in Reflect.fields(obj)){val = Reflect.field(obj, t);break;
+                var obj:Dynamic = e.commonName.value;
+                var val:Dynamic;
+                for (t in Reflect.fields(obj)) {val = Reflect.field(obj, t);break;
                 }
                 return val;
             }
-        }  //			return (subject.findAttributeValue(OID.COMMON_NAME) as PrintableString).getString();  
-        
+        }
+        //			return (subject.findAttributeValue(OID.COMMON_NAME) as PrintableString).getString();
+
         return "hi";
     }
 }

@@ -14,72 +14,69 @@ import com.hurlant.crypto.hash.IHash;
 
 import com.hurlant.util.ByteArray;
 
-class HMAC implements IHMAC
-{
-    private var hash : IHash;
-    private var bits : Int;
-    
+class HMAC implements IHMAC {
+    private var hash:IHash;
+    private var bits:Int;
+
     /**
-		 * Create a HMAC object, using a Hash function, and 
-		 * optionally a number of bits to return. 
-		 * The HMAC will be truncated to that size if needed.
-		 */
-    public function new(hash : IHash, bits : Int = 0)
-    {
+     * Create a HMAC object, using a Hash function, and
+     * optionally a number of bits to return.
+     * The HMAC will be truncated to that size if needed.
+     */
+
+    public function new(hash:IHash, bits:Int = 0) {
         this.hash = hash;
         this.bits = bits;
     }
-    
-    
-    public function getHashSize() : Int{
-        if (bits != 0) {
-            return Std.int(bits / 8);
-        }
-        else {
-            return hash.getHashSize();
-        }
+
+
+    public function getHashSize():Int {
+        return (bits != 0) ? Std.int(bits / 8) : hash.getHashSize();
     }
-    
+
     /**
-		 * Compute a HMAC using a key and some data.
-		 * It doesn't modify either, and returns a new ByteArray with the HMAC value.
-		 */
-    public function compute(key : ByteArray, data : ByteArray) : ByteArray{
-        var hashKey : ByteArray;
+     * Compute a HMAC using a key and some data.
+     * It doesn't modify either, and returns a new ByteArray with the HMAC value.
+     */
+
+    public function compute(key:ByteArray, data:ByteArray):ByteArray {
+        var hashKey:ByteArray;
         if (key.length > hash.getInputSize()) {
             hashKey = hash.hash(key);
-        }
-        else {
+        } else {
             hashKey = new ByteArray();
             hashKey.writeBytes(key);
         }
-        while (hashKey.length < hash.getInputSize()){
-            hashKey[hashKey.length] = 0;
-        }
-        var innerKey : ByteArray = new ByteArray();
-        var outerKey : ByteArray = new ByteArray();
-        for (i in 0...hashKey.length){
+
+        while (hashKey.length < hash.getInputSize()) hashKey[hashKey.length] = 0;
+
+        var innerKey = new ByteArray();
+        var outerKey = new ByteArray();
+
+        for (i in 0...hashKey.length) {
             innerKey[i] = hashKey[i] ^ 0x36;
             outerKey[i] = hashKey[i] ^ 0x5c;
-        }  // inner + data  
-        
+        }
+
         innerKey.position = hashKey.length;
         innerKey.writeBytes(data);
-        var innerHash : ByteArray = hash.hash(innerKey);
+        var innerHash:ByteArray = hash.hash(innerKey);
         // outer + innerHash
         outerKey.position = hashKey.length;
         outerKey.writeBytes(innerHash);
-        var outerHash : ByteArray = hash.hash(outerKey);
+        var outerHash:ByteArray = hash.hash(outerKey);
         if (bits > 0 && bits < 8 * outerHash.length) {
             outerHash.length = Std.int(bits / 8);
         }
         return outerHash;
     }
-    public function dispose() : Void{
+
+    public function dispose():Void {
         hash = null;
         bits = 0;
     }
-    public function toString() : String{
-        return "hmac-" + (bits > (0) ? bits + "-" : "") + Std.string(hash);
+
+    public function toString():String {
+        return "hmac-" + (bits > (0) ? bits + "-" : "") + hash.toString();
     }
 }

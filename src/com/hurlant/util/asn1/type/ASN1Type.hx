@@ -47,10 +47,10 @@ class ASN1Type {
     public static inline var UNSTRUCTURED_NAME:Int = 31; // ??? no clue.
 
     // Classes of tags
-    public static inline var UNIVERSAL:Int = 0;
-    public static inline var APPLICATION:Int = 1;
-    public static inline var CONTEXT:Int = 2;
-    public static inline var PRIVATE:Int = 3;
+    public static inline var UNIVERSAL = 0;
+    public static inline var APPLICATION = 1;
+    public static inline var CONTEXT = 2;
+    public static inline var PRIVATE = 3;
 
     // various type modifiers
     public var optional:Bool = false;

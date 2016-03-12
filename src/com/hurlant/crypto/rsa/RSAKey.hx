@@ -117,7 +117,7 @@ class RSAKey {
         _decrypt(doPublic, src, dst, length, pad, 0x01);
     }
 
-    private function _encrypt(op:BigInteger -> BigInteger, src:ByteArray, dst:ByteArray, length:Int, pad: ByteArray -> Int -> Int -> Int -> ByteArray, padType:Int):Void {
+    private function _encrypt(op:BigInteger -> BigInteger, src:ByteArray, dst:ByteArray, length:Int, pad:ByteArray -> Int -> Int -> Int -> ByteArray, padType:Int):Void {
         // adjust pad if needed
         if (pad == null) pad = pkcs1pad; // convert src to BigInteger
 
@@ -329,25 +329,20 @@ class RSAKey {
         var xp = x.mod(p).modPow(dmp1, p);
         var xq = x.mod(q).modPow(dmq1, q);
 
-        while (xp.compareTo(xq) < 0) {
-            xp = xp.add(p);
-        }
+        while (xp.compareTo(xq) < 0) xp = xp.add(p);
         var r = xp.subtract(xq).multiply(coeff).mod(p).multiply(q).add(xq);
 
         return r;
     }
 
     private function doPrivate(x:BigInteger):BigInteger {
-        if (p == null || q == null) {
-            return x.modPow(d, n);
-        } // TODO: re-calculate any missing CRT params
+        if (p == null || q == null) return x.modPow(d, n);
+        // TODO: re-calculate any missing CRT params
 
         var xp = x.mod(p).modPow(dmp1, p);
         var xq = x.mod(q).modPow(dmq1, q);
 
-        while (xp.compareTo(xq) < 0) {
-            xp = xp.add(p);
-        }
+        while (xp.compareTo(xq) < 0) xp = xp.add(p);
         return xp.subtract(xq).multiply(coeff).mod(p).multiply(q).add(xq);
     }
 }

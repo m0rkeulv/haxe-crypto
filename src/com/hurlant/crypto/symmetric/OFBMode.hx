@@ -48,6 +48,6 @@ class OFBMode extends IVMode implements IMode
         }
     }
     public function toString() : String{
-        return Std.string(key) + "-ofb";
+        return key.toString() + "-ofb";
     }
 }

@@ -15,52 +15,48 @@ import com.hurlant.crypto.symmetric.IVMode;
 
 import com.hurlant.util.ByteArray;
 
-class CTRMode extends IVMode implements IMode
-{
-    
-    public function new(key : ISymmetricKey, padding : IPad = null)
-    {
+class CTRMode extends IVMode implements IMode {
+    public function new(key:ISymmetricKey, padding:IPad = null) {
         super(key, padding);
     }
-    
-    public function encrypt(src : ByteArray) : Void
-    {
+
+    public function encrypt(src:ByteArray):Void {
         padding.pad(src);
-        var vector : ByteArray = getIV4e();
+        var vector:ByteArray = getIV4e();
         core(src, vector);
     }
-    
-    public function decrypt(src : ByteArray) : Void
-    {
-        var vector : ByteArray = getIV4d();
+
+    public function decrypt(src:ByteArray):Void {
+        var vector:ByteArray = getIV4d();
         core(src, vector);
         padding.unpad(src);
     }
-    
-    private function core(src : ByteArray, iv : ByteArray) : Void{
-        var X : ByteArray = new ByteArray();
-        var Xenc : ByteArray = new ByteArray();
+
+    private function core(src:ByteArray, iv:ByteArray):Void {
+        var X:ByteArray = new ByteArray();
+        var Xenc:ByteArray = new ByteArray();
         X.writeBytes(iv);
-        var i : Int = 0;
-        while (i < src.length){
+        var i:Int = 0;
+        while (i < src.length) {
             Xenc.position = 0;
             Xenc.writeBytes(X);
             key.encrypt(Xenc);
-            for (j in 0...blockSize){
+            for (j in 0...blockSize) {
                 src[i + j] ^= Xenc[j];
             }
-            
+
             var j = blockSize - 1;
-            while (j >= 0){
+            while (j >= 0) {
                 X[j]++;
-                if (X[j] != 0) 
+                if (X[j] != 0)
                     break;
                 --j;
             }
             i += blockSize;
         }
     }
-    public function toString() : String{
-        return Std.string(key) + "-ctr";
+
+    public function toString():String {
+        return key.toString() + "-ctr";
     }
 }

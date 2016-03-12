@@ -11,4 +11,11 @@ class ArrayUtil {
         var r = new Random();
         for (i in 0...k.length) k[i] = r.nextByte();
     }
+
+    static public function secureDisposeByteArray(ba:ByteArray) {
+        // @TODO: Not use ByteArray, since ByteArray can grow and it realloc buffers copying content
+        // @TODO: Instead allocate a fixed size buffer
+        for (i in 0...ba.length) ba[i] = Std.random(256);
+        ba.length = 0;
+    }
 }

@@ -37,7 +37,7 @@ class HaxeCryptoTests {
         tr.add(new BigIntegerTest());
         tr.add(new DESKeyTest());
         tr.add(new AESKeyTest());
-
+        tr.add(new TripleDESKeyTest());
 
         //tr.add(new ECBModeTest());
 
@@ -47,7 +47,6 @@ class HaxeCryptoTests {
         //tr.add(new CFBModeTest());
         //tr.add(new CTRModeTest());
         //tr.add(new OFBModeTest());
-        //tr.add(new TripleDESKeyTest());
         tr.run();
     }
 }

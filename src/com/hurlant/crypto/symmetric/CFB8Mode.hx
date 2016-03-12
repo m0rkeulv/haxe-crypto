@@ -58,6 +58,6 @@ class CFB8Mode extends IVMode implements IMode {
     }
 
     public function toString():String {
-        return Std.string(key) + "-cfb8";
+        return key.toString() + "-cfb8";
     }
 }

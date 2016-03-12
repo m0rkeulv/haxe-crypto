@@ -1,4 +1,18 @@
 -cp src
 -cp test
 -main com.hurlant.tests.HaxeCryptoTests
--js out.js
+-js tests.js
+
+#--next
+#
+#-cp src
+#-cp test
+#-main com.hurlant.tests.HaxeCryptoTests
+#-php tests.php
+
+#--next
+#
+#-cp src
+#-cp test
+#-main com.hurlant.tests.HaxeCryptoTests
+#-neko tests.n
