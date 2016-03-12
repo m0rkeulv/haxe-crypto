@@ -202,7 +202,6 @@ class RSAKey {
      * @return
      *
      */
-
     private function pkcs1unpad(src:BigInteger, n:Int32, type:Int32 = 0x02):ByteArray {
         var out = new ByteArray();
         var b = new ByteArray();
@@ -213,7 +212,7 @@ class RSAKey {
         while (i < b.length && b[i] == 0) ++i;
 
         if (b.length - i != n - 1 || b[i] != type) {
-            trace("PKCS#1 unpad: i=" + i + ", expected b[i]==" + type + ", got b[i]=" + Std.string(b[i]));
+            trace("PKCS#1 unpad: i=" + i + ", expected b[i]==" + type + ", got b[i]=${b[i]}");
             return null;
         }
         ++i;

@@ -233,7 +233,7 @@ class TLSEngine extends EventDispatcher {
             } // Can pretty much assume that if I'm here, I've got a default config, so let's use it.  
 
             if (ver != _securityParameters.version) {
-                throw new TLSError("Unsupported TLS version: " + Std.string(ver), TLSError.protocol_version);
+                throw new TLSError("Unsupported TLS version: $ver", TLSError.protocol_version);
             }
 
             p = new ByteArray();
@@ -279,7 +279,7 @@ class TLSEngine extends EventDispatcher {
                 p = protocolHandlers[type](p);
         }
         else {
-            throw new TLSError("Unsupported TLS Record Content Type: " + Std.string(type), TLSError.unexpected_message);
+            throw new TLSError("Unsupported TLS Record Content Type: $type", TLSError.unexpected_message);
         }
     }
 
@@ -490,7 +490,7 @@ class TLSEngine extends EventDispatcher {
 
         var ver:Int32 = rec.readShort();
         if (ver != _securityParameters.version) {
-            throw new TLSError("Unsupported TLS version: " + Std.string(ver), TLSError.protocol_version);
+            throw new TLSError("Unsupported TLS version: $ver", TLSError.protocol_version);
         }
         var random:ByteArray = new ByteArray();
         rec.readBytes(random, 0, 32);
@@ -514,7 +514,7 @@ class TLSEngine extends EventDispatcher {
         var ret:Dynamic;
         var ver:Int32 = rec.readShort();
         if (ver != _securityParameters.version) {
-            throw new TLSError("Unsupported TLS version: " + Std.string(ver), TLSError.protocol_version);
+            throw new TLSError("Unsupported TLS version: $ver", TLSError.protocol_version);
         }
 
         var random:ByteArray = new ByteArray();

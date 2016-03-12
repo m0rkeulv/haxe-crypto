@@ -53,7 +53,7 @@ class BulkCiphers {
 
     private static function getProp(cipher:Int):BulkCiphers {
         var p = _props[cipher];
-        if (p == null) throw new Error("Unknown bulk cipher " + Std.string(cipher));
+        if (p == null) throw new Error("Unknown bulk cipher $cipher");
         return p;
     }
 

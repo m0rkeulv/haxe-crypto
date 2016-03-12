@@ -9,7 +9,7 @@ class NullReduction implements IReduction {
     }
 
     public function revert(x:BigInteger):BigInteger {
-        return x;
+        return x.clone();
     }
 
     public function mulTo(x:BigInteger, y:BigInteger, r:BigInteger):Void {
@@ -21,7 +21,7 @@ class NullReduction implements IReduction {
     }
 
     public function convert(x:BigInteger):BigInteger {
-        return x;
+        return x.clone();
     }
 
     public function reduce(x:BigInteger):Void {

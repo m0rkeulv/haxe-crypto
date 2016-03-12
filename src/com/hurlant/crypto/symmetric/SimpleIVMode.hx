@@ -56,6 +56,6 @@ class SimpleIVMode implements IMode implements ICipher {
     }
 
     public function toString():String {
-        return "simple-" + Std.string(cipher);
+        return "simple-$cipher";
     }
 }

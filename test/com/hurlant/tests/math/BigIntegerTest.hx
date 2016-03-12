@@ -41,6 +41,11 @@ class BigIntegerTest extends BaseTestCase {
         assert(arr_i3.length, 1);
         assert(arr_i4.length, 1);
         assert(i3.equals(i4));
+
+        assertEquals(false, new BigInteger("1").isEven());
+        assertEquals(true, new BigInteger("2").isEven());
+        assertEquals(false, new BigInteger("1000000000000000011111111111111111111111111111111110000000000000000000000000000000000000000000001").isEven());
+        assertEquals(true, new BigInteger("100000000000000111111111111111111111111111111111110000000000000000000000000000000000000000000000").isEven());
     }
 
     public function test_signed2():Void {
@@ -59,6 +64,22 @@ class BigIntegerTest extends BaseTestCase {
         var out = res.subtract(one);
         assert(out.valueOf(), -16);
         assert(out.sigNum(), -1);
+    }
+
+    public function test_multiplyMod():Void {
+        var a = BigInteger.nbv(100000000);
+        var b = BigInteger.nbv(100000000);
+        var c = a.multiply(b);
+        assertEquals('10000000000000000', c.toString(10));
+        assertEquals('99', c.add(BigInteger.nbv(299)).mod(BigInteger.nbv(100)).toString(10));
+    }
+
+    public function test_pow():Void {
+        assertEquals('1024', BigInteger.nbv(2).pow(10).toString(10));
+    }
+
+    public function test_square():Void {
+        assertEquals('256', BigInteger.nbv(16).square().toString(10));
     }
 
     public function test_toAndFromString():Void {

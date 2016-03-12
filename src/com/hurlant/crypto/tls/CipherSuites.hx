@@ -74,7 +74,7 @@ class CipherSuites {
 
     private static function getProp(cipher:Int32):CipherSuites {
         var p = _props[cipher];
-        if (p == null) throw new Error("Unknown cipher " + Std.string(cipher));
+        if (p == null) throw new Error("Unknown cipher $cipher");
         return p;
     }
 
