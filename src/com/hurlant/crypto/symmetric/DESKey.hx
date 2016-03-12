@@ -13,6 +13,7 @@
  */
 package com.hurlant.crypto.symmetric;
 
+import haxe.Int32;
 import com.hurlant.crypto.symmetric.DESKeyTables;
 import com.hurlant.util.ArrayUtil;
 import com.hurlant.crypto.symmetric.ISymmetricKey;
@@ -22,8 +23,8 @@ import com.hurlant.util.Memory;
 
 class DESKey implements ISymmetricKey {
     private var key:ByteArray;
-    private var encKey:Array<Int>;
-    private var decKey:Array<Int>;
+    private var encKey:Array<Int32>;
+    private var decKey:Array<Int32>;
 
 
     public function new(key:ByteArray) {
@@ -32,11 +33,11 @@ class DESKey implements ISymmetricKey {
         this.decKey = generateWorkingKey(false, key, 0);
     }
 
-    public function getBlockSize():Int {
+    public function getBlockSize():Int32 {
         return 8;
     }
 
-    public function decrypt(block:ByteArray, index:Int = 0):Void {
+    public function decrypt(block:ByteArray, index:Int32 = 0):Void {
         desFunc(decKey, block, index, block, index);
     }
 
@@ -51,7 +52,7 @@ class DESKey implements ISymmetricKey {
         Memory.gc();
     }
 
-    public function encrypt(block:ByteArray, index:Int = 0):Void {
+    public function encrypt(block:ByteArray, index:Int32 = 0):Void {
         desFunc(encKey, block, index, block, index);
     }
 
@@ -63,14 +64,14 @@ class DESKey implements ISymmetricKey {
      * Acknowledgements for this routine go to James Gillogly & Phil Karn.
      */
 
-    private function generateWorkingKey(encrypting:Bool, key:ByteArray, off:Int):Array<Int> {
+    private function generateWorkingKey(encrypting:Bool, key:ByteArray, off:Int32):Array<Int32> {
         //int[] newKey = new int[32];
-        var newKey:Array<Int> = [];
+        var newKey:Array<Int32> = [];
         //boolean[] pc1m = new boolean[56], pcr = new boolean[56];
         var pc1m:ByteArray = new ByteArray();
         var pcr:ByteArray = new ByteArray();
 
-        var l:Int;
+        var l:Int32;
 
         for (j in 0...56) {
             l = DESKeyTables.pc1[j];
@@ -115,10 +116,10 @@ class DESKey implements ISymmetricKey {
      * the DES engine.
      */
 
-    private function desFunc(wKey:Array<Dynamic>, inp:ByteArray, inOff:Int, out:ByteArray, outOff:Int):Void {
-        var work:Int;
-        var right:Int = 0;
-        var left:Int = 0;
+    private function desFunc(wKey:Array<Int32>, inp:ByteArray, inOff:Int32, out:ByteArray, outOff:Int32):Void {
+        var work:Int32;
+        var right:Int32 = 0;
+        var left:Int32 = 0;
 
         left |= (inp[inOff + 0] & 0xff) << 24;
         left |= (inp[inOff + 1] & 0xff) << 16;
@@ -154,7 +155,7 @@ class DESKey implements ISymmetricKey {
 
 
         for (round in 0...8) {
-            var fval:Int;
+            var fval:Int32;
 
             work = (right << 28) | (right >>> 4);
             work ^= wKey[round * 4 + 0];

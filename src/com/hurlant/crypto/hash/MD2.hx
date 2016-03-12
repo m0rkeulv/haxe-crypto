@@ -24,6 +24,7 @@
 package com.hurlant.crypto.hash;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 class MD2 implements IHash {
@@ -50,20 +51,20 @@ class MD2 implements IHash {
         49, 68, 80, 180, 143, 237, 31, 26, 219, 153, 141, 51, 159, 17, 131, 20
     ];
 
-    public function getInputSize():Int {
+    public function getInputSize():Int32 {
         return 16;
     }
 
-    public function getPadSize():Int {
+    public function getPadSize():Int32 {
         return pad_size;
     }
 
-    public function getHashSize():Int {
+    public function getHashSize():Int32 {
         return HASH_SIZE;
     }
 
     public function hash(src:ByteArray):ByteArray {
-        var savedLength:Int = src.length;
+        var savedLength:Int32 = src.length;
 
         // 3.1 Step 1. Padding
         var i = (16 - src.length % 16);
@@ -98,7 +99,7 @@ class MD2 implements IHash {
 
             /* Copy block i into X */
             for (j in 0...16) X[32 + j] = (X[16 + j] = src[i + j]) ^ X[j];
-            var t:Int = 0;
+            var t:Int32 = 0;
             /* Do 18 rounds */
             for (j in 0...18) {
                 /* Round j. */

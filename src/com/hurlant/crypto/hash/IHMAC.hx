@@ -11,11 +11,12 @@
 package com.hurlant.crypto.hash;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 interface IHMAC {
 
-    function getHashSize():Int;
+    function getHashSize():Int32;
     /**
      * Compute a HMAC using a key and some data.
      * It doesn't modify either, and returns a new ByteArray with the HMAC value.

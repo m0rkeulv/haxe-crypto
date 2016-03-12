@@ -8,6 +8,7 @@
  */
 package com.hurlant.util;
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 class Hex {
@@ -23,7 +24,7 @@ class Hex {
         var a:ByteArray = new ByteArray();
         a.length = Std.int(hex.length / 2);
         if ((hex.length & 1) == 1) hex = "0" + hex;
-        var i:Int = 0;
+        var i:Int32 = 0;
         while (i < hex.length) {
             a[Std.int(i / 2)] = Std2.parseInt(hex.substr(i, 2), 16);
             i += 2;

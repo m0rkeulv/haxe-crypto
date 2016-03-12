@@ -11,6 +11,7 @@
  */
 package com.hurlant.crypto.prng;
 
+import haxe.Int32;
 import com.hurlant.util.ArrayUtil;
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Memory;
@@ -20,18 +21,18 @@ class Random {
     private var state:IPRNG;
     private var ready:Bool = false;
     private var pool:ByteArray;
-    private var psize:Int;
-    private var pptr:Int;
+    private var psize:Int32;
+    private var pptr:Int32;
     private var seeded:Bool = false;
 
     public function new(prng:Class<Dynamic> = null) {
         if (prng == null) prng = ARC4;
-        state = try cast(Type.createInstance(prng, []), IPRNG) catch (e:Dynamic) null;
+        state = cast(Type.createInstance(prng, []), IPRNG);
         psize = state.getPoolSize();
         pool = new ByteArray();
         pptr = 0;
         while (pptr < psize) {
-            var t:Int = Std.random(65536);
+            var t:Int32 = Std.random(65536);
             pool[pptr++] = (t >>> 8) & 0xFF;
             pool[pptr++] = (t >>> 0) & 0xFF;
         }
@@ -39,10 +40,10 @@ class Random {
         seed();
     }
 
-    public function seed(x:Int = 0):Void {
+    public function seed(x:Int32 = 0):Void {
         if (x == 0) x = Std.int(Date.now().getTime());
-        pool[pptr++] ^= (x >>  0) & 0xFF;
-        pool[pptr++] ^= (x >>  8) & 0xFF;
+        pool[pptr++] ^= (x >> 0) & 0xFF;
+        pool[pptr++] ^= (x >> 8) & 0xFF;
         pool[pptr++] ^= (x >> 16) & 0xFF;
         pool[pptr++] ^= (x >> 24) & 0xFF;
         pptr %= psize;
@@ -55,13 +56,13 @@ class Random {
         while (data.bytesAvailable >= 4) seed(data.readUnsignedInt());
     }
 
-    public function nextBytes(buffer:ByteArray, length:Int):Void {
+    public function nextBytes(buffer:ByteArray, length:Int32):Void {
         while (length-- > 0) {
             buffer.writeByte(nextByte());
         }
     }
 
-    public function nextByte():Int {
+    public function nextByte():Int32 {
         if (!ready) {
             if (!seeded) autoSeed();
             state.init(pool);

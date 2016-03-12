@@ -17,14 +17,14 @@
 package com.hurlant.util;
 
 
-
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 class Base64
 {
     
-    private static var _encodeChars : Array<Int> = _initEncoreChar();
-    private static var _decodeChars : Array<Int> = _initDecodeChar();
+    private static var _encodeChars : Array<Int32> = _initEncoreChar();
+    private static var _decodeChars : Array<Int32> = _initDecodeChar();
     
     public static function encode(data : String) : String{
         var bytes : ByteArray = new ByteArray();
@@ -138,8 +138,8 @@ class Base64
         return decodeToByteArray(str);
     }
     
-    private static function _initEncoreChar() : Array<Int>{
-        var encodeChars : Array<Int> = new Array<Int>();
+    private static function _initEncoreChar() : Array<Int32>{
+        var encodeChars : Array<Int32> = new Array<Int32>();
         
         // We could push the number directly
         // but I think it's nice to see the characters (with no overhead on encode/decode)
@@ -151,8 +151,8 @@ class Base64
         return encodeChars;
     }
     
-    private static function _initDecodeChar() : Array<Int>{
-        var decodeChars : Array<Int> = [
+    private static function _initDecodeChar() : Array<Int32>{
+        var decodeChars : Array<Int32> = [
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 

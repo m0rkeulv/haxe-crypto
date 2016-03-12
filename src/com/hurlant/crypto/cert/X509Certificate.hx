@@ -46,13 +46,13 @@ class X509Certificate {
         var p:Dynamic = _param;
         var b:ByteArray;
         if (Std.is(p, String)) {
-            b = PEM.readCertIntoArray(try cast(p, String) catch (e:Dynamic) null);
+            b = PEM.readCertIntoArray(cast(p, String));
         }
         else if (Std.is(p, ByteArray)) {
             b = p;
         }
         if (b != null) {
-            var t1:Int = Math.round(haxe.Timer.stamp() * 1000);
+            var t1:Int32 = Math.round(haxe.Timer.stamp() * 1000);
             //_obj = DER.parse(b, Type.TLS_CERT);
             //trace("Type 1 method: "+(getTimer()-t1)+"ms");
             //b.position = 0;
@@ -105,67 +105,54 @@ class X509Certificate {
 
     private function verifyCertificate(key:RSAKey):Bool {
         var algo:String = getAlgorithmIdentifier();
-        var hash:IHash;
-        var oid:String;
-        switch (algo)
-        {
-            case OID.SHA1_WITH_RSA_ENCRYPTION:
-                hash = new SHA1();
-                oid = OID.SHA1_ALGORITHM;
-            case OID.MD2_WITH_RSA_ENCRYPTION:
-                hash = new MD2();
-                oid = OID.MD2_ALGORITHM;
-            case OID.MD5_WITH_RSA_ENCRYPTION:
-                hash = new MD5();
-                oid = OID.MD5_ALGORITHM;
-            default:
-                return false;
-        } //var data:ByteArray = _obj.signedCertificate_bin;
 
-        var data:ByteArray = _obj2.toBeSigned_bin;
-        var buf:ByteArray = new ByteArray();
+        //var data:ByteArray = _obj.signedCertificate_bin;
+        var hash = createHashFromAlgo(algo);
+        var oid = getOIDFromObject(hash);
+        if (hash == null) return false;
+        var data = _obj2.toBeSigned_bin;
+        var buf = new ByteArray();
         //key.verify(_obj.encrypted, buf, _obj.encrypted.length);
         key.verify(_obj2.signature, buf, _obj2.signature.length);
         buf.position = 0;
         data = hash.hash(data);
         var obj = DER.parse(buf, Type.RSA_SIGNATURE);
-        if (Std.string(obj.algorithm.algorithmId) != oid) {
-            return false;
+        return (Std.string(obj.algorithm.algorithmId) != oid) && (ArrayUtil.equals(obj.hash, data));
+    }
+
+    static private function createHashFromAlgo(algo:String):IHash {
+        return switch (algo) {
+            case OID.SHA1_WITH_RSA_ENCRYPTION: new SHA1();
+            case OID.MD2_WITH_RSA_ENCRYPTION : new MD2() ;
+            case OID.MD5_WITH_RSA_ENCRYPTION : new MD5() ;
+            default: null;
         }
-        if (!ArrayUtil.equals(obj.hash, data)) {
-            return false;
-        }
-        return true;
+    }
+
+    static private function getOIDFromObject(obj:Dynamic):String {
+        if (obj == null) return null;
+        if (Std.is(obj, SHA1)) return OID.SHA1_ALGORITHM;
+        if (Std.is(obj, MD2)) return OID.MD2_ALGORITHM;
+        if (Std.is(obj, MD5)) return OID.MD5_ALGORITHM;
+        return null;
     }
 
     /**
-		 * This isn't used anywhere so far.
-		 * It would become useful if we started to offer facilities
-		 * to generate and sign X509 certificates.
-		 * 
-		 * @param key
-		 * @param algo
-		 * @return 
-		 * 
-		 */
+     * This isn't used anywhere so far.
+     * It would become useful if we started to offer facilities
+     * to generate and sign X509 certificates.
+     *
+     * @param key
+     * @param algo
+     * @return
+     *
+     */
 
     private function signCertificate(key:RSAKey, algo:String):ByteArray {
-        var hash:IHash;
-        var oid:String;
-        switch (algo)
-        {
-            case OID.SHA1_WITH_RSA_ENCRYPTION:
-                hash = new SHA1();
-                oid = OID.SHA1_ALGORITHM;
-            case OID.MD2_WITH_RSA_ENCRYPTION:
-                hash = new MD2();
-                oid = OID.MD2_ALGORITHM;
-            case OID.MD5_WITH_RSA_ENCRYPTION:
-                hash = new MD5();
-                oid = OID.MD5_ALGORITHM;
-            default:
-                return null;
-        } //var data:ByteArray = _obj.signedCertificate_bin;
+        var hash = createHashFromAlgo(algo);
+        var oid = getOIDFromObject(hash);
+        if (hash == null) return null;
+        //var data:ByteArray = _obj.signedCertificate_bin;
 
         var data:ByteArray = _obj2.toBeSigned_bin;
         data = hash.hash(data);
@@ -183,8 +170,7 @@ class X509Certificate {
 
     public function getPublicKey():RSAKey {
         load();
-        //var pk:ByteArray = _obj.signedCertificate.subjectPublicKeyInfo.subjectPublicKey as ByteArray;
-        var pk:ByteArray = try cast(_obj2.toBeSigned.subjectPublicKeyInfo.subjectPublicKey, ByteArray) catch (e:Dynamic) null;
+        var pk:ByteArray = cast(_obj2.toBeSigned.subjectPublicKeyInfo.subjectPublicKey, ByteArray);
         pk.position = 0;
         var rsaKey:Dynamic = DER.parse(pk, [{name : "N"}, {name : "E"}]);
         return new RSAKey(rsaKey.N, rsaKey.E.valueOf());
@@ -244,7 +230,9 @@ class X509Certificate {
                 // not sure I like this.
                 var obj:Dynamic = e.commonName.value;
                 var val:Dynamic;
-                for (t in Reflect.fields(obj)) {val = Reflect.field(obj, t);break;
+                for (t in Reflect.fields(obj)) {
+                    val = Reflect.field(obj, t);
+                    break;
                 }
                 return val;
             }

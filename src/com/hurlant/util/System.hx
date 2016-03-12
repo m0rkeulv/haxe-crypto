@@ -1,4 +1,5 @@
 package com.hurlant.util;
+import haxe.Int32;
 class System {
     // @TODO: IMPORTANT!!
     /**
@@ -8,7 +9,7 @@ class System {
      *  - timing stuff
      *  - installed fonts
      */
-static public function getSecureRandomBytes(length:Int):ByteArray {
+    static public function getSecureRandomBytes(length:Int32):ByteArray {
         var ba = new ByteArray();
         for (n in 0 ... length) {
             ba.writeByte(Std.random(256));

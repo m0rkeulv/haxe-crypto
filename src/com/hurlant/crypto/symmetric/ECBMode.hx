@@ -8,6 +8,7 @@
  */
 package com.hurlant.crypto.symmetric;
 
+import haxe.Int32;
 import com.hurlant.crypto.symmetric.ICipher;
 import com.hurlant.crypto.symmetric.IMode;
 import com.hurlant.crypto.symmetric.IPad;
@@ -34,7 +35,7 @@ class ECBMode implements IMode implements ICipher {
         this.padding = padding;
     }
 
-    public function getBlockSize():Int { return key.getBlockSize(); }
+    public function getBlockSize():Int32 { return key.getBlockSize(); }
 
     public function encrypt(src:ByteArray):Void {
         padding.pad(src);

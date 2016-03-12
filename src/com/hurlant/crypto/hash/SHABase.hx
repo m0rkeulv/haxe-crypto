@@ -9,21 +9,22 @@
 package com.hurlant.crypto.hash;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Endian;
 
 class SHABase implements IHash {
-    public var pad_size:Int = 40;
+    public var pad_size:Int32 = 40;
 
-    public function getInputSize():Int {
+    public function getInputSize():Int32 {
         return 64;
     }
 
-    public function getHashSize():Int {
+    public function getHashSize():Int32 {
         return 0;
     }
 
-    public function getPadSize():Int {
+    public function getPadSize():Int32 {
         return pad_size;
     }
 
@@ -32,13 +33,13 @@ class SHABase implements IHash {
         var savedEndian = src.endian;
 
         src.endian = Endian.BIG_ENDIAN;
-        var len:Int = savedLength * 8;
+        var len:Int32 = savedLength * 8;
         // pad to nearest int.
         while ((src.length % 4) != 0) src[src.length] = 0;
 
         src.position = 0;
-        var a:Array<Int> = [];
-        var i:Int = 0;
+        var a:Array<Int32> = [];
+        var i:Int32 = 0;
         while (i < src.length) {
             a.push(src.readUnsignedInt());
             i += 4;
@@ -62,7 +63,7 @@ class SHABase implements IHash {
         return out;
     }
 
-    private function core(x:Array<Int>, len:Int):Array<Int> {
+    private function core(x:Array<Int32>, len:Int32):Array<Int32> {
         return null;
     }
 

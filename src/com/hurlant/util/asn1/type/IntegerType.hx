@@ -17,9 +17,9 @@ class IntegerType extends ASN1Type {
      * @return a BigInteger or a int, if it fits within one.
      *
      */
-    override private function fromDERContent(s:ByteArray, length:Int):Dynamic {
-        var p:Int = s.position;
-        var left:Int = length;
+    override private function fromDERContent(s:ByteArray, length:Int32):Dynamic {
+        var p:Int32 = s.position;
+        var left:Int32 = length;
         var b:ByteArray = new ByteArray();
         s.readBytes(b, 0, length);
         b.position = 0;

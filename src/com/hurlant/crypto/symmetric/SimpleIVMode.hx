@@ -20,10 +20,10 @@ class SimpleIVMode implements IMode implements ICipher {
 
     public function new(mode:IVMode) {
         this.mode = mode;
-        cipher = try cast(mode, ICipher) catch (e:Dynamic) null;
+        cipher = cast(mode, ICipher);
     }
 
-    public function getBlockSize():Int {
+    public function getBlockSize():Int32 {
         return mode.getBlockSize();
     }
 

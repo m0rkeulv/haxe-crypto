@@ -19,11 +19,15 @@ import com.hurlant.util.ByteArray;
 
 class RSAKeyTest extends BaseTestCase {
     public function test_smoke() {
-        var N = "C4E3F7212602E1E396C0B6623CF11D26204ACE3E7D26685E037AD2507DCE82FC" +
-        "28F2D5F8A67FC3AFAB89A6D818D1F4C28CFA548418BD9F8E7426789A67E73E41";
+        var N = (
+            "C4E3F7212602E1E396C0B6623CF11D26204ACE3E7D26685E037AD2507DCE82FC" +
+            "28F2D5F8A67FC3AFAB89A6D818D1F4C28CFA548418BD9F8E7426789A67E73E41"
+        );
         var E = "10001";
-        var D = "7cd1745aec69096129b1f42da52ac9eae0afebbe0bc2ec89253598dcf454960e" +
-        "3e5e4ec9f8c87202b986601dd167253ee3fb3fa047e14f1dfd5ccd37e931b29d";
+        var D = (
+            "7cd1745aec69096129b1f42da52ac9eae0afebbe0bc2ec89253598dcf454960e" +
+            "3e5e4ec9f8c87202b986601dd167253ee3fb3fa047e14f1dfd5ccd37e931b29d"
+        );
         var P = "f0e4dd1eac5622bd3932860fc749bbc48662edabdf3d2826059acc0251ac0d3b";
         var Q = "d13cb38fbcd06ee9bca330b4000b3dae5dae12b27e5173e4d888c325cda61ab3";
         var DMP1 = "b3d5571197fc31b0eb6b4153b425e24c033b054d22b9c8282254fe69d8c8c593";
@@ -40,6 +44,7 @@ class RSAKeyTest extends BaseTestCase {
         var txt2 = Std.string(Hex);
         assert(txt, txt2);
     }
+
 
     public function test_generate() {
         var rsa = RSAKey.generate(256, "10001");
@@ -139,6 +144,5 @@ class RSAKeyTest extends BaseTestCase {
         var txt2 = Std.string(Hex);
         assert(txt, txt2);
     }
+
 }
-
-

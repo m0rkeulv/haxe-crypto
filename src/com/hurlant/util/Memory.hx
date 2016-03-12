@@ -9,13 +9,15 @@
  */
 package com.hurlant.util;
 
+import haxe.Int32;
+
 class Memory {
-    public static var used(get, never):Int;
+    public static var used(get, never):Int32;
 
     public static function gc():Void {
     }
 
-    private static function get_used():Int {
+    private static function get_used():Int32 {
         //return System.totalMemory;
         return 0;
     }

@@ -21,7 +21,7 @@ class AnyType extends ASN1Type {
      * @return
      *
      */
-    override private function fromDERContent(s:ByteArray, length:Int):Dynamic {
+    override private function fromDERContent(s:ByteArray, length:Int32):Dynamic {
         // hmmm I have the universal type found in parsedTag
         // but then what?
         // do I need a factory that returns a type for it?

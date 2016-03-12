@@ -13,7 +13,7 @@
  */
 package com.hurlant.math;
 
-import com.hurlant.util.Function;
+import haxe.Int32;
 import com.hurlant.util.Std2;
 import com.hurlant.math.ClassicReduction;
 import com.hurlant.math.IReduction;
@@ -34,17 +34,17 @@ class BigInteger {
     public static inline var DV = (1 << DB);
     public static inline var DM = (DV - 1); // Max value in a chunk
 
-    public static inline var BI_FP = 52;
-    public static var FV = Math.pow(2, BI_FP);
-    public static var F1 = BI_FP - DB;
-    public static var F2 = 2 * DB - BI_FP;
+    public static inline var BI_FP:Int32 = 52;
+    public static var FV:Float = Math.pow(2, BI_FP);
+    public static var F1:Int32 = BI_FP - DB;
+    public static var F2:Int32 = 2 * DB - BI_FP;
 
     public static var ZERO = nbv(0);
     public static var ONE = nbv(1);
 
-    public var t:Int; // number of chunks.
-    public var s:Int; // sign
-    public var a:Array<UInt>; // chunks
+    public var s:Int32; // sign
+    public var t:Int32; // number of chunks.
+    public var a:Array<Int32>; // chunks
 
     /**
      *
@@ -53,9 +53,10 @@ class BigInteger {
      * @param unsigned
      *
      */
-    public function new(value:Dynamic = null, radix:Int = 0, unsigned:Bool = false) {
+
+    public function new(value:Dynamic = null, radix:Int32 = 0, unsigned:Bool = false) {
         //trace('+++++++++++++ ' + value);
-        a = new Array<Int>();
+        a = new Array<Int32>();
         if (Std.is(value, String)) {
             if (radix != 0 && radix != 16) {
                 fromRadix(cast(value, String), radix);
@@ -68,22 +69,20 @@ class BigInteger {
         }
 
         if (value != null) {
-        //if (Std.is(value, ByteArrayData)) {
+            //if (Std.is(value, ByteArrayData)) {
             //trace(':::::::::::::: ' + value);
             var array = cast(value, ByteArray);
-            var length:Int = radix;
+            var length:Int32 = radix;
             if (length == 0) length = (array.length - array.position);
             fromArray(array, length, unsigned);
         }
     }
 
-    //private var data:Array<Int> = [];
-
-    public function get(index:Int):Int {
+    public function get(index:Int32):Int32 {
         return a[index];
     }
 
-    public function set(index:Int, value:Int):Int {
+    public function set(index:Int32, value:Int32):Int32 {
         return a[index] = value;
     }
 
@@ -100,7 +99,7 @@ class BigInteger {
 
     public function toString(radix:Float = 16):String {
         if (s < 0) return "-" + negate().toString(radix);
-        var k:Int;
+        var k:Int32;
         switch (radix)
         {
             case 2: k = 1;
@@ -110,12 +109,12 @@ class BigInteger {
             case 32: k = 5;
             default: return toRadix(Std.int(radix));
         }
-        var km:Int = (1 << k) - 1;
-        var d:Int = 0;
+        var km:Int32 = (1 << k) - 1;
+        var d:Int32 = 0;
         var m:Bool = false;
         var r:String = "";
-        var i:Int = t;
-        var p:Int = DB - (i * DB) % k;
+        var i:Int32 = t;
+        var p:Int32 = DB - (i * DB) % k;
         if (i-- > 0) {
             if (p < DB && (d = a[i] >> p) > 0) {
                 m = true;
@@ -144,14 +143,14 @@ class BigInteger {
         return (m) ? r : "0";
     }
 
-    public function toArray(array:ByteArray):Int {
-        var k:Int = 8;
-        var km:Int = (1 << k) - 1;
-        var d:Int = 0;
-        var i:Int = t;
-        var p:Int = DB - (i * DB) % k;
+    public function toArray(array:ByteArray):Int32 {
+        var k:Int32 = 8;
+        var km:Int32 = (1 << k) - 1;
+        var d:Int32 = 0;
+        var i:Int32 = t;
+        var p:Int32 = DB - (i * DB) % k;
         var m:Bool = false;
-        var c:Int = 0;
+        var c:Int32 = 0;
         if (i-- > 0) {
             if (p < DB && (d = a[i] >> p) > 0) {
                 m = true;
@@ -181,15 +180,14 @@ class BigInteger {
         }
         return c;
     }
+
     /**
-		 * best-effort attempt to fit into a Number.
-		 * precision can be lost if it just can't fit.
-		 */
+     * best-effort attempt to fit into a Number.
+     * precision can be lost if it just can't fit.
+     */
 
     public function valueOf():Float {
-        if (s == -1) {
-            return -negate().valueOf();
-        }
+        if (s == -1) return -negate().valueOf();
         var coef:Float = 1;
         var value:Float = 0;
         for (i in 0...t) {
@@ -198,32 +196,35 @@ class BigInteger {
         }
         return value;
     }
+
     /**
-		 * -this
-		 */
+     * -this
+     */
 
     public function negate():BigInteger {
         var r:BigInteger = nbi();
         ZERO.subTo(this, r);
         return r;
     }
+
     /**
-		 * |this|
-		 */
+     * |this|
+     */
 
     public function abs():BigInteger {
         return ((s < 0)) ? negate() : this;
     }
-    /**
-		 * return + if this > v, - if this < v, 0 if equal
-		 */
 
-    public function compareTo(v:BigInteger):Int {
-        var r:Int = s - v.s;
+    /**
+     * return + if this > v, - if this < v, 0 if equal
+     */
+
+    public function compareTo(v:BigInteger):Int32 {
+        var r:Int32 = s - v.s;
         if (r != 0) {
             return r;
         }
-        var i:Int = t;
+        var i:Int32 = t;
         r = i - v.t;
         if (r != 0) {
             return ((s < 0)) ? r * -1 : r;
@@ -236,32 +237,20 @@ class BigInteger {
     }
 
     /**
-     * returns bit length of the integer x
+     * returns the number of bits in this
      */
-    public function nbits(x:Int):Int {
-        var r:Int = 1;
-        var t:Int;
-        if ((t = x >>> 16) != 0) {x = t;r += 16;}
-        if ((t = x >> 8) != 0) {x = t;r += 8;}
-        if ((t = x >> 4) != 0) {x = t;r += 4;}
-        if ((t = x >> 2) != 0) {x = t;r += 2;}
-        if ((t = x >> 1) != 0) {x = t;r += 1;}
-        return r;
-    }
-    /**
-		 * returns the number of bits in this
-		 */
 
-    public function bitLength():Int {
+    public function bitLength():Int32 {
         if (t <= 0) return 0;
-        return DB * (t - 1) + nbits(a[t - 1] ^ (s & DM));
+        return DB * (t - 1) + Std2.nbits(a[t - 1] ^ (s & DM));
     }
+
     /**
-		 * 
-		 * @param v
-		 * @return this % v
-		 * 
-		 */
+     *
+     * @param v
+     * @return this % v
+     *
+     */
 
     public function mod(v:BigInteger):BigInteger {
         var r:BigInteger = nbi();
@@ -271,27 +260,21 @@ class BigInteger {
         }
         return r;
     }
-    /**
-		 * this^e % m, 0 <= e < 2^32
-		 */
 
-    public function modPowInt(e:Int, m:BigInteger):BigInteger {
-        var z:IReduction;
-        if (e < 256 || m.isEven()) {
-            z = new ClassicReduction(m);
-        }
-        else {
-            z = new MontgomeryReduction(m);
-        }
-        return exp(e, z);
+    /**
+     * this^e % m, 0 <= e < 2^32
+     */
+
+    public function modPowInt(e:Int32, m:BigInteger):BigInteger {
+        return exp(e, (e < 256 || m.isEven()) ? new ClassicReduction(m) : new MontgomeryReduction(m));
     }
 
     /**
-		 * copy this to r
-		 */
+     * copy this to r
+     */
 
     public function copyTo(r:BigInteger):Void {
-        var i:Int = t - 1;
+        var i:Int32 = t - 1;
         while (i >= 0) {
             r.a[i] = a[i];
             --i;
@@ -303,7 +286,8 @@ class BigInteger {
     /**
      * set from integer value "value", -DV <= value < DV
      */
-    public function fromInt(value:Int):Void {
+
+    public function fromInt(value:Int32):Void {
         if (value > 0) {
             a[0] = value;
             s = 0;
@@ -323,23 +307,22 @@ class BigInteger {
      * starting a current position
      * If length goes beyond the array, pad with zeroes.
      */
-    public function fromArray(value:ByteArray, length:Int, unsigned:Bool = false):Void {
-        var p:Int = value.position;
-        var i:Int = p + length;
-        var sh:Int = 0;
-        var k:Int = 8;
+
+    public function fromArray(value:ByteArray, length:Int32, unsigned:Bool = false):Void {
+        var p:Int32 = value.position;
+        var i:Int32 = p + length;
+        var sh:Int32 = 0;
+        var k:Int32 = 8;
         t = 0;
         s = 0;
         while (--i >= p) {
-            var x:Int = i < (value.length) ? value[i] : 0;
+            var x:Int32 = i < (value.length) ? value[i] : 0;
             if (sh == 0) {
                 a[t++] = x;
-            }
-            else if (sh + k > DB) {
+            } else if (sh + k > DB) {
                 a[t - 1] |= (x & ((1 << (DB - sh)) - 1)) << sh;
                 a[t++] = x >> (DB - sh);
-            }
-            else {
+            } else {
                 a[t - 1] |= x << sh;
             }
             sh += k;
@@ -358,18 +341,18 @@ class BigInteger {
     /**
      * clamp off excess high words
      */
+
     public function clamp():Void {
-        var c:Int = s & DM;
-        while (t > 0 && a[t - 1] == c) {
-            --t;
-        }
+        var c:Int32 = s & DM;
+        while (t > 0 && a[t - 1] == c) --t;
     }
 
     /**
      * r = this << n*DB
      */
-    public function dlShiftTo(n:Int, r:BigInteger):Void {
-        var i:Int;
+
+    public function dlShiftTo(n:Int32, r:BigInteger):Void {
+        var i:Int32;
         i = t - 1;
         while (i >= 0) {
             r.a[i + n] = a[i];
@@ -387,18 +370,18 @@ class BigInteger {
     /**
      * r = this >> n*DB
      */
-    public function drShiftTo(n:Int, r:BigInteger):Void {
-        for (i in n...t) {
-            r.a[i - n] = a[i];
-        }
+
+    public function drShiftTo(n:Int32, r:BigInteger):Void {
+        for (i in n...t) r.a[i - n] = a[i];
         r.t = Std.int(Math.max(t - n, 0));
         r.s = s;
     }
-    /**
-		 * r = this << n
-		 */
 
-    public function lShiftTo(n:Int, r:BigInteger):Void {
+    /**
+     * r = this << n
+     */
+
+    public function lShiftTo(n:Int32, r:BigInteger):Void {
         var bs = n % DB;
         var cbs = DB - bs;
         var bm = (1 << cbs) - 1;
@@ -425,18 +408,19 @@ class BigInteger {
     /**
      * r = this >> n
      */
-    public function rShiftTo(n:Int, r:BigInteger):Void {
+
+    public function rShiftTo(n:Int32, r:BigInteger):Void {
         r.s = s;
-        var ds:Int = Std.int(n / DB);
+        var ds:Int32 = Std.int(n / DB);
         if (ds >= t) {
             r.t = 0;
             return;
         }
-        var bs:Int = n % DB;
-        var cbs:Int = DB - bs;
-        var bm:Int = (1 << bs) - 1;
+        var bs:Int32 = n % DB;
+        var cbs:Int32 = DB - bs;
+        var bm:Int32 = (1 << bs) - 1;
         r.a[0] = a[ds] >> bs;
-        var i:Int;
+        var i:Int32;
         for (i in ds + 1...t) {
             r.a[i - ds - 1] |= (a[i] & bm) << cbs;
             r.a[i - ds] = a[i] >> bs;
@@ -451,10 +435,11 @@ class BigInteger {
     /**
      * r = this - v
      */
+
     public function subTo(v:BigInteger, r:BigInteger):Void {
-        var i:Int = 0;
-        var c:Int = 0;
-        var m:Int = Std.int(Math.min(v.t, t));
+        var i:Int32 = 0;
+        var c:Int32 = 0;
+        var m:Int32 = Std.int(Math.min(v.t, t));
         while (i < m) {
             c += a[i] - v.a[i];
             r.a[i++] = c & DM;
@@ -493,28 +478,30 @@ class BigInteger {
      * c is initial carry, returns final carry.
      * c < 3*dvalue, x < 2*dvalue, this_i < dvalue
      */
-    public function am(i:Int, x:Int, w:BigInteger, j:Int, c:Int, n:Int):Int {
-        var xl:Int = x & 0x7fff;
-        var xh:Int = x >> 15;
+
+    public function am(i:Int32, x:Int32, w:BigInteger, j:Int32, c:Int32, n:Int32):Int32 {
+        var xl:Int32 = x & 0x7fff;
+        var xh:Int32 = x >> 15;
         while (--n >= 0) {
-            var l:Int = a[i] & 0x7fff;
-            var h:Int = a[i++] >> 15;
-            var m:Int = xh * l + h * xl;
+            var l:Int32 = a[i] & 0x7fff;
+            var h:Int32 = a[i++] >> 15;
+            var m:Int32 = xh * l + h * xl;
             l = xl * l + ((m & 0x7fff) << 15) + w.a[j] + (c & 0x3fffffff);
             c = (l >>> 30) + (m >>> 15) + xh * h + (c >>> 30);
             w.a[j++] = l & 0x3fffffff;
         }
         return c;
     }
+
     /**
-		 * r = this * v, r != this,a (HAC 14.12)
-		 * "this" should be the larger one if appropriate
-		 */
+     * r = this * v, r != this,a (HAC 14.12)
+     * "this" should be the larger one if appropriate
+     */
 
     public function multiplyTo(v:BigInteger, r:BigInteger):Void {
         var x:BigInteger = abs();
         var y:BigInteger = v.abs();
-        var i:Int = x.t;
+        var i:Int32 = x.t;
         r.t = i + y.t;
         while (--i >= 0) {
             r.a[i] = 0;
@@ -532,12 +519,13 @@ class BigInteger {
     /**
      * r = this^2, r != this (HAC 14.16)
      */
+
     public function squareTo(r:BigInteger):Void {
         var x:BigInteger = abs();
-        var i:Int = r.t = 2 * x.t;
+        var i:Int32 = r.t = 2 * x.t;
         while (--i >= 0)r.a[i] = 0;
         for (i in 0...x.t - 1) {
-            var c:Int = x.am(i, x.a[i], r, 2 * i, 0, 1);
+            var c:Int32 = x.am(i, x.a[i], r, 2 * i, 0, 1);
             if ((r.a[i + x.t] += x.am(i + 1, 2 * x.a[i], r, 2 * i + 1, c, x.t - i - 1)) >= DV) {
                 r.a[i + x.t] -= DV;
                 r.a[i + x.t + 1] = 1;
@@ -549,10 +537,11 @@ class BigInteger {
         r.s = 0;
         r.clamp();
     }
+
     /**
-		 * divide this by m, quotient and remainder to q, r (HAC 14.20)
-		 * r != q, this != m. q or r may be null.
-		 */
+     * divide this by m, quotient and remainder to q, r (HAC 14.20)
+     * r != q, this != m. q or r may be null.
+     */
 
     public function divRemTo(m:BigInteger, q:BigInteger = null, r:BigInteger = null):Void {
         var pm:BigInteger = m.abs();
@@ -565,9 +554,9 @@ class BigInteger {
         }
         if (r == null) r = nbi();
         var y:BigInteger = nbi();
-        var ts:Int = s;
-        var ms:Int = m.s;
-        var nsh:Int = DB - nbits(pm.a[pm.t - 1]); // normalize modulus
+        var ts:Int32 = s;
+        var ms:Int32 = m.s;
+        var nsh:Int32 = DB - Std2.nbits(pm.a[pm.t - 1]); // normalize modulus
         if (nsh > 0) {
             pm.lShiftTo(nsh, y);
             pt.lShiftTo(nsh, r);
@@ -576,15 +565,15 @@ class BigInteger {
             pm.copyTo(y);
             pt.copyTo(r);
         }
-        var ys:Int = y.t;
-        var y0:Int = y.a[ys - 1];
+        var ys:Int32 = y.t;
+        var y0:Int32 = y.a[ys - 1];
         if (y0 == 0) return;
         var yt:Float = y0 * (1 << F1) + (((ys > 1)) ? y.a[ys - 2] >> F2 : 0);
         var d1:Float = FV / yt;
         var d2:Float = (1 << F1) / yt;
         var e:Float = 1 << F2;
-        var i:Int = r.t;
-        var j:Int = i - ys;
+        var i:Int32 = r.t;
+        var j:Int32 = i - ys;
         var t:BigInteger = ((q == null)) ? nbi() : q;
         y.dlShiftTo(j, t);
         if (r.compareTo(t) >= 0) {
@@ -599,7 +588,7 @@ class BigInteger {
         }
         while (--j >= 0) {
             // Estimate quotient digit
-            var qd:Int = ((r.a[--i] == y0)) ? DM : Std.int((r.a[i]) * d1 + ((r.a[i - 1]) + e) * d2);
+            var qd:Int32 = ((r.a[--i] == y0)) ? DM : Std.int((r.a[i]) * d1 + ((r.a[i - 1]) + e) * d2);
             if ((r.a[i] += y.am(0, qd, r, j, 0, ys)) < qd) { // Try it out
                 y.dlShiftTo(j, t);
                 r.subTo(t, r);
@@ -623,24 +612,25 @@ class BigInteger {
             ZERO.subTo(r, r);
         }
     }
-    /**
-		 * return "-1/this % 2^DB"; useful for Mont. reduction
-		 * justification:
-		 *         xy == 1 (mod n)
-		 *         xy =  1+km
-		 * 	 xy(2-xy) = (1+km)(1-km)
-		 * x[y(2-xy)] =  1-k^2.m^2
-		 * x[y(2-xy)] == 1 (mod m^2)
-		 * if y is 1/x mod m, then y(2-xy) is 1/x mod m^2
-		 * should reduce x and y(2-xy) by m^2 at each step to keep size bounded
-		 * [XXX unit test the living shit out of this.]
-		 */
 
-    public function invDigit():Int {
+    /**
+     * return "-1/this % 2^DB"; useful for Mont. reduction
+     * justification:
+     *         xy == 1 (mod n)
+     *         xy =  1+km
+     * 	 xy(2-xy) = (1+km)(1-km)
+     * x[y(2-xy)] =  1-k^2.m^2
+     * x[y(2-xy)] == 1 (mod m^2)
+     * if y is 1/x mod m, then y(2-xy) is 1/x mod m^2
+     * should reduce x and y(2-xy) by m^2 at each step to keep size bounded
+     * [XXX unit test the living shit out of this.]
+     */
+
+    public function invDigit():Int32 {
         if (t < 1) return 0;
-        var x:Int = a[0];
+        var x:Int32 = a[0];
         if ((x & 1) == 0) return 0;
-        var y:Int = x & 3; // y == 1/x mod 2^2
+        var y:Int32 = x & 3; // y == 1/x mod 2^2
         y = (y * (2 - (x & 0xf) * y)) & 0xf; // y == 1/x mod 2^4
         y = (y * (2 - (x & 0xff) * y)) & 0xff; // y == 1/x mod 2^8
         y = (y * (2 - (((x & 0xffff) * y) & 0xffff))) & 0xffff; // y == 1/x mod 2^16
@@ -651,23 +641,25 @@ class BigInteger {
         // we really want the negative inverse, and -DV < y < DV
         return ((y > 0)) ? DV - y : -y;
     }
+
     /**
-		 * true iff this is even
-		 */
+     * true iff this is even
+     */
 
     public function isEven():Bool {
         return (((t > 0)) ? (a[0] & 1) : s) == 0;
     }
-    /**
-		 * this^e, e < 2^32, doing sqr and mul with "r" (HAC 14.79)
-		 */
 
-    public function exp(e:Int, z:IReduction):BigInteger {
+    /**
+     * this^e, e < 2^32, doing sqr and mul with "r" (HAC 14.79)
+     */
+
+    public function exp(e:Int32, z:IReduction):BigInteger {
         if (e > 0xffffffff || e < 1) return ONE;
         var r:BigInteger = nbi();
         var r2:BigInteger = nbi();
         var g:BigInteger = z.convert(this);
-        var i:Int = nbits(e) - 1;
+        var i:Int32 = Std2.nbits(e) - 1;
         g.copyTo(r);
         while (--i >= 0) {
             z.sqrTo(r, r2);
@@ -683,7 +675,7 @@ class BigInteger {
         return z.revert(r);
     }
 
-    public function intAt(str:String, index:Int):Int {
+    public function intAt(str:String, index:Int32):Int32 {
         return Std2.parseInt(str.charAt(index), 36);
     }
 
@@ -695,7 +687,7 @@ class BigInteger {
      * return bigint initialized to value
      */
 
-    public static function nbv(value:Int):BigInteger {
+    public static function nbv(value:Int32):BigInteger {
         var bn = new BigInteger();
         bn.fromInt(value);
         return bn;
@@ -705,8 +697,8 @@ class BigInteger {
     // Functions above are sufficient for RSA encryption.
     // The stuff below is useful for decryption and key generation
 
-    public static var lowprimes:Array<Int> = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509];
-    public static var lplim:Int = Std.int((1 << 26) / lowprimes[lowprimes.length - 1]);
+    public static var lowprimes:Array<Int32> = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509];
+    public static var lplim:Int32 = Std.int((1 << 26) / lowprimes[lowprimes.length - 1]);
 
 
     public function clone():BigInteger {
@@ -720,7 +712,8 @@ class BigInteger {
      * @return value as integer
      *
      */
-    public function intValue():Int {
+
+    public function intValue():Int32 {
         if (s < 0) {
             if (t == 1) {
                 return a[0] - DV;
@@ -745,7 +738,8 @@ class BigInteger {
      * @return value as byte
      *
      */
-    public function byteValue():Int {
+
+    public function byteValue():Int32 {
         return ((t == 0)) ? s : (a[0] << 24) >> 24;
     }
 
@@ -754,7 +748,8 @@ class BigInteger {
      * @return value as short (assumes DB>=16)
      *
      */
-    public function shortValue():Int {
+
+    public function shortValue():Int32 {
         return ((t == 0)) ? s : (a[0] << 16) >> 16;
     }
 
@@ -764,7 +759,8 @@ class BigInteger {
      * @return x s.t. r^x < DV
      *
      */
-    public function chunkSize(r:Float):Int {
+
+    public function chunkSize(r:Float):Int32 {
         return Math.floor(getLN2() * DB / Math.log(r));
     }
 
@@ -779,7 +775,8 @@ class BigInteger {
      * @return 0 if this ==0, 1 if this >0
      *
      */
-    public function sigNum():Int {
+
+    public function sigNum():Int32 {
         if (s < 0) return -1;
         if (t <= 0 || (t == 1 && a[0] <= 0)) return 0;
         return 1;
@@ -791,9 +788,10 @@ class BigInteger {
      * @return a string representing the integer converted to the radix.
      *
      */
-    public function toRadix(b:Int = 10):String {
+
+    public function toRadix(b:Int32 = 10):String {
         if (sigNum() == 0 || b < 2 || b > 32) return "0";
-        var cs:Int = chunkSize(b);
+        var cs:Int32 = chunkSize(b);
         var a:Float = Math.pow(b, cs);
         var d:BigInteger = nbv(Std.int(a));
         var y:BigInteger = nbi();
@@ -813,20 +811,21 @@ class BigInteger {
      * @param b a radix
      *
      */
-    public function fromRadix(s:String, b:Int = 10):Void {
+
+    public function fromRadix(s:String, b:Int32 = 10):Void {
         fromInt(0);
-        var cs:Int = chunkSize(b);
+        var cs:Int32 = chunkSize(b);
         var d:Float = Math.pow(b, cs);
         var mi:Bool = false;
-        var j:Int = 0;
-        var w:Int = 0;
+        var j:Int32 = 0;
+        var w:Int32 = 0;
         for (i in 0...s.length) {
             if (s.charAt(i) == "-" && sigNum() == 0) {
                 mi = true;
                 continue;
             }
 
-            var x:Int = intAt(s, i);
+            var x:Int32 = intAt(s, i);
             if (x < 0) {
                 continue;
             }
@@ -850,18 +849,18 @@ class BigInteger {
     // XXX function fromNumber not written yet.
 
     /**
-		 * 
-		 * @return a byte array.
-		 * 
-		 */
+     *
+     * @return a byte array.
+     *
+     */
 
     public function toByteArray():ByteArray {
-        var i:Int = t;
+        var i:Int32 = t;
         var r:ByteArray = new ByteArray();
         r[0] = s;
-        var p:Int = DB - (i * DB) % 8;
-        var d:Int;
-        var k:Int = 0;
+        var p:Int32 = DB - (i * DB) % 8;
+        var d:Int32;
+        var k:Int32 = 0;
         if (i-- > 0) {
             if (p < DB && (d = a[i] >> p) != (s & DM) >> p) {
                 r[k++] = d | (s << (DB - p));
@@ -899,17 +898,17 @@ class BigInteger {
     }
 
     /**
-		 * 
-		 * @param a	a BigInteger to perform the operation with
-		 * @param op a Function implementing the operation
-		 * @param r a BigInteger to store the result of the operation
-		 * 
-		 */
+     *
+     * @param a	a BigInteger to perform the operation with
+     * @param op a Function implementing the operation
+     * @param r a BigInteger to store the result of the operation
+     *
+     */
 
-    public function bitwiseTo(a:BigInteger, op:Function, r:BigInteger):Void {
-        var i:Int;
-        var f:Int;
-        var m:Int = Std.int(Math.min(a.t, t));
+    public function bitwiseTo(a:BigInteger, op:Int32 -> Int -> Int, r:BigInteger):Void {
+        var i:Int32;
+        var f:Int32;
+        var m:Int32 = Std.int(Math.min(a.t, t));
         for (i in 0...m) {
             r.a[i] = op(this.a[i], a.a[i]);
         }
@@ -931,7 +930,7 @@ class BigInteger {
         r.clamp();
     }
 
-    public function op_and(x:Int, y:Int):Int {return x & y;
+    public function op_and(x:Int32, y:Int32):Int32 {return x & y;
     }
 
     public function and(a:BigInteger):BigInteger {
@@ -940,7 +939,7 @@ class BigInteger {
         return r;
     }
 
-    public function op_or(x:Int, y:Int):Int {return x | y;
+    public function op_or(x:Int32, y:Int32):Int32 {return x | y;
     }
 
     public function or(a:BigInteger):BigInteger {
@@ -949,7 +948,7 @@ class BigInteger {
         return r;
     }
 
-    public function op_xor(x:Int, y:Int):Int {return x ^ y;
+    public function op_xor(x:Int32, y:Int32):Int32 {return x ^ y;
     }
 
     public function xor(a:BigInteger):BigInteger {
@@ -958,7 +957,7 @@ class BigInteger {
         return r;
     }
 
-    public function op_andnot(x:Int, y:Int):Int {return x & ~y;
+    public function op_andnot(x:Int32, y:Int32):Int32 {return x & ~y;
     }
 
     public function andNot(a:BigInteger):BigInteger {
@@ -969,55 +968,21 @@ class BigInteger {
 
     public function not():BigInteger {
         var r:BigInteger = new BigInteger();
-        for (i in 0...t) {
-            r.set(i, DM & ~a[i]);
-        }
+        for (i in 0...t) r.set(i, DM & ~a[i]);
         r.t = t;
         r.s = ~s;
         return r;
     }
 
-    public function shiftLeft(n:Int):BigInteger {
+    public function shiftLeft(n:Int32):BigInteger {
         var r = new BigInteger();
         if (n < 0) rShiftTo(-n, r); else lShiftTo(n, r);
         return r;
     }
 
-    public function shiftRight(n:Int):BigInteger {
+    public function shiftRight(n:Int32):BigInteger {
         var r = new BigInteger();
         if (n < 0) lShiftTo(-n, r); else rShiftTo(n, r);
-        return r;
-    }
-
-    /**
-     *
-     * @param x
-     * @return index of lowet 1-bit in x, x < 2^31
-     *
-     */
-
-    public function lbit(x:Int):Int {
-        if (x == 0) return -1;
-        var r:Int = 0;
-        if ((x & 0xffff) == 0) {
-            x = x >> 16;
-            r += 16;
-        }
-        if ((x & 0xff) == 0) {
-            x = x >> 8;
-            r += 8;
-        }
-        if ((x & 0xf) == 0) {
-            x = x >> 4;
-            r += 4;
-        }
-        if ((x & 0x3) == 0) {
-            x = x >> 2;
-            r += 2;
-        }
-        if ((x & 0x1) == 0) {
-            ++r;
-        }
         return r;
     }
 
@@ -1026,26 +991,11 @@ class BigInteger {
      * @return index of lowest 1-bit (or -1 if none)
      *
      */
-    public function getLowestSetBit():Int {
-        for (i in 0...t) if (a[i] != 0) return i * DB + lbit(a[i]);
+
+    public function getLowestSetBit():Int32 {
+        for (i in 0...t) if (a[i] != 0) return i * DB + Std2.lbit(a[i]);
         if (s < 0) return t * DB;
         return -1;
-    }
-
-    /**
-     *
-     * @param x
-     * @return number of 1 bits in x
-     *
-     */
-
-    public function cbit(x:Int):Int {
-        var r = 0;
-        while (x != 0) {
-            x &= x - 1;
-            ++r;
-        }
-        return r;
     }
 
     /**
@@ -1053,12 +1003,11 @@ class BigInteger {
      * @return number of set bits
      *
      */
-    public function bitCount():Int {
-        var r:Int = 0;
-        var x:Int = s & DM;
-        for (i in 0...t) {
-            r += cbit(a[i] ^ x);
-        }
+
+    public function bitCount():Int32 {
+        var r:Int32 = 0;
+        var x:Int32 = s & DM;
+        for (i in 0...t) r += Std2.cbit(a[i] ^ x);
         return r;
     }
 
@@ -1068,7 +1017,8 @@ class BigInteger {
      * @return true iff nth bit is set
      *
      */
-    public function testBit(n:Int):Bool {
+
+    public function testBit(n:Int32):Bool {
         var j = Math.floor(n / DB);
         if (j >= t) return s != 0;
         return ((a[j] & (1 << (n % DB))) != 0);
@@ -1081,7 +1031,8 @@ class BigInteger {
      * @return this op (1<<n)
      *
      */
-    public function changeBit(n:Int, op:Function):BigInteger {
+
+    public function changeBit(n:Int32, op:Int32 -> Int -> Int):BigInteger {
         var r:BigInteger = BigInteger.ONE.shiftLeft(n);
         bitwiseTo(r, op, r);
         return r;
@@ -1093,7 +1044,9 @@ class BigInteger {
      * @return this | (1<<n)
      *
      */
-    public function setBit(n:Int):BigInteger {return changeBit(n, op_or);
+
+    public function setBit(n:Int32):BigInteger {
+        return changeBit(n, op_or);
     }
 
     /**
@@ -1102,7 +1055,9 @@ class BigInteger {
      * @return this & ~(1<<n)
      *
      */
-    public function clearBit(n:Int):BigInteger {return changeBit(n, op_andnot);
+
+    public function clearBit(n:Int32):BigInteger {
+        return changeBit(n, op_andnot);
     }
 
     /**
@@ -1111,7 +1066,9 @@ class BigInteger {
      * @return this ^ (1<<n)
      *
      */
-    public function flipBit(n:Int):BigInteger {return changeBit(n, op_xor);
+
+    public function flipBit(n:Int32):BigInteger {
+        return changeBit(n, op_xor);
     }
 
     /**
@@ -1120,10 +1077,11 @@ class BigInteger {
      * @param r = this + a
      *
      */
+
     public function addTo(a:BigInteger, r:BigInteger):Void {
-        var i:Int = 0;
-        var c:Int = 0;
-        var m:Int = Std.int(Math.min(a.t, t));
+        var i:Int32 = 0;
+        var c:Int32 = 0;
+        var m:Int32 = Std.int(Math.min(a.t, t));
         while (i < m) {
             c += this.a[i] + a.a[i];
             r.a[i++] = c & DM;
@@ -1164,6 +1122,7 @@ class BigInteger {
      * @return this + a
      *
      */
+
     public function add(a:BigInteger):BigInteger {
         var r:BigInteger = new BigInteger();
         addTo(a, r);
@@ -1176,6 +1135,7 @@ class BigInteger {
      * @return this - a
      *
      */
+
     public function subtract(a:BigInteger):BigInteger {
         var r:BigInteger = new BigInteger();
         subTo(a, r);
@@ -1188,6 +1148,7 @@ class BigInteger {
      * @return this * a
      *
      */
+
     public function multiply(a:BigInteger):BigInteger {
         var r:BigInteger = new BigInteger();
         multiplyTo(a, r);
@@ -1200,6 +1161,7 @@ class BigInteger {
      * @return this / a
      *
      */
+
     public function divide(a:BigInteger):BigInteger {
         var r:BigInteger = new BigInteger();
         divRemTo(a, r, null);
@@ -1218,6 +1180,7 @@ class BigInteger {
      * @return [this/a, this%a]
      *
      */
+
     public function divideAndRemainder(a:BigInteger):Array<Dynamic> {
         var q:BigInteger = new BigInteger();
         var r:BigInteger = new BigInteger();
@@ -1232,7 +1195,8 @@ class BigInteger {
      * @param n
      *
      */
-    public function dMultiply(n:Int):Void {
+
+    public function dMultiply(n:Int32):Void {
         a[t] = am(0, n - 1, this, 0, 0, t);
         ++t;
         clamp();
@@ -1246,7 +1210,8 @@ class BigInteger {
      * @param w
      *
      */
-    public function dAddOffset(n:Int, w:Int):Void {
+
+    public function dAddOffset(n:Int32, w:Int32):Void {
         while (t <= w) {
             a[t++] = 0;
         }
@@ -1266,7 +1231,8 @@ class BigInteger {
      * @return this^e
      *
      */
-    public function pow(e:Int):BigInteger {
+
+    public function pow(e:Int32):BigInteger {
         return exp(e, new NullReduction());
     }
 
@@ -1277,8 +1243,9 @@ class BigInteger {
      * @param r = lower n words of "this * a", a.t <= n
      *
      */
-    public function multiplyLowerTo(a:BigInteger, n:Int, r:BigInteger):Void {
-        var i:Int = Std.int(Math.min(t + a.t, n));
+
+    public function multiplyLowerTo(a:BigInteger, n:Int32, r:BigInteger):Void {
+        var i:Int32 = Std.int(Math.min(t + a.t, n));
         r.s = 0; // assumes a, this >= 0
         r.t = i;
         while (i > 0) {
@@ -1304,9 +1271,10 @@ class BigInteger {
      * @param r = "this * a" without lower n words, n > 0
      *
      */
-    public function multiplyUpperTo(a:BigInteger, n:Int, r:BigInteger):Void {
+
+    public function multiplyUpperTo(a:BigInteger, n:Int32, r:BigInteger):Void {
         --n;
-        var i:Int = r.t = t + a.t - n;
+        var i:Int32 = r.t = t + a.t - n;
         r.s = 0; // assumes a,this >= 0
         while (--i >= 0) {
             r.a[i] = 0;
@@ -1325,9 +1293,10 @@ class BigInteger {
      * @return this^e % m (HAC 14.85)
      *
      */
+
     public function modPow(e:BigInteger, m:BigInteger):BigInteger {
-        var i:Int = e.bitLength();
-        var k:Int;
+        var i:Int32 = e.bitLength();
+        var k:Int32;
         var r:BigInteger = nbv(1);
         var z:IReduction;
 
@@ -1349,10 +1318,11 @@ class BigInteger {
         else {
             k = 6;
         }
+
         if (i < 8) {
             z = new ClassicReduction(m);
         }
-        // precomputation
+            // precomputation
         else if (m.isEven()) {
             z = new BarrettReduction(m);
         }
@@ -1361,9 +1331,9 @@ class BigInteger {
         }
 
         var g:Array<Dynamic> = [];
-        var n:Int = 3;
-        var k1:Int = k - 1;
-        var km:Int = (1 << k) - 1;
+        var n:Int32 = 3;
+        var k1:Int32 = k - 1;
+        var km:Int32 = (1 << k) - 1;
         g[1] = z.convert(this);
         if (k > 1) {
             var g2:BigInteger = new BigInteger();
@@ -1375,12 +1345,12 @@ class BigInteger {
             }
         }
 
-        var j:Int = e.t - 1;
-        var w:Int;
+        var j:Int32 = e.t - 1;
+        var w:Int32;
         var is1:Bool = true;
         var r2:BigInteger = new BigInteger();
         var t:BigInteger;
-        i = nbits(e.a[j]) - 1;
+        i = Std2.nbits(e.a[j]) - 1;
         while (j >= 0) {
             if (i >= k1) {
                 w = (e.a[j] >> (i - k1)) & km;
@@ -1441,16 +1411,17 @@ class BigInteger {
      * @return gcd(this, a) (HAC 14.54)
      *
      */
+
     public function gcd(a:BigInteger):BigInteger {
-        var x = ((s < 0)) ? negate() : clone();
-        var y = ((a.s < 0)) ? a.negate() : a.clone();
+        var x:BigInteger = ((s < 0)) ? negate() : clone();
+        var y:BigInteger = ((a.s < 0)) ? a.negate() : a.clone();
         if (x.compareTo(y) < 0) {
             var t = x;
             x = y;
             y = t;
         }
-        var i:Int = x.getLowestSetBit();
-        var g:Int = y.getLowestSetBit();
+        var i:Int32 = x.getLowestSetBit();
+        var g:Int32 = y.getLowestSetBit();
         if (g < 0) return x;
         if (i < g) g = i;
         if (g > 0) {
@@ -1481,7 +1452,8 @@ class BigInteger {
      * @return this % n, n < 2^DB
      *
      */
-    public function modInt(n:Int):Int {
+
+    public function modInt(n:Int32):Int32 {
         if (n <= 0) return 0;
         var d = DV % n;
         var r = ((s < 0)) ? n - 1 : 0;
@@ -1490,7 +1462,7 @@ class BigInteger {
                 r = a[0] % n;
             }
             else {
-                var i:Int = t - 1;
+                var i:Int32 = t - 1;
                 while (i >= 0) {
                     r = (d * r + a[i]) % n;
                     --i;
@@ -1506,6 +1478,7 @@ class BigInteger {
      * @return 1/this %m (HAC 14.61)
      *
      */
+
     public function modInverse(m:BigInteger):BigInteger {
         var ac:Bool = m.isEven();
         if ((isEven() && ac) || m.sigNum() == 0) return BigInteger.ZERO;
@@ -1577,8 +1550,9 @@ class BigInteger {
      * @return primality with certainty >= 1-.5^t
      *
      */
-    public function isProbablePrime(t:Int):Bool {
-        var i:Int;
+
+    public function isProbablePrime(t:Int32):Bool {
+        var i:Int32;
         var x:BigInteger = abs();
         if (x.t == 1 && x.a[0] <= lowprimes[lowprimes.length - 1]) {
             for (i in 0...lowprimes.length) {
@@ -1590,8 +1564,8 @@ class BigInteger {
         if (x.isEven()) return false;
         i = 1;
         while (i < lowprimes.length) {
-            var m:Int = lowprimes[i];
-            var j:Int = i + 1;
+            var m:Int32 = lowprimes[i];
+            var j:Int32 = i + 1;
             while (j < lowprimes.length && m < lplim) {
                 m *= lowprimes[j++];
             }
@@ -1611,9 +1585,10 @@ class BigInteger {
      * @return true if probably prime (HAC 4.24, Miller-Rabin)
      *
      */
-    public function millerRabin(t:Int):Bool {
+
+    public function millerRabin(t:Int32):Bool {
         var n1:BigInteger = subtract(BigInteger.ONE);
-        var k:Int = n1.getLowestSetBit();
+        var k:Int32 = n1.getLowestSetBit();
         if (k <= 0) {
             return false;
         }
@@ -1627,7 +1602,7 @@ class BigInteger {
             a.fromInt(lowprimes[i]);
             var y:BigInteger = a.modPow(r, this);
             if (y.compareTo(BigInteger.ONE) != 0 && y.compareTo(n1) != 0) {
-                var j:Int = 1;
+                var j:Int32 = 1;
                 while (j++ < k && y.compareTo(n1) != 0) {
                     y = y.modPowInt(2, this);
                     if (y.compareTo(BigInteger.ONE) == 0) {
@@ -1649,7 +1624,8 @@ class BigInteger {
      * @param t
      *
      */
-    public function primify(bits:Int, t:Int):Void {
+
+    public function primify(bits:Int32, t:Int32):Void {
         if (!testBit(bits - 1)) { // force MSB set
             bitwiseTo(BigInteger.ONE.shiftLeft(bits - 1), op_or, this);
         }

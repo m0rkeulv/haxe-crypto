@@ -11,16 +11,16 @@ class SequenceType extends ASN1Type {
     public function new(p:Dynamic = null) {
         super(ASN1Type.SEQUENCE);
         if (Std.is(p, Array)) {
-            children = try cast(p, Array<Dynamic>) catch(e:Dynamic) null;
+            children = cast(p, Array<Dynamic>);
         }
         else {
-            childType = try cast(p, ASN1Type) catch (e:Dynamic) null;
+            childType = cast(p, ASN1Type);
         }
     }
 
-    override private function fromDERContent(s:ByteArray, length:Int):Dynamic {
-        var p:Int = s.position;
-        var left:Int = length;
+    override private function fromDERContent(s:ByteArray, length:Int32):Dynamic {
+        var p:Int32 = s.position;
+        var left:Int32 = length;
         var val:Dynamic;
         var v:Dynamic; // v=individual children, val=entire sequence
         if (children != null) {
@@ -28,7 +28,7 @@ class SequenceType extends ASN1Type {
             val = { };
             for (i in 0...children.length) {
                 for (name in Reflect.fields(children[i])) {
-                    var pp:Int = s.position;
+                    var pp:Int32 = s.position;
                     left = length - pp + p;
                     var child:ASN1Type = children[i][name];
                     v = child.fromDER(s, left);

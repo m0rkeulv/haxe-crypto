@@ -9,12 +9,13 @@
 package com.hurlant.crypto.hash;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 interface IHash {
-    function getInputSize():Int;
-    function getHashSize():Int;
+    function getInputSize():Int32;
+    function getHashSize():Int32;
     function hash(src:ByteArray):ByteArray;
     function toString():String;
-    function getPadSize():Int;
+    function getPadSize():Int32;
 }

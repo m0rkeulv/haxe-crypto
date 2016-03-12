@@ -10,6 +10,7 @@
 package com.hurlant.crypto.prng;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 import com.hurlant.crypto.hash.HMAC;
 import com.hurlant.crypto.hash.MD5;
@@ -69,11 +70,11 @@ class TLSPRF {
 
     // XXX HORRIBLY SLOW. REWRITE.
 
-    public function nextBytes(buffer:IDataOutput, length:Int):Void {
+    public function nextBytes(buffer:IDataOutput, length:Int32):Void {
         while (length-- > 0) buffer.writeByte(nextByte());
     }
 
-    public function nextByte():Int {
+    public function nextByte():Int32 {
         if (p1.bytesAvailable == 0) more_md5();
         if (p2.bytesAvailable == 0) more_sha1();
         return p1.readUnsignedByte() ^ p2.readUnsignedByte();
@@ -105,7 +106,7 @@ class TLSPRF {
     private function more_md5():Void {
         d1.position = 0;
         d1.writeBytes(a1);
-        var p:Int = p1.position;
+        var p:Int32 = p1.position;
         var more:ByteArray = hmac_md5.compute(s1, d1);
         a1 = hmac_md5.compute(s1, a1);
         p1.writeBytes(more);
@@ -115,7 +116,7 @@ class TLSPRF {
     private function more_sha1():Void {
         d2.position = 0;
         d2.writeBytes(a2);
-        var p:Int = p2.position;
+        var p:Int32 = p2.position;
         var more:ByteArray = hmac_sha1.compute(s2, d2);
         a2 = hmac_sha1.compute(s2, a2);
         p2.writeBytes(more);

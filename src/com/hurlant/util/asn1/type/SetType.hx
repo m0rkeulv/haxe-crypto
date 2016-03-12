@@ -12,9 +12,9 @@ class SetType extends ASN1Type {
         childType = p;
     }
 
-    override private function fromDERContent(s:ByteArray, length:Int):Dynamic {
-        var p:Int = s.position;
-        var left:Int = length;
+    override private function fromDERContent(s:ByteArray, length:Int32):Dynamic {
+        var p:Int32 = s.position;
+        var left:Int32 = length;
         var val:Array<Dynamic>;
         var v:Dynamic; // v=individual children, val=entire set
         val = []; // unordered in theory, but this will do.

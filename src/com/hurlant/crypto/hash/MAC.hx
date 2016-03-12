@@ -15,7 +15,7 @@ import com.hurlant.util.ByteArray;
 
 class MAC implements IHMAC {
     private var hash:IHash;
-    private var bits:Int;
+    private var bits:Int32;
     private var pad_1:ByteArray;
     private var pad_2:ByteArray;
     private var innerHash:ByteArray;
@@ -29,7 +29,7 @@ class MAC implements IHMAC {
      * The MAC will be truncated to that size if needed.
      */
 
-    public function new(hash:IHash, bits:Int = 0) {
+    public function new(hash:IHash, bits:Int32 = 0) {
         this.hash = hash;
         this.bits = bits;
         innerHash = new ByteArray();
@@ -38,7 +38,7 @@ class MAC implements IHMAC {
         outerKey = new ByteArray();
 
         if (hash != null) {
-            var pad_size:Int = hash.getPadSize();
+            var pad_size:Int32 = hash.getPadSize();
             pad_1 = new ByteArray();
             pad_2 = new ByteArray();
 
@@ -49,10 +49,10 @@ class MAC implements IHMAC {
         }
     }
 
-    public function setPadSize(pad_size:Int):Void {
+    public function setPadSize(pad_size:Int32):Void {
     }
 
-    public function getHashSize():Int {
+    public function getHashSize():Int32 {
         return (bits != 0) ? Std.int(bits / 8) : hash.getHashSize();
     }
 
@@ -67,7 +67,7 @@ class MAC implements IHMAC {
         // note that data =  (sequence + type + length + record)
 
         if (pad_1 == null) {
-            var pad_size:Int = hash.getPadSize();
+            var pad_size:Int32 = hash.getPadSize();
             pad_1 = new ByteArray();
             pad_2 = new ByteArray();
 

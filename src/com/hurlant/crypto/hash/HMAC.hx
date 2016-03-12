@@ -9,6 +9,7 @@
  */
 package com.hurlant.crypto.hash;
 
+import haxe.Int32;
 import com.hurlant.crypto.hash.IHMAC;
 import com.hurlant.crypto.hash.IHash;
 
@@ -16,7 +17,7 @@ import com.hurlant.util.ByteArray;
 
 class HMAC implements IHMAC {
     private var hash:IHash;
-    private var bits:Int;
+    private var bits:Int32;
 
     /**
      * Create a HMAC object, using a Hash function, and
@@ -24,13 +25,13 @@ class HMAC implements IHMAC {
      * The HMAC will be truncated to that size if needed.
      */
 
-    public function new(hash:IHash, bits:Int = 0) {
+    public function new(hash:IHash, bits:Int32 = 0) {
         this.hash = hash;
         this.bits = bits;
     }
 
 
-    public function getHashSize():Int {
+    public function getHashSize():Int32 {
         return (bits != 0) ? Std.int(bits / 8) : hash.getHashSize();
     }
 

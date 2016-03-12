@@ -8,6 +8,7 @@
  */
 package com.hurlant.crypto.symmetric;
 
+import haxe.Int32;
 import com.hurlant.crypto.symmetric.PKCS5;
 import com.hurlant.util.Error;
 
@@ -27,17 +28,13 @@ class IVMode {
     private var prng:Random; // random generator used to generate IVs
     private var iv:ByteArray; // optional static IV. used for testing only.
     private var lastIV:ByteArray; // generated IV is stored here.
-    private var blockSize:Int;
+    private var blockSize:Int32;
 
     public function new(key:ISymmetricKey, padding:IPad = null) {
         this.key = key;
         blockSize = key.getBlockSize();
-        if (padding == null) {
-            padding = new PKCS5(blockSize);
-        }
-        else {
-            padding.setBlockSize(blockSize);
-        }
+        if (padding == null) padding = new PKCS5(blockSize);
+        padding.setBlockSize(blockSize);
         this.padding = padding;
 
         prng = new Random();
@@ -45,12 +42,12 @@ class IVMode {
         lastIV = new ByteArray();
     }
 
-    public function getBlockSize():Int {
+    public function getBlockSize():Int32 {
         return key.getBlockSize();
     }
 
     public function dispose():Void {
-        var i:Int;
+        var i:Int32;
         if (iv != null) {
             for (i in 0...iv.length) {
                 iv[i] = prng.nextByte();

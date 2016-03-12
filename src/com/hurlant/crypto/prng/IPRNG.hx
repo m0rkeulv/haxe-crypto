@@ -9,12 +9,13 @@
 package com.hurlant.crypto.prng;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 interface IPRNG {
-    function getPoolSize():Int;
+    function getPoolSize():Int32;
     function init(key:ByteArray):Void;
-    function next():Int;
+    function next():Int32;
     function dispose():Void;
     function toString():String;
 }

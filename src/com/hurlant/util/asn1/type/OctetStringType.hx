@@ -8,7 +8,7 @@ class OctetStringType extends ASN1Type {
         super(ASN1Type.OCTET_STRING);
     }
 
-    override private function fromDERContent(s:ByteArray, length:Int):Dynamic {
+    override private function fromDERContent(s:ByteArray, length:Int32):Dynamic {
         var b:ByteArray = new ByteArray();
         s.readBytes(b, 0, length);
         return b;

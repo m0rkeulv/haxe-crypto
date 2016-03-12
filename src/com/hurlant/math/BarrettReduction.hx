@@ -61,7 +61,7 @@ class BarrettReduction implements IReduction {
      *
      */
     public function reduce(lx:BigInteger):Void {
-        var x:BigInteger = try cast(lx, BigInteger) catch (e:Dynamic) null;
+        var x:BigInteger = lx;
         x.drShiftTo(m.t - 1, r2);
         if (x.t > m.t + 1) {
             x.t = m.t + 1;

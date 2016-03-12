@@ -11,7 +11,7 @@ class ChoiceType extends ASN1Type {
         choices = p;
     }
 
-    override public function fromDER(s:ByteArray, size:Int):Dynamic {
+    override public function fromDER(s:ByteArray, size:Int32):Dynamic {
         // just loop through each choice until one of them is non-null
         // XXX this will fail horribly if one of the choices has a default value.
         // I kinda hope that's forbidden by common sense somewhere.

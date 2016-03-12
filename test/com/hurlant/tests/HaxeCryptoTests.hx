@@ -6,10 +6,10 @@
 package com.hurlant.tests;
 
 
+import com.hurlant.tests.crypto.rsa.RSAKeyTest;
 import haxe.unit.TestRunner;
 import com.hurlant.tests.crypto.hash.*;
 import com.hurlant.tests.crypto.prng.*;
-import com.hurlant.tests.crypto.rsa.*;
 import com.hurlant.tests.crypto.symmetric.*;
 import com.hurlant.tests.math.*;
 import com.hurlant.tests.util.*;
@@ -29,23 +29,23 @@ class HaxeCryptoTests {
         tr.add(new ArrayUtilTest());
         tr.add(new XTeaKeyTest());
         tr.add(new SHA1Test());
-        tr.add(new SHA224Test());
         tr.add(new SHA256Test());
+        tr.add(new SHA224Test());
         tr.add(new HMACTest());
         tr.add(new TLSPRFTest());
         tr.add(new BlowFishKeyTest());
-        tr.add(new BigIntegerTest());
         tr.add(new DESKeyTest());
-        tr.add(new AESKeyTest());
         tr.add(new TripleDESKeyTest());
+        tr.add(new AESKeyTest());
         tr.add(new CFB8ModeTest());
         tr.add(new CBCModeTest());
         tr.add(new CFBModeTest());
         tr.add(new CTRModeTest());
         tr.add(new OFBModeTest());
         tr.add(new ECBModeTest());
+        //tr.add(new BigIntegerTest());
 
-        //tr.add(new RSAKeyTest());
+        tr.add(new RSAKeyTest());
         tr.run();
     }
 }

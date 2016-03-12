@@ -1,4 +1,5 @@
 package com.hurlant.util;
+import haxe.Int32;
 import com.hurlant.crypto.prng.Random;
 class ArrayUtil {
     public static function equals(a1:ByteArray, a2:ByteArray):Bool {
@@ -7,7 +8,7 @@ class ArrayUtil {
         return true;
     }
 
-    public static function secureDisposeIntArray(k:Array<Int>) {
+    public static function secureDisposeIntArray(k:Array<Int32>) {
         if (k == null) return;
         var r = new Random();
         for (i in 0...k.length) k[i] = r.nextByte();

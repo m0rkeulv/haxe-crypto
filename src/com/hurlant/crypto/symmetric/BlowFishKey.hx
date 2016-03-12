@@ -14,6 +14,7 @@
  */
 package com.hurlant.crypto.symmetric;
 
+import haxe.Int32;
 import com.hurlant.util.ArrayUtil;
 import com.hurlant.crypto.symmetric.ISymmetricKey;
 
@@ -26,16 +27,16 @@ class BlowFishKey implements ISymmetricKey {
     // Useful constants
     // ====================================
 
-    private static inline var ROUNDS:Int = 16;
-    private static inline var BLOCK_SIZE:Int = 8; // bytes = 64 bits
-    private static inline var SBOX_SK:Int = 256;
-    private static var P_SZ:Int = ROUNDS + 2;
+    private static inline var ROUNDS:Int32 = 16;
+    private static inline var BLOCK_SIZE:Int32 = 8; // bytes = 64 bits
+    private static inline var SBOX_SK:Int32 = 256;
+    private static var P_SZ:Int32 = ROUNDS + 2;
 
-    private var S0:Array<Int>;
-    private var S1:Array<Int>;
-    private var S2:Array<Int>;
-    private var S3:Array<Int>; // the s-boxes
-    private var P:Array<Int>; // the p-array
+    private var S0:Array<Int32>;
+    private var S1:Array<Int32>;
+    private var S2:Array<Int32>;
+    private var S3:Array<Int32>; // the s-boxes
+    private var P:Array<Int32>; // the p-array
 
     private var key:ByteArray = null;
 
@@ -44,16 +45,16 @@ class BlowFishKey implements ISymmetricKey {
         setKey(key);
     }
 
-    public function getBlockSize():Int {
+    public function getBlockSize():Int32 {
         return BLOCK_SIZE;
     }
 
-    public function decrypt(block:ByteArray, index:Int = 0):Void {
+    public function decrypt(block:ByteArray, index:Int32 = 0):Void {
         decryptBlock(block, index, block, index);
     }
 
     public function dispose():Void {
-        var i:Int = 0;
+        var i:Int32 = 0;
         ArrayUtil.secureDisposeIntArray(S0);
         ArrayUtil.secureDisposeIntArray(S1);
         ArrayUtil.secureDisposeIntArray(S2);
@@ -70,11 +71,11 @@ class BlowFishKey implements ISymmetricKey {
         Memory.gc();
     }
 
-    public function encrypt(block:ByteArray, index:Int = 0):Void {
+    public function encrypt(block:ByteArray, index:Int32 = 0):Void {
         encryptBlock(block, index, block, index);
     }
 
-    private function F(x:Int):Int {
+    private function F(x:Int32):Int32 {
         return (((S0[(x >>> 24)] + S1[(x >>> 16) & 0xff]) ^ S2[(x >>> 8) & 0xff]) + S3[x & 0xff]);
     }
 
@@ -82,14 +83,14 @@ class BlowFishKey implements ISymmetricKey {
      * apply the encryption cycle to each value pair in the table.
      */
 
-    private function processTable(xl:Int, xr:Int, table:Array<Dynamic>):Void {
+    private function processTable(xl:Int32, xr:Int32, table:Array<Int32>):Void {
         var size = table.length;
 
         var s = 0;
         while (s < size) {
             xl ^= P[0];
 
-            var i:Int = 1;
+            var i:Int32 = 1;
             while (i < ROUNDS) {
                 xr ^= F(xl) ^ P[i + 0];
                 xl ^= F(xr) ^ P[i + 1];
@@ -128,12 +129,12 @@ class BlowFishKey implements ISymmetricKey {
          * to P[17]). Repeatedly cycle through the key bits until the entire
          * P-array has been XOR-ed with the key bits
          */
-        var keyLength:Int = key.length;
-        var keyIndex:Int = 0;
+        var keyLength:Int32 = key.length;
+        var keyIndex:Int32 = 0;
 
         for (i in 0...P_SZ) {
             // get the 32 bits of the key, in 4 * 8 bit chunks
-            var data:Int = 0x0000000;
+            var data:Int32 = 0x0000000;
             for (j in 0...4) {
                 // create a 32 bit block
                 data = (data << 8) | (key[keyIndex++] & 0xff);
@@ -176,13 +177,13 @@ class BlowFishKey implements ISymmetricKey {
      * exact multiple of our blocksize.
      */
 
-    private function encryptBlock(src:ByteArray, srcIndex:Int, dst:ByteArray, dstIndex:Int):Void {
+    private function encryptBlock(src:ByteArray, srcIndex:Int32, dst:ByteArray, dstIndex:Int32):Void {
         var xl = BytesTo32bits(src, srcIndex);
         var xr = BytesTo32bits(src, srcIndex + 4);
 
         xl ^= P[0];
 
-        var i:Int = 1;
+        var i:Int32 = 1;
         while (i < ROUNDS) {
             xr ^= F(xl) ^ P[i + 0];
             xl ^= F(xr) ^ P[i + 1];
@@ -201,13 +202,13 @@ class BlowFishKey implements ISymmetricKey {
      * exact multiple of our blocksize.
      */
 
-    private function decryptBlock(src:ByteArray, srcIndex:Int, dst:ByteArray, dstIndex:Int):Void {
+    private function decryptBlock(src:ByteArray, srcIndex:Int32, dst:ByteArray, dstIndex:Int32):Void {
         var xl = BytesTo32bits(src, srcIndex);
         var xr = BytesTo32bits(src, srcIndex + 4);
 
         xl ^= P[ROUNDS + 1];
 
-        var i:Int = ROUNDS;
+        var i:Int32 = ROUNDS;
         while (i > 0) {
             xr ^= F(xl) ^ P[i - 0];
             xl ^= F(xr) ^ P[i - 1];
@@ -220,11 +221,11 @@ class BlowFishKey implements ISymmetricKey {
         Bits32ToBytes(xl, dst, dstIndex + 4);
     }
 
-    private function BytesTo32bits(b:ByteArray, i:Int):Int {
+    private function BytesTo32bits(b:ByteArray, i:Int32):Int32 {
         return ((b[i] & 0xff) << 24) | ((b[i + 1] & 0xff) << 16) | ((b[i + 2] & 0xff) << 8) | ((b[i + 3] & 0xff));
     }
 
-    private function Bits32ToBytes(i:Int, b:ByteArray, offset:Int):Void {
+    private function Bits32ToBytes(i:Int32, b:ByteArray, offset:Int32):Void {
         b[offset + 3] = i;
         b[offset + 2] = (i >> 8);
         b[offset + 1] = (i >> 16);

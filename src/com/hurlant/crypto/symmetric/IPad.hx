@@ -9,6 +9,7 @@
 package com.hurlant.crypto.symmetric;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 /**
@@ -29,5 +30,5 @@ interface IPad {
     /**
      * Set the blockSize to work on
      */
-    function setBlockSize(bs:Int):Void;
+    function setBlockSize(bs:Int32):Void;
 }

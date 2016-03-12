@@ -9,6 +9,7 @@
 package com.hurlant.crypto.symmetric;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 /**
@@ -27,7 +28,7 @@ class NullPad implements IPad {
         return;
     }
 
-    public function setBlockSize(bs:Int):Void {
+    public function setBlockSize(bs:Int32):Void {
         return;
     }
 }

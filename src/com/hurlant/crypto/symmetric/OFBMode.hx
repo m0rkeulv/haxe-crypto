@@ -9,6 +9,7 @@
 package com.hurlant.crypto.symmetric;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 class OFBMode extends IVMode implements IMode {
@@ -27,14 +28,14 @@ class OFBMode extends IVMode implements IMode {
     }
 
     private function core(src:ByteArray, iv:ByteArray):Void {
-        var l:Int = src.length;
+        var l:Int32 = src.length;
         var tmp:ByteArray = new ByteArray();
-        var i:Int = 0;
+        var i:Int32 = 0;
         while (i < src.length) {
             key.encrypt(iv);
             tmp.position = 0;
             tmp.writeBytes(iv);
-            var chunk:Int = ((i + blockSize < l)) ? blockSize : l - i;
+            var chunk:Int32 = ((i + blockSize < l)) ? blockSize : l - i;
             for (j in 0...chunk) {
                 src[i + j] ^= iv[j];
             }

@@ -24,16 +24,16 @@ class OIDType extends ASN1Type {
 		 * 
 		 */
 
-    override private function fromDERContent(s:ByteArray, length:Int):Dynamic {
-        var p:Int = s.position;
+    override private function fromDERContent(s:ByteArray, length:Int32):Dynamic {
+        var p:Int32 = s.position;
         // parse stuff
         // first byte = 40*value1 + value2
-        var o:Int = s.readUnsignedByte();
-        var left:Int = length - 1;
+        var o:Int32 = s.readUnsignedByte();
+        var left:Int32 = length - 1;
         var a:Array<Dynamic> = [];
         a.push(Int(o / 40));
         a.push(Int(o % 40));
-        var v:Int = 0;
+        var v:Int32 = 0;
         while (left-- > 0) {
             o = s.readUnsignedByte();
             var last:Bool = (o & 0x80) == 0;

@@ -11,12 +11,10 @@ package com.hurlant.crypto.symmetric;
 
 import com.hurlant.util.ByteArray;
 
-interface ICipher
-{
-
-    function getBlockSize() : Int;
-    function encrypt(src : ByteArray) : Void;
-    function decrypt(src : ByteArray) : Void;
-    function dispose() : Void;
-    function toString() : String;
+interface ICipher {
+    function getBlockSize():Int;
+    function encrypt(src:ByteArray):Void;
+    function decrypt(src:ByteArray):Void;
+    function dispose():Void;
+    function toString():String;
 }

@@ -8,7 +8,7 @@ class NullType extends ASN1Type {
         super(ASN1Type.NULL);
     }
 
-    override private function fromDERContent(s:ByteArray, length:Int):Dynamic {
+    override private function fromDERContent(s:ByteArray, length:Int32):Dynamic {
         return "NULL";
     }
 }

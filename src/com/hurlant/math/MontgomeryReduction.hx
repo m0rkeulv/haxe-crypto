@@ -1,16 +1,17 @@
 package com.hurlant.math;
 
+import haxe.Int32;
 
 /**
  * Montgomery reduction
  */
 class MontgomeryReduction implements IReduction {
     private var m:BigInteger;
-    private var mp:Int;
-    private var mpl:Int;
-    private var mph:Int;
-    private var um:Int;
-    private var mt2:Int;
+    private var mp:Int32;
+    private var mpl:Int32;
+    private var mph:Int32;
+    private var um:Int32;
+    private var mt2:Int32;
 
     public function new(m:BigInteger) {
         this.m = m;
@@ -56,8 +57,8 @@ class MontgomeryReduction implements IReduction {
         }
         for (i in 0...m.t) {
             // faster way of calculating u0 = x[i]*mp mod DV
-            var j:Int = x.a[i] & 0x7fff;
-            var u0:Int = (j * mpl + (((j * mph + (x.a[i] >> 15) * mpl) & um) << 15)) & BigInteger.DM;
+            var j:Int32 = x.a[i] & 0x7fff;
+            var u0:Int32 = (j * mpl + (((j * mph + (x.a[i] >> 15) * mpl) & um) << 15)) & BigInteger.DM;
             // use am to combine the multiply-shift-add into one call
             j = i + m.t;
             x.a[j] += m.am(0, u0, x, i, 0, m.t);
@@ -86,6 +87,7 @@ class MontgomeryReduction implements IReduction {
     /**
      * r = "xy/R mod m"; x,y != r
      */
+
     public function mulTo(x:BigInteger, y:BigInteger, r:BigInteger):Void {
         x.multiplyTo(y, r);
         reduce(r);

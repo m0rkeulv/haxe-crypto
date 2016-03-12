@@ -92,7 +92,7 @@ class Crypto {
                         name = keys.join("-");
                         var cipher = getCipher(name, key, pad);
                         if (Std.is(cipher, IVMode)) {
-                            return new SimpleIVMode(try cast(cipher, IVMode) catch (e:Dynamic) null);
+                            return new SimpleIVMode(cast(cipher, IVMode));
                         } else {
                             return cipher;
                         }
@@ -143,7 +143,7 @@ class Crypto {
      * Returns the size of a key for a given cipher identifier.
      */
 
-    public static function getKeySize(name:String):Int {
+    public static function getKeySize(name:String):Int32 {
         var keys:Array<Dynamic> = name.split("-");
         var _sw1_ = (keys[0]);
 
@@ -218,7 +218,7 @@ class Crypto {
     public static function getHMAC(name:String):HMAC {
         var keys = name.split("-");
         if (keys[0] == "hmac") keys.shift();
-        var bits:Int = 0;
+        var bits:Int32 = 0;
         if (keys.length > 1) bits = Std.parseInt(keys[1]);
         return new HMAC(getHash(keys[0]), bits);
     }

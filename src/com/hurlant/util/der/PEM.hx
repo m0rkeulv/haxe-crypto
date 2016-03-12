@@ -9,6 +9,7 @@
 package com.hurlant.util.der;
 
 
+import haxe.Int32;
 import com.hurlant.crypto.rsa.RSAKey;
 import com.hurlant.util.Base64;
 
@@ -38,17 +39,18 @@ class PEM {
         if (der == null) return null;
         var obj:Dynamic = DER.parse(der);
         if (Std.is(obj, Array)) {
-            var arr:Array<Dynamic> = try cast(obj, Array<Dynamic>) catch (e:Dynamic) null;
+            var arr:Array<Dynamic> = cast(obj, Array<Dynamic>);
             // arr[0] is Version. should be 0. should be checked. shoulda woulda coulda.
             return new RSAKey(
-            arr[1], // N
-            arr[2].valueOf(), // E
-            arr[3], // D
-            arr[4], // P
-            arr[5], // Q
-            arr[6], // DMP1
-            arr[7], // DMQ1
-            arr[8]);
+                arr[1], // N
+                arr[2].valueOf(), // E
+                arr[3], // D
+                arr[4], // P
+                arr[5], // Q
+                arr[6], // DMP1
+                arr[7], // DMQ1
+                arr[8]
+            );
         }
         else {
             // dunno
@@ -73,7 +75,7 @@ class PEM {
         if (der == null) return null;
         var obj:Dynamic = DER.parse(der);
         if (Std.is(obj, Array)) {
-            var arr:Array<Dynamic> = try cast(obj, Array<Dynamic>) catch (e:Dynamic) null;
+            var arr:Array<Dynamic> = cast(obj, Array<Dynamic>);
             // arr[0] = [ <some crap that means "rsaEncryption">, null ]; ( apparently, that's an X-509 Algorithm Identifier.
             if (Std.string(arr[0][0]) != OID.RSA_ENCRYPTION) {
                 return null;
@@ -82,7 +84,7 @@ class PEM {
             arr[1].position = 0; // there's a 0x00 byte up front. find out why later. like, read a spec.
             obj = DER.parse(arr[1]);
             if (Std.is(obj, Array)) {
-                arr = try cast(obj, Array<Dynamic>) catch (e:Dynamic) null;
+                arr = cast(obj, Array<Dynamic>);
                 // arr[0] = modulus
                 // arr[1] = public expt.
                 return new RSAKey(arr[0], arr[1]);
@@ -103,10 +105,10 @@ class PEM {
     }
 
     private static function extractBinary(header:String, footer:String, str:String):ByteArray {
-        var i:Int = str.indexOf(header);
+        var i:Int32 = str.indexOf(header);
         if (i == -1) return null;
         i += header.length;
-        var j:Int = str.indexOf(footer);
+        var j:Int32 = str.indexOf(footer);
         if (j == -1) return null;
         var b64:String = str.substring(i, j);
         // remove whitesapces.

@@ -8,6 +8,7 @@
  */
 package com.hurlant.crypto.symmetric;
 
+import haxe.Int32;
 import com.hurlant.crypto.symmetric.IMode;
 import com.hurlant.crypto.symmetric.IPad;
 import com.hurlant.crypto.symmetric.ISymmetricKey;
@@ -36,7 +37,7 @@ class CTRMode extends IVMode implements IMode {
         var X:ByteArray = new ByteArray();
         var Xenc:ByteArray = new ByteArray();
         X.writeBytes(iv);
-        var i:Int = 0;
+        var i:Int32 = 0;
         while (i < src.length) {
             Xenc.position = 0;
             Xenc.writeBytes(X);

@@ -41,8 +41,9 @@ class SHA224Test extends BaseTestCase {
 
     public function test_longSha224() {
         var src = new ByteArray();
+        src.length = Std.int(1000000);
         var a = "a".charCodeAt(0);
-        for (i in 0...Std.int(1e6)) src[i] = a;
+        for (i in 0...src.length) src[i] = a;
         var sha224 = new SHA224();
         var digest = sha224.hash(src);
         var hash = "20794655980c91d8bbb4c1ea97618a4bf03f42581948b2ee4ee7ad67";

@@ -14,15 +14,16 @@
 package com.hurlant.crypto.symmetric;
 
 
+import haxe.Int32;
 import com.hurlant.util.ArrayUtil;
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Memory;
 
 class TripleDESKey extends DESKey {
-    private var encKey2:Array<Int>;
-    private var encKey3:Array<Int>;
-    private var decKey2:Array<Int>;
-    private var decKey3:Array<Int>;
+    private var encKey2:Array<Int32>;
+    private var encKey3:Array<Int32>;
+    private var decKey2:Array<Int32>;
+    private var decKey3:Array<Int32>;
 
     /**
      * This supports 2TDES and 3TDES.
@@ -55,13 +56,13 @@ class TripleDESKey extends DESKey {
         Memory.gc();
     }
 
-    override public function encrypt(block:ByteArray, index:Int = 0):Void {
+    override public function encrypt(block:ByteArray, index:Int32 = 0):Void {
         desFunc(encKey, block, index, block, index);
         desFunc(encKey2, block, index, block, index);
         desFunc(encKey3, block, index, block, index);
     }
 
-    override public function decrypt(block:ByteArray, index:Int = 0):Void {
+    override public function decrypt(block:ByteArray, index:Int32 = 0):Void {
         desFunc(decKey3, block, index, block, index);
         desFunc(decKey2, block, index, block, index);
         desFunc(decKey, block, index, block, index);

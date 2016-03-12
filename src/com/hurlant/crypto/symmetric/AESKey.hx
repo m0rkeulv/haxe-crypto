@@ -13,6 +13,7 @@
  */
 package com.hurlant.crypto.symmetric;
 
+import haxe.Int32;
 import com.hurlant.crypto.symmetric.ISymmetricKey;
 
 import com.hurlant.crypto.prng.Random;
@@ -42,8 +43,8 @@ class AESKey implements ISymmetricKey {
 
     // static initializer
     private var key:ByteArray;
-    private var keyLength:Int;
-    private var Nr:Int;
+    private var keyLength:Int32;
+    private var Nr:Int32;
     private var state:ByteArray;
     private var tmp:ByteArray;
 
@@ -90,14 +91,14 @@ class AESKey implements ISymmetricKey {
     }
 
 
-    public function getBlockSize():Int {
+    public function getBlockSize():Int32 {
         return 16;
     }
 
     // encrypt one 128 bit block
 
-    public function encrypt(block:ByteArray, index:Int = 0):Void {
-        var round:Int;
+    public function encrypt(block:ByteArray, index:Int32 = 0):Void {
+        var round:Int32;
         state.position = 0;
         state.writeBytes(block, index, Nb * 4);
 
@@ -116,8 +117,8 @@ class AESKey implements ISymmetricKey {
         block.writeBytes(state);
     }
 
-    public function decrypt(block:ByteArray, index:Int = 0):Void {
-        var round:Int;
+    public function decrypt(block:ByteArray, index:Int32 = 0):Void {
+        var round:Int32;
         state.position = 0;
         state.writeBytes(block, index, Nb * 4);
 
@@ -136,7 +137,7 @@ class AESKey implements ISymmetricKey {
     }
 
     public function dispose():Void {
-        var i:Int;
+        var i:Int32;
         var r:Random = new Random();
         for (i in 0...key.length) {
             key[i] = r.nextByte();
@@ -164,7 +165,7 @@ class AESKey implements ISymmetricKey {
     // row2 - shifted left 2 and row3 - shifted left 3
 
     private function shiftRows():Void {
-        var tmp:UInt;
+        var tmp:Int32;
 
         // just substitute row 0
         state[0] = Sbox[state[0]]; state[4] = Sbox[state[4]];
@@ -188,7 +189,7 @@ class AESKey implements ISymmetricKey {
     // row2 - shifted right 2 and row3 - shifted right 3
 
     private function invShiftRows():Void {
-        var tmp:UInt;
+        var tmp:Int32;
 
         // restore row 0
         state[0] = InvSbox[state[0]]; state[4] = InvSbox[state[4]];
@@ -244,7 +245,7 @@ class AESKey implements ISymmetricKey {
 
     private function invMixSubColumns():Void {
         tmp.length = 0;
-        var i:UInt;
+        var i:Int32;
 
         // restore column 0
         tmp[0] = XtimeE[state[0]] ^ XtimeB[state[1]] ^ XtimeD[state[2]] ^ Xtime9[state[3]];
@@ -275,7 +276,7 @@ class AESKey implements ISymmetricKey {
 
     // encrypt/decrypt columns of the key
 
-    private function addRoundKey(key:ByteArray, offset:Int):Void {
+    private function addRoundKey(key:ByteArray, offset:Int32):Void {
         for (idx in 0...16) state[idx] ^= key[idx + offset];
     }
 

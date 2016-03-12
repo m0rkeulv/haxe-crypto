@@ -9,6 +9,7 @@
  */
 package com.hurlant.crypto.hash;
 
+import haxe.Int32;
 import com.hurlant.crypto.hash.SHA256;
 
 class SHA224 extends SHA256 {
@@ -17,7 +18,7 @@ class SHA224 extends SHA256 {
         h = [0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939, 0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4];
     }
 
-    override public function getHashSize():Int {
+    override public function getHashSize():Int32 {
         return 28;
     }
 

@@ -15,6 +15,7 @@
  */
 package com.hurlant.crypto.hash;
 
+import haxe.Int32;
 import com.hurlant.util.Std2;
 import com.hurlant.crypto.hash.SHABase;
 
@@ -22,30 +23,30 @@ import com.hurlant.crypto.hash.SHABase;
 class SHA1 extends SHABase implements IHash {
     public static inline var HASH_SIZE = 20;
 
-    override public function getHashSize():Int {
+    override public function getHashSize():Int32 {
         return HASH_SIZE;
     }
 
-    override private function core(x:Array<Int>, len:Int):Array<Int> {
+    override private function core(x:Array<Int32>, len:Int32):Array<Int32> {
         x[len >> 5] |= 0x80 << (24 - len % 32);
         x[((len + 64 >> 9) << 4) + 15] = len;
 
         for (n in 0 ... x.length) x[n] |= 0;
 
-        var w:Array<Int> = [];
-        var a = 0x67452301; //1732584193;
-        var b = 0xEFCDAB89; //-271733879;
-        var c = 0x98BADCFE; //-1732584194;
-        var d = 0x10325476; //271733878;
-        var e = 0xC3D2E1F0; //-1009589776;
+        var w:Array<Int32> = [];
+        var a:Int32 = 0x67452301; //1732584193;
+        var b:Int32 = 0xEFCDAB89; //-271733879;
+        var c:Int32 = 0x98BADCFE; //-1732584194;
+        var d:Int32 = 0x10325476; //271733878;
+        var e:Int32 = 0xC3D2E1F0; //-1009589776;
 
-        var i:Int = 0;
+        var i:Int32 = 0;
         while (i < x.length) {
-            var olda = a;
-            var oldb = b;
-            var oldc = c;
-            var oldd = d;
-            var olde = e;
+            var olda:Int32 = a;
+            var oldb:Int32 = b;
+            var oldc:Int32 = c;
+            var oldd:Int32 = d;
+            var olde:Int32 = e;
 
             for (j in 0...80) {
                 if (j < 16) {
@@ -61,17 +62,17 @@ class SHA1 extends SHABase implements IHash {
                 b = a;
                 a = t;
             }
-            a = (a + olda) | 0;
-            b = (b + oldb) | 0;
-            c = (c + oldc) | 0;
-            d = (d + oldd) | 0;
-            e = (e + olde) | 0;
+            a += olda;
+            b += oldb;
+            c += oldc;
+            d += oldd;
+            e += olde;
             i += 16;
         }
         return [a, b, c, d, e];
     }
 
-    private function rol(num:Int, cnt:Int):UInt {
+    private function rol(num:Int32, cnt:Int32):Int32 {
         return Std2.rol(num, cnt);
     }
 
@@ -80,7 +81,7 @@ class SHA1 extends SHABase implements IHash {
      * iteration
      */
 
-    private function ft(t:Int, b:Int, c:Int, d:Int):Int {
+    private function ft(t:Int32, b:Int32, c:Int32, d:Int32):Int32 {
         if (t < 20) return (b & c) | ((~b) & d);
         if (t < 40) return b ^ c ^ d;
         if (t < 60) return (b & c) | (b & d) | (c & d);
@@ -91,7 +92,7 @@ class SHA1 extends SHABase implements IHash {
      * Determine the appropriate additive constant for the current iteration
      */
 
-    private function kt(t:UInt):UInt {
+    private function kt(t:Int32):Int32 {
         return ((t < 20)) ? 0x5A827999 : ((t < 40)) ? 0x6ED9EBA1 : ((t < 60)) ? 0x8F1BBCDC : 0xCA62C1D6;
     }
 

@@ -14,37 +14,37 @@ import com.hurlant.util.ByteArray;
  */
 class ASN1Type {
     // Universal types and tag numbers
-    public static var CHOICE:Int = -2;
-    public static var ANY:Int = -1;
-    public static inline var RESERVED:Int = 0;
-    public static inline var BOOLEAN:Int = 1;
-    public static inline var INTEGER:Int = 2;
-    public static inline var BIT_STRING:Int = 3;
-    public static inline var OCTET_STRING:Int = 4;
-    public static inline var NULL:Int = 5;
-    public static inline var OID:Int = 6;
-    public static inline var ODT:Int = 7;
-    public static inline var EXTERNAL:Int = 8;
-    public static inline var REAL:Int = 9;
-    public static inline var ENUMERATED:Int = 10;
-    public static inline var EMBEDDED:Int = 11;
-    public static inline var UTF8STRING:Int = 12;
-    public static inline var ROID:Int = 13;
-    public static inline var SEQUENCE:Int = 16;
-    public static inline var SET:Int = 17;
-    public static inline var NUMERIC_STRING:Int = 18;
-    public static inline var PRINTABLE_STRING:Int = 19;
-    public static inline var TELETEX_STRING:Int = 20;
-    public static inline var VIDEOTEX_STRING:Int = 21;
-    public static inline var IA5_STRING:Int = 22;
-    public static inline var UTC_TIME:Int = 23;
-    public static inline var GENERALIZED_TIME:Int = 24;
-    public static inline var GRAPHIC_STRING:Int = 25;
-    public static inline var VISIBLE_STRING:Int = 26;
-    public static inline var GENERAL_STRING:Int = 27;
-    public static inline var UNIVERSAL_STRING:Int = 28;
-    public static inline var BMP_STRING:Int = 30;
-    public static inline var UNSTRUCTURED_NAME:Int = 31; // ??? no clue.
+    public static var CHOICE:Int32 = -2;
+    public static var ANY:Int32 = -1;
+    public static inline var RESERVED:Int32 = 0;
+    public static inline var BOOLEAN:Int32 = 1;
+    public static inline var INTEGER:Int32 = 2;
+    public static inline var BIT_STRING:Int32 = 3;
+    public static inline var OCTET_STRING:Int32 = 4;
+    public static inline var NULL:Int32 = 5;
+    public static inline var OID:Int32 = 6;
+    public static inline var ODT:Int32 = 7;
+    public static inline var EXTERNAL:Int32 = 8;
+    public static inline var REAL:Int32 = 9;
+    public static inline var ENUMERATED:Int32 = 10;
+    public static inline var EMBEDDED:Int32 = 11;
+    public static inline var UTF8STRING:Int32 = 12;
+    public static inline var ROID:Int32 = 13;
+    public static inline var SEQUENCE:Int32 = 16;
+    public static inline var SET:Int32 = 17;
+    public static inline var NUMERIC_STRING:Int32 = 18;
+    public static inline var PRINTABLE_STRING:Int32 = 19;
+    public static inline var TELETEX_STRING:Int32 = 20;
+    public static inline var VIDEOTEX_STRING:Int32 = 21;
+    public static inline var IA5_STRING:Int32 = 22;
+    public static inline var UTC_TIME:Int32 = 23;
+    public static inline var GENERALIZED_TIME:Int32 = 24;
+    public static inline var GRAPHIC_STRING:Int32 = 25;
+    public static inline var VISIBLE_STRING:Int32 = 26;
+    public static inline var GENERAL_STRING:Int32 = 27;
+    public static inline var UNIVERSAL_STRING:Int32 = 28;
+    public static inline var BMP_STRING:Int32 = 30;
+    public static inline var UNSTRUCTURED_NAME:Int32 = 31; // ??? no clue.
 
     // Classes of tags
     public static inline var UNIVERSAL = 0;
@@ -55,9 +55,9 @@ class ASN1Type {
     // various type modifiers
     public var optional:Bool = false;
     public var implicitTag:Float = NaN;
-    public var implicitClass:Int = 0;
+    public var implicitClass:Int32 = 0;
     public var explicitTag:Float = NaN;
-    public var explicitClass:Int = 0;
+    public var explicitClass:Int32 = 0;
     public var defaultValue:Dynamic = null;
     public var extract:Bool = false; // if true, the constructed parent will copy the binary value in a [name]_bin slot.
 
@@ -67,11 +67,11 @@ class ASN1Type {
     public var defaultTag:Float;
     public var parsedTag:Float; // used for ANY logic
 
-    public function new(tag:Int) {
+    public function new(tag:Int32) {
         defaultTag = tag;
     }
 
-    public function matches(type:Int, classValue:Int, length:Int):Bool {
+    public function matches(type:Int32, classValue:Int32, length:Int32):Bool {
         return false;
     }
 
@@ -102,13 +102,13 @@ class ASN1Type {
 		 * 
 		 */
 
-    public function fromDER(s:ByteArray, size:Int):Dynamic {
-        var p:Int = s.position; // We'll reset if things go wrong.
-        var length:Int;
+    public function fromDER(s:ByteArray, size:Int32):Dynamic {
+        var p:Int32 = s.position; // We'll reset if things go wrong.
+        var length:Int32;
         do {
             if (!Math.isNaN(explicitTag)) {
                 // unwrap the explicit tag..
-                var tag:Int = readDERTag(s, explicitClass, true); // explicit tags are always constructed
+                var tag:Int32 = readDERTag(s, explicitClass, true); // explicit tags are always constructed
                 if (tag != explicitTag) {
                     break;
                 }
@@ -148,21 +148,21 @@ class ASN1Type {
         return defaultValue;
     }
 
-    private function fromDERContent(s:ByteArray, length:Int):Dynamic {
+    private function fromDERContent(s:ByteArray, length:Int32):Dynamic {
         throw new Error("pure virtual function call: fromDERContent");
     }
 
-    private function readDERTag(s:ByteArray, classValue:Int = UNIVERSAL, constructed:Bool = false, any:Bool = false):Int {
-        var type:Int = s.readUnsignedByte();
+    private function readDERTag(s:ByteArray, classValue:Int32 = UNIVERSAL, constructed:Bool = false, any:Bool = false):Int32 {
+        var type:Int32 = s.readUnsignedByte();
         var c:Bool = (type & 0x20) != 0;
-        var cv:Int = (type & 0xC0) >> 6; // { universal, application, context, private }
+        var cv:Int32 = (type & 0xC0) >> 6; // { universal, application, context, private }
         type &= 0x1F;
         if (type == 0x1F) {
             // multibyte tag. blah.
             type = 0;
             do {
-                var o:Int = s.readUnsignedByte();
-                var v:Int = o & 0x7F;
+                var o:Int32 = s.readUnsignedByte();
+                var v:Int32 = o & 0x7F;
                 type = (type << 7) + v;
             } while (((o & 0x80) != 0));
         }
@@ -174,12 +174,12 @@ class ASN1Type {
         return type;
     }
 
-    private function readDERLength(s:ByteArray):Int {
+    private function readDERLength(s:ByteArray):Int32 {
         // length
-        var len:Int = s.readUnsignedByte();
+        var len:Int32 = s.readUnsignedByte();
         if (len >= 0x80) {
             // long form of length
-            var count:Int = len & 0x7f;
+            var count:Int32 = len & 0x7f;
             len = 0;
             while (count > 0) {
                 len = (len << 8) | s.readUnsignedByte();

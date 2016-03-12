@@ -9,6 +9,7 @@
  */
 package com.hurlant.util.der;
 
+import haxe.Int32;
 import com.hurlant.util.der.IAsn1Type;
 import com.hurlant.util.der.Integer;
 import com.hurlant.util.der.ObjectIdentifier;
@@ -47,7 +48,7 @@ class DER {
         var len = der.readUnsignedByte();
         if (len >= 0x80) {
             // long form of length
-            var count:Int = len & 0x7f;
+            var count:Int32 = len & 0x7f;
             len = 0;
             while (count > 0) {
                 len = (len << 8) | der.readUnsignedByte();
@@ -56,7 +57,7 @@ class DER {
         } // data
 
         var b:ByteArray;
-        var p:Int;
+        var p:Int32;
         switch (type) {
             // WHAT IS THIS THINGY? (seen as 0xa0)
             // (note to self: read a spec someday.)
@@ -97,7 +98,7 @@ class DER {
                         var value:Dynamic = tmpStruct.value;
                         if (tmpStruct.extract) {
                             // we need to keep a binary copy of this element
-                            var size:Int = getLengthOfNextElement(der);
+                            var size:Int32 = getLengthOfNextElement(der);
                             var ba:ByteArray = new ByteArray();
                             ba.writeBytes(der, der.position, size);
                             o.setStr(name + "_bin", ba);
@@ -168,14 +169,14 @@ class DER {
         }
     }
 
-    private static function getLengthOfNextElement(b:ByteArray):Int {
-        var p:Int = b.position;
+    private static function getLengthOfNextElement(b:ByteArray):Int32 {
+        var p:Int32 = b.position;
         // length
         b.position = b.position + 1;
-        var len:Int = b.readUnsignedByte();
+        var len:Int32 = b.readUnsignedByte();
         if (len >= 0x80) {
             // long form of length
-            var count:Int = len & 0x7f;
+            var count:Int32 = len & 0x7f;
             len = 0;
             while (count > 0) {
                 len = (len << 8) | b.readUnsignedByte();
@@ -188,14 +189,14 @@ class DER {
     }
 
     private static function isConstructedType(b:ByteArray):Bool {
-        var type:Int = b[b.position];
+        var type:Int32 = b[b.position];
         return (type & 0x20) != 0;
     }
 
-    public static function wrapDER(type:Int, data:ByteArray):ByteArray {
+    public static function wrapDER(type:Int32, data:ByteArray):ByteArray {
         var d:ByteArray = new ByteArray();
         d.writeByte(type);
-        var len:Int = data.length;
+        var len:Int32 = data.length;
         if (len < 128) {
             d.writeByte(len);
         } else if (len < 256) {

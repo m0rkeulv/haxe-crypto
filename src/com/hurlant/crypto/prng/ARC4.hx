@@ -11,6 +11,7 @@
  */
 package com.hurlant.crypto.prng;
 
+import haxe.Int32;
 import com.hurlant.crypto.prng.IPRNG;
 
 import com.hurlant.crypto.symmetric.IStreamCipher;
@@ -19,10 +20,10 @@ import com.hurlant.util.Memory;
 import com.hurlant.util.ByteArray;
 
 class ARC4 implements IPRNG implements IStreamCipher {
-    private var i:Int = 0;
-    private var j:Int = 0;
+    private var i:Int32 = 0;
+    private var j:Int32 = 0;
     private var S:ByteArray;
-    static private inline var psize:Int = 256;
+    static private inline var psize:Int32 = 256;
 
     public function new(key:ByteArray = null) {
         S = new ByteArray();
@@ -31,7 +32,7 @@ class ARC4 implements IPRNG implements IStreamCipher {
         }
     }
 
-    public function getPoolSize():Int {
+    public function getPoolSize():Int32 {
         return psize;
     }
 
@@ -48,7 +49,7 @@ class ARC4 implements IPRNG implements IStreamCipher {
         this.j = 0;
     }
 
-    public function next():Int {
+    public function next():Int32 {
         i = (i + 1) & 255;
         j = (j + S[i]) & 255;
         var t = S[i];
@@ -57,12 +58,12 @@ class ARC4 implements IPRNG implements IStreamCipher {
         return S[(t + S[i]) & 255];
     }
 
-    public function getBlockSize():Int {
+    public function getBlockSize():Int32 {
         return 1;
     }
 
     public function encrypt(block:ByteArray):Void {
-        var i:Int = 0;
+        var i:Int32 = 0;
         while (i < block.length) block[i++] ^= next();
     }
 
@@ -71,7 +72,7 @@ class ARC4 implements IPRNG implements IStreamCipher {
     }
 
     public function dispose():Void {
-        var i:Int = 0;
+        var i:Int32 = 0;
         if (S != null) {
             for (i in 0...S.length) S[i] = Std.random(256);
             S.length = 0;

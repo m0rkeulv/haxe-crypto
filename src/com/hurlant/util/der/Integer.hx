@@ -9,24 +9,25 @@
 package com.hurlant.util.der;
 
 
+import haxe.Int32;
 import com.hurlant.math.BigInteger;
 import com.hurlant.util.ByteArray;
 
 class Integer extends BigInteger implements IAsn1Type {
-    private var type:Int;
-    private var len:Int;
+    private var type:Int32;
+    private var len:Int32;
 
-    public function new(type:Int, length:Int, b:ByteArray) {
+    public function new(type:Int32, length:Int32, b:ByteArray) {
         this.type = type;
         this.len = length;
         super(b);
     }
 
-    public function getLength():Int {
+    public function getLength():Int32 {
         return len;
     }
 
-    public function getType():Int {
+    public function getType():Int32 {
         return type;
     }
 

@@ -8,6 +8,7 @@
  */
 package com.hurlant.crypto.symmetric;
 
+import haxe.Int32;
 import com.hurlant.crypto.symmetric.IMode;
 import com.hurlant.crypto.symmetric.IPad;
 import com.hurlant.crypto.symmetric.ISymmetricKey;
@@ -41,10 +42,10 @@ class CFB8Mode extends IVMode implements IMode {
     }
 
     public function decrypt(src:ByteArray):Void {
-        var vector:ByteArray = getIV4d();
-        var tmp:ByteArray = new ByteArray();
+        var vector = getIV4d();
+        var tmp = new ByteArray();
         for (i in 0...src.length) {
-            var c:Int = src[i];
+            var c:Int32 = src[i];
             tmp.position = 0;
             tmp.writeBytes(vector); // I <- tmp
             key.encrypt(vector); // O <- vector

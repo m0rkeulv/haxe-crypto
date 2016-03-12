@@ -19,6 +19,8 @@
 package com.hurlant.crypto.hash;
 
 
+import com.hurlant.util.Std2;
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Endian;
 
@@ -26,15 +28,15 @@ class MD5 implements IHash {
     public static inline var HASH_SIZE = 16;
     public var pad_size = 48;
 
-    public function getInputSize():Int {
+    public function getInputSize():Int32 {
         return 64;
     }
 
-    public function getHashSize():Int {
+    public function getHashSize():Int32 {
         return HASH_SIZE;
     }
 
-    public function getPadSize():Int {
+    public function getPadSize():Int32 {
         return pad_size;
     }
 
@@ -63,7 +65,7 @@ class MD5 implements IHash {
         return out;
     }
 
-    private function core_md5(x:Array<Int>, len:Int):Array<Int> {
+    private function core_md5(x:Array<Int32>, len:Int32):Array<Int32> {
         var maxoffset = (((len + 64) >>> 9) << 4) + 14;
         if (x.length < maxoffset) x.push(0);
         while ((x.length % 16) != 0) x.push(0);
@@ -84,7 +86,7 @@ class MD5 implements IHash {
         // 251e40f4
         // 9d95b76b
 
-        var i = 0;
+        var i:Int32 = 0;
         while (i < x.length) {
             var olda = a;
             var oldb = b;
@@ -178,31 +180,31 @@ class MD5 implements IHash {
      * Bitwise rotate a 32-bit number to the left.
      */
 
-    private function rol(num:Int, cnt:Int):Int {
-        return (num << cnt) | (num >>> (32 - cnt));
+    private function rol(num:Int32, cnt:Int32):Int32 {
+        return Std2.rol(num, cnt);
     }
 
     /*
      * These functions implement the four basic operations the algorithm uses.
      */
 
-    private function cmn(q:Int, a:Int, b:Int, x:Int, s:Int, t:Int):Int {
+    private function cmn(q:Int32, a:Int32, b:Int32, x:Int32, s:Int32, t:Int32):Int32 {
         return rol(a + q + x + t, s) + b;
     }
 
-    private function ff(a:Int, b:Int, c:Int, d:Int, x:Int, s:Int, t:Int):Int {
+    private function ff(a:Int32, b:Int32, c:Int32, d:Int32, x:Int32, s:Int32, t:Int32):Int32 {
         return cmn((b & c) | ((~b) & d), a, b, x, s, t);
     }
 
-    private function gg(a:Int, b:Int, c:Int, d:Int, x:Int, s:Int, t:Int):Int {
+    private function gg(a:Int32, b:Int32, c:Int32, d:Int32, x:Int32, s:Int32, t:Int32):Int32 {
         return cmn((b & d) | (c & (~d)), a, b, x, s, t);
     }
 
-    private function hh(a:Int, b:Int, c:Int, d:Int, x:Int, s:Int, t:Int):Int {
+    private function hh(a:Int32, b:Int32, c:Int32, d:Int32, x:Int32, s:Int32, t:Int32):Int32 {
         return cmn(b ^ c ^ d, a, b, x, s, t);
     }
 
-    private function ii(a:Int, b:Int, c:Int, d:Int, x:Int, s:Int, t:Int):Int {
+    private function ii(a:Int32, b:Int32, c:Int32, d:Int32, x:Int32, s:Int32, t:Int32):Int32 {
         return cmn(c ^ (b | (~d)), a, b, x, s, t);
     }
 

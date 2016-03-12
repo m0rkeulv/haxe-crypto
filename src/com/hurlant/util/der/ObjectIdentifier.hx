@@ -9,23 +9,24 @@
  */
 package com.hurlant.util.der;
 
+import haxe.Int32;
 import com.hurlant.util.Error;
 
 import com.hurlant.util.ByteArray;
 
 class ObjectIdentifier implements IAsn1Type {
-    private var type:Int;
-    private var len:Int;
+    private var type:Int32;
+    private var len:Int32;
     private var oid:Array<Dynamic>;
 
-    public function new(type:Int = 0, length:Int = 0, b:Dynamic = null) {
+    public function new(type:Int32 = 0, length:Int32 = 0, b:Dynamic = null) {
         this.type = type;
         this.len = length;
         if (Std.is(b, ByteArrayData)) {
-            parse(try cast(b, ByteArray) catch (e:Dynamic) null);
+            parse(cast(b, ByteArray));
         }
         else if (Std.is(b, String)) {
-            generate(try cast(b, String) catch (e:Dynamic) null);
+            generate(cast(b, String));
         }
         else {
             throw new Error("Invalid call to new ObjectIdentifier");
@@ -39,11 +40,11 @@ class ObjectIdentifier implements IAsn1Type {
     private function parse(b:ByteArray):Void {
         // parse stuff
         // first byte = 40*value1 + value2
-        var o:Int = b.readUnsignedByte();
+        var o:Int32 = b.readUnsignedByte();
         var a:Array<Dynamic> = [];
         a.push(Std.int(o / 40));
         a.push(Std.int(o % 40));
-        var v:Int = 0;
+        var v:Int32 = 0;
         while (b.bytesAvailable > 0) {
             o = b.readUnsignedByte();
             var last:Bool = (o & 0x80) == 0;
@@ -57,11 +58,11 @@ class ObjectIdentifier implements IAsn1Type {
         oid = a;
     }
 
-    public function getLength():Int {
+    public function getLength():Int32 {
         return len;
     }
 
-    public function getType():Int {
+    public function getType():Int32 {
         return type;
     }
 
@@ -69,7 +70,7 @@ class ObjectIdentifier implements IAsn1Type {
         var tmp:Array<Dynamic> = [];
         tmp[0] = oid[0] * 40 + oid[1];
         for (i in 2...oid.length) {
-            var v:Int = Std.parseInt(oid[i]);
+            var v:Int32 = Std.parseInt(oid[i]);
             if (v < 128) {
                 tmp.push(v);
             }

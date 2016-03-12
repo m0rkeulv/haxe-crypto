@@ -28,7 +28,7 @@ class Parser {
         return new BitStringType();
     }
 
-    static public function bmpString(size:Int = Int.MAX_VALUE, size2:Int = 0):BMPStringType {
+    static public function bmpString(size:Int32 = Int.MAX_VALUE, size2:Int32 = 0):BMPStringType {
         return new BMPStringType(size, size2);
     }
 
@@ -50,7 +50,7 @@ class Parser {
         return o;
     }
 
-    static public function explicitTag(v:Int, c:Int, o:ASN1Type):ASN1Type {
+    static public function explicitTag(v:Int32, c:Int32, o:ASN1Type):ASN1Type {
         o = o.clone();
         o.explicitTag = v;
         o.explicitClass = c;
@@ -67,11 +67,11 @@ class Parser {
         return new GeneralizedTimeType();
     }
 
-    static public function ia5String(size:Int = Int.MAX_VALUE, size2:Int = 0):IA5StringType {
+    static public function ia5String(size:Int32 = Int.MAX_VALUE, size2:Int32 = 0):IA5StringType {
         return new IA5StringType(size, size2);
     }
 
-    static public function implicitTag(v:Int, c:Int, o:ASN1Type):ASN1Type {
+    static public function implicitTag(v:Int32, c:Int32, o:ASN1Type):ASN1Type {
         o = o.clone();
         o.implicitTag = v;
         o.implicitClass = c;
@@ -101,7 +101,7 @@ class Parser {
         return o;
     }
 
-    static public function printableString(size:Int = Int.MAX_VALUE, size2:Int = 0):ASN1Type {
+    static public function printableString(size:Int32 = Int.MAX_VALUE, size2:Int32 = 0):ASN1Type {
         return new PrintableStringType(size, size2);
     }
 
@@ -113,19 +113,19 @@ class Parser {
         return new SequenceType(a);
     }
 
-    static public function sequenceOf(t:ASN1Type, min:Int = Int.MIN_VALUE, max:Int = Int.MAX_VALUE):ASN1Type {
+    static public function sequenceOf(t:ASN1Type, min:Int32 = Int.MIN_VALUE, max:Int32 = Int.MAX_VALUE):ASN1Type {
         return new SequenceType(t);
     }
 
-    static public function setOf(type:ASN1Type, min:Int = Int.MIN_VALUE, max:Int = Int.MAX_VALUE):ASN1Type {
+    static public function setOf(type:ASN1Type, min:Int32 = Int.MIN_VALUE, max:Int32 = Int.MAX_VALUE):ASN1Type {
         return new SetType(type);
     }
 
-    static public function teletexString(size:Int = Int.MAX_VALUE, size2:Int = 0):ASN1Type {
+    static public function teletexString(size:Int32 = Int.MAX_VALUE, size2:Int32 = 0):ASN1Type {
         return new TeletexStringType(size, size2);
     }
 
-    static public function universalString(size:Int = Int.MAX_VALUE, size2:Int = 0):UniversalStringType {
+    static public function universalString(size:Int32 = Int.MAX_VALUE, size2:Int32 = 0):UniversalStringType {
         return new UniversalStringType(size, size2);
     }
 
