@@ -29,7 +29,6 @@ class MAC implements IHMAC {
      * optionally a number of bits to return.
      * The MAC will be truncated to that size if needed.
      */
-
     public function new(hash:IHash, bits:Int32 = 0) {
         this.hash = hash;
         this.bits = bits;
@@ -57,12 +56,9 @@ class MAC implements IHMAC {
         return (bits != 0) ? Std.int(bits / 8) : hash.getHashSize();
     }
 
-
     /**
      * Compute a MAC using a key and some data.
-     *
      */
-
     public function compute(key:ByteArray, data:ByteArray):ByteArray {
         // take that incoming key and do hash(key + pad_2 + hash(key + pad_1 + sequence + length + record)
         // note that data =  (sequence + type + length + record)
@@ -117,8 +113,8 @@ class MAC implements IHMAC {
 
         if (bits > 0 && bits < 8 * outerHash.length) {
             outerHash.length = Std.int(bits / 8);
-        } // trace("MAC for record: " + Hex.fromArray(outerHash));
-
+            // trace("MAC for record: " + Hex.fromArray(outerHash));
+        }
 
         return outerHash;
     }

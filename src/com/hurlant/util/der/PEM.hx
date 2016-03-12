@@ -38,8 +38,8 @@ class PEM {
         var der:ByteArray = extractBinary(RSA_PRIVATE_KEY_HEADER, RSA_PRIVATE_KEY_FOOTER, str);
         if (der == null) return null;
         var obj = DER.parse(der);
-        if (Std.is(obj, Array)) {
-            var arr:Array<Dynamic> = cast(obj, Array<Dynamic>);
+        if (Std.is(obj, Sequence)) {
+            var arr = cast(obj, Sequence).data;
             // arr[0] is Version. should be 0. should be checked. shoulda woulda coulda.
             return new RSAKey(
                 arr[1], // N
@@ -52,10 +52,8 @@ class PEM {
                 arr[8]
             );
         }
-        else {
-            // dunno
-            return null;
-        }
+        // dunno
+        throw new Error('Don\'t know how to handle $obj');
     }
 
 
@@ -71,32 +69,28 @@ class PEM {
 		 */
 
     public static function readRSAPublicKey(str:String):RSAKey {
-        var der:ByteArray = extractBinary(RSA_PUBLIC_KEY_HEADER, RSA_PUBLIC_KEY_FOOTER, str);
-        if (der == null) return null;
-        var obj:Dynamic = DER.parse(der);
-        if (Std.is(obj, Array)) {
-            var arr:Array<Dynamic> = cast(obj, Array<Dynamic>);
-            // arr[0] = [ <some crap that means "rsaEncryption">, null ]; ( apparently, that's an X-509 Algorithm Identifier.
-            if (Std.string(arr[0][0]) != OID.RSA_ENCRYPTION) {
-                return null;
-            } // arr[1] is a ByteArray begging to be parsed as DER
-
-            arr[1].position = 0; // there's a 0x00 byte up front. find out why later. like, read a spec.
-            obj = DER.parse(arr[1]);
-            if (Std.is(obj, Array)) {
-                arr = cast(obj, Array<Dynamic>);
-                // arr[0] = modulus
-                // arr[1] = public expt.
-                return new RSAKey(arr[0], arr[1]);
-            }
-            else {
-                return null;
+        var der = extractBinary(RSA_PUBLIC_KEY_HEADER, RSA_PUBLIC_KEY_FOOTER, str);
+        var obj = null;
+        if (der != null) {
+            obj = DER.parse(der);
+            if (Std.is(obj, Sequence)) {
+                var seq = cast(obj, Sequence);
+                // arr[0] = [ <some crap that means "rsaEncryption">, null ]; ( apparently, that's an X-509 Algorithm Identifier.
+                if (Std.string(seq.get(0).get(0)) == OID.RSA_ENCRYPTION) {
+                    seq.get(1).position = 0; // there's a 0x00 byte up front. find out why later. like, read a spec.
+                    //trace(seq.get(1));
+                    //trace(HaxeType.getClass(seq.get(1)));
+                    obj = DER.parse(seq.get(1).data);
+                    if (Std.is(obj, Sequence)) {
+                        seq = cast(obj, Sequence);
+                        // arr[0] = modulus
+                        // arr[1] = public expt.
+                        return new RSAKey(seq.get(0), seq.get(1));
+                    }
+                }
             }
         }
-        else {
-            // dunno
-            return null;
-        }
+        throw new Error('Unhandled PEM.readRSAPublicKey $obj');
     }
 
     public static function readCertIntoArray(str:String):ByteArray {

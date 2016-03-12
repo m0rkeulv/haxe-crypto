@@ -50,7 +50,6 @@ class HaxeCryptoTests {
         tr.add(new OFBModeTest());
         tr.add(new ECBModeTest());
         tr.add(new CryptoTest());
-
         tr.add(new BigIntegerTest());
         tr.add(new RSAKeyTest());
         //tr.add(new TLSTest());

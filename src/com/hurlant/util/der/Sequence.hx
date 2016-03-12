@@ -13,7 +13,7 @@ import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 class Sequence implements IAsn1Type {
-    private var data:Array<Dynamic>;
+    public var data:Array<Dynamic>;
     private var strData:Map<String, Dynamic>;
     private var type:Int;
     private var len:Int;

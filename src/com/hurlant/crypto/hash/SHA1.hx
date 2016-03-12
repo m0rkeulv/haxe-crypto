@@ -51,8 +51,7 @@ class SHA1 extends SHABase implements IHash {
             for (j in 0...80) {
                 if (j < 16) {
                     w[j] = x[i + j];
-                }
-                else {
+                } else {
                     w[j] = rol(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
                 }
                 var t = rol(a, 5) + ft(j, b, c, d) + e + w[j] + kt(j);

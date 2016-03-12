@@ -45,7 +45,6 @@ class RSAKeyTest extends BaseTestCase {
         assert(txt, txt2);
     }
 
-    /*
     public function test_generate() {
         var rsa = RSAKey.generate(256, "10001");
         // same lame smoke test here.
@@ -55,7 +54,7 @@ class RSAKeyTest extends BaseTestCase {
         var dst2 = new ByteArray();
         rsa.encrypt(src, dst, src.length);
         rsa.decrypt(dst, dst2, dst.length);
-        var txt2 = Std.string(Hex);
+        var txt2 = Hex.toString(Hex.fromArray(dst2));
         assert(txt, txt2);
     }
 
@@ -77,7 +76,7 @@ class RSAKeyTest extends BaseTestCase {
         var dst2 = new ByteArray();
         rsa.encrypt(src, dst, src.length);
         rsa.decrypt(dst, dst2, dst.length);
-        var txt2 = Std.string(Hex);
+        var txt2 = Hex.toString(Hex.fromArray(dst2));
         assert(txt, txt2);
     }
 
@@ -91,6 +90,7 @@ class RSAKeyTest extends BaseTestCase {
         assert(rsa != null);
     }
 
+    /*
     public function test_adobeSample() {
         var myPEMPublicKeyString = (
             "-----BEGIN PUBLIC KEY-----" +
@@ -114,9 +114,11 @@ class RSAKeyTest extends BaseTestCase {
         // The other side of the connection can convert the hex back into
         // binary before decrypting
         var hexEncryptedResult = Hex.fromArray(encryptedResult);
-        assert(hexEncryptedResult.length > 5);
+        assertTrue(hexEncryptedResult.length > 5);
     }
+    */
 
+    /*
     public function test_longText() {
         var pem = (
             "-----BEGIN RSA PRIVATE KEY-----\n" +
@@ -141,7 +143,7 @@ class RSAKeyTest extends BaseTestCase {
         var dst2 = new ByteArray();
         rsa.encrypt(src, dst, src.length);
         rsa.decrypt(dst, dst2, dst.length);
-        var txt2 = Std.string(Hex);
+        var txt2 = Hex.toString(Hex.fromArray(dst2));
         assert(txt, txt2);
     }
 */

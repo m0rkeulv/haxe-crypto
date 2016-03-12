@@ -8,6 +8,7 @@
  */
 package com.hurlant.crypto.symmetric;
 
+import haxe.Int32;
 import com.hurlant.crypto.tls.TLSError;
 import com.hurlant.util.ByteArray;
 

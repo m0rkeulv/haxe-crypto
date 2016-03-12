@@ -50,7 +50,6 @@ class RSAKey {
         DQ:BigInteger = null,
         C:BigInteger = null
     ) {
-
         this.n = N;
         this.e = E;
         this.d = D;

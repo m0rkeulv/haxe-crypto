@@ -520,24 +520,28 @@ class BigInteger {
      */
 
     public function squareTo(r:BigInteger):Void {
-        /*
-        var x:BigInteger = abs();
-        var i:Int = r.t = 2 * x.t;
-        while (--i >= 0)r.a[i] = 0;
-        for (i in 0...x.t - 1) {
-            var c:Int = x.am(i, x.a[i], r, 2 * i, 0, 1);
-            if ((r.a[i + x.t] += x.am(i + 1, 2 * x.a[i], r, 2 * i + 1, c, x.t - i - 1)) >= DV) {
-                r.a[i + x.t] -= DV;
-                r.a[i + x.t + 1] = 1;
+        if (false) {
+            this.multiplyTo(this, r);
+        } else {
+            var x:BigInteger = abs();
+            var i:Int32 = r.t = 2 * x.t;
+            while (--i >= 0) r.a[i] = 0;
+            //trace(r.a);
+            for (i in 0...x.t) {
+                //trace(i);
+                var c:Int32 = x.am(i, x.a[i], r, 2 * i, 0, 1);
+                r.a[i + x.t] += x.am(i + 1, 2 * x.a[i], r, 2 * i + 1, c, x.t - i - 1);
+                r.a[i + x.t] |= 0;
+                if (r.a[i + x.t] >= DV) {
+                    r.a[i + x.t] -= DV;
+                    r.a[i + x.t] |= 0;
+                    r.a[i + x.t + 1] = 1;
+                }
             }
+            if (r.t > 0) r.a[r.t - 1] += x.am(i, x.a[i], r, 2 * i, 0, 1);
+            r.s = 0;
+            r.clamp();
         }
-        if (r.t > 0) r.a[r.t - 1] += x.am(i, x.a[i], r, 2 * i, 0, 1);
-        r.s = 0;
-        r.clamp();
-        trace(x.a);
-        trace(r.a);
-        */
-        this.multiplyTo(this, r);
     }
 
     /**
