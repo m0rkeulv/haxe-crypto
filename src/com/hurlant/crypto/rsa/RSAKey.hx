@@ -11,9 +11,7 @@
  */
 package com.hurlant.crypto.rsa;
 
-
 import com.hurlant.crypto.tls.TLSError;
-import com.hurlant.util.Function;
 import com.hurlant.util.Std2;
 import com.hurlant.crypto.prng.Random;
 import com.hurlant.math.BigInteger;
@@ -21,11 +19,10 @@ import com.hurlant.util.Memory;
 
 import com.hurlant.util.ByteArray;
 
-
 /**
-	 * Current limitations:
-	 * exponent must be smaller than 2^31.
-	 */
+ * Current limitations:
+ * exponent must be smaller than 2^31.
+ */
 class RSAKey {
     // public key
     public var e:Int; // public exponent. must be <2^31
@@ -42,11 +39,16 @@ class RSAKey {
     private var canDecrypt:Bool;
     private var canEncrypt:Bool;
 
-    public function new(N:BigInteger, E:Int,
-                        D:BigInteger = null,
-                        P:BigInteger = null, Q:BigInteger = null,
-                        DP:BigInteger = null, DQ:BigInteger = null,
-                        C:BigInteger = null) {
+    public function new(
+        N:BigInteger,
+        E:Int,
+        D:BigInteger = null,
+        P:BigInteger = null,
+        Q:BigInteger = null,
+        DP:BigInteger = null,
+        DQ:BigInteger = null,
+        C:BigInteger = null
+    ) {
 
         this.n = N;
         this.e = E;
@@ -66,16 +68,25 @@ class RSAKey {
         return new RSAKey(new BigInteger(N, 16, true), Std2.parseInt(E, 16));
     }
 
-    public static function parsePrivateKey(N:String, E:String, D:String,
-                                           P:String = null, Q:String = null, DMP1:String = null, DMQ1:String = null, IQMP:String = null):RSAKey {
+    public static function parsePrivateKey(
+        N:String,
+        E:String,
+        D:String,
+        P:String = null,
+        Q:String = null,
+        DMP1:String = null,
+        DMQ1:String = null,
+        IQMP:String = null
+    ):RSAKey {
         if (P == null) {
             return new RSAKey(new BigInteger(N, 16, true), Std2.parseInt(E, 16), new BigInteger(D, 16, true));
-        }
-        else {
-            return new RSAKey(new BigInteger(N, 16, true), Std2.parseInt(E, 16), new BigInteger(D, 16, true),
+        } else {
+            return new RSAKey(
+            new BigInteger(N, 16, true), Std2.parseInt(E, 16), new BigInteger(D, 16, true),
             new BigInteger(P, 16, true), new BigInteger(Q, 16, true),
             new BigInteger(DMP1, 16, true), new BigInteger(DMQ1, 16, true),
-            new BigInteger(IQMP, 16, true));
+            new BigInteger(IQMP, 16, true)
+            );
         }
     }
 
@@ -90,23 +101,23 @@ class RSAKey {
         Memory.gc();
     }
 
-    public function encrypt(src:ByteArray, dst:ByteArray, length:Int, pad:Function = null):Void {
+    public function encrypt(src:ByteArray, dst:ByteArray, length:Int, pad:ByteArray -> Int -> Int -> Int -> ByteArray = null):Void {
         _encrypt(doPublic, src, dst, length, pad, 0x02);
     }
 
-    public function decrypt(src:ByteArray, dst:ByteArray, length:Int, pad:Function = null):Void {
+    public function decrypt(src:ByteArray, dst:ByteArray, length:Int, pad:BigInteger -> Int -> Int -> ByteArray = null):Void {
         _decrypt(doPrivate2, src, dst, length, pad, 0x02);
     }
 
-    public function sign(src:ByteArray, dst:ByteArray, length:Int, pad:Function = null):Void {
+    public function sign(src:ByteArray, dst:ByteArray, length:Int, pad:ByteArray -> Int -> Int -> Int -> ByteArray = null):Void {
         _encrypt(doPrivate2, src, dst, length, pad, 0x01);
     }
 
-    public function verify(src:ByteArray, dst:ByteArray, length:Int, pad:Function = null):Void {
+    public function verify(src:ByteArray, dst:ByteArray, length:Int, pad:BigInteger -> Int -> Int -> ByteArray = null):Void {
         _decrypt(doPublic, src, dst, length, pad, 0x01);
     }
 
-    private function _encrypt(op:Function, src:ByteArray, dst:ByteArray, length:Int, pad:Function, padType:Int):Void {
+    private function _encrypt(op:BigInteger -> BigInteger, src:ByteArray, dst:ByteArray, length:Int, pad: ByteArray -> Int -> Int -> Int -> ByteArray, padType:Int):Void {
         // adjust pad if needed
         if (pad == null) pad = pkcs1pad; // convert src to BigInteger
 
@@ -116,8 +127,8 @@ class RSAKey {
         var bl:Int = getBlockSize();
         var end:Int = src.position + length;
         while (src.position < end) {
-            var block:BigInteger = new BigInteger(pad(src, end, bl, padType), bl, true);
-            var chunk:BigInteger = op(block);
+            var block = new BigInteger(pad(src, end, bl, padType), bl, true);
+            var chunk = op(block);
 
             var b:Int = bl - Math.ceil(chunk.bitLength() / 8);
             while (b > 0) {
@@ -129,56 +140,48 @@ class RSAKey {
         }
     }
 
-    private function _decrypt(op:Function, src:ByteArray, dst:ByteArray, length:Int, pad:Function, padType:Int):Void {
+    private function _decrypt(op:BigInteger -> BigInteger, src:ByteArray, dst:ByteArray, length:Int, pad:BigInteger -> Int -> Int -> ByteArray, padType:Int):Void {
         // adjust pad if needed
+        // src:BigInteger, n:Int, type:Int = 0x02
         if (pad == null) pad = pkcs1unpad; // convert src to BigInteger
-
 
         if (src.position >= src.length) {
             src.position = 0;
         }
-        var bl:Int = getBlockSize();
-        var end:Int = src.position + length;
+        var bl = getBlockSize();
+        var end = src.position + length;
         while (src.position < end) {
-            var block:BigInteger = new BigInteger(src, bl, true);
-            var chunk:BigInteger = op(block);
-            var b:ByteArray = pad(chunk, bl, padType);
-            if (b == null)
-                throw new TLSError("Decrypt error - padding function returned null!", TLSError.decode_error);
+            var block = new BigInteger(src, bl, true);
+            var chunk = op(block);
+            var b = pad(chunk, bl, padType);
+            if (b == null) throw new TLSError("Decrypt error - padding function returned null!", TLSError.decode_error);
 
             dst.writeBytes(b);
         }
     }
 
     /**
-		 * PKCS#1 pad. type 1 (0xff) or 2, random.
-		 * puts as much data from src into it, leaves what doesn't fit alone.
-		 */
+     * PKCS#1 pad. type 1 (0xff) or 2, random.
+     * puts as much data from src into it, leaves what doesn't fit alone.
+     */
 
     private function pkcs1pad(src:ByteArray, end:Int, n:Int, type:Int = 0x02):ByteArray {
-        var out:ByteArray = new ByteArray();
-        var p:Int = src.position;
+        var out = new ByteArray();
+        var p = src.position;
         end = Std.int(Std2.min3(end, src.length, p + n - 11));
         src.position = end;
-        var i:Int = end - 1;
-        while (i >= p && n > 11) {
-            out[--n] = src[i--];
-        }
+        var i = end - 1;
+        while (i >= p && n > 11) out[--n] = src[i--];
         out[--n] = 0;
         if (type == 0x02) { // type 2
-            var rng:Random = new Random();
-            var x:Int = 0;
+            var rng = new Random();
+            var x = 0;
             while (n > 2) {
-                do {
-                    x = rng.nextByte();
-                } while ((x == 0));
+                do { x = rng.nextByte(); } while ((x == 0));
                 out[--n] = x;
             }
-        }
-        else { // type 1
-            while (n > 2) {
-                out[--n] = 0xFF;
-            }
+        } else { // type 1
+            while (n > 2) out[--n] = 0xFF;
         }
         out[--n] = type;
         out[--n] = 0;
@@ -186,13 +189,13 @@ class RSAKey {
     }
 
     /**
-		 * 
-		 * @param src
-		 * @param n
-		 * @param type Not used.
-		 * @return 
-		 * 
-		 */
+     *
+     * @param src
+     * @param n
+     * @param type Not used.
+     * @return
+     *
+     */
 
     private function pkcs1unpad(src:BigInteger, n:Int, type:Int = 0x02):ByteArray {
         var out:ByteArray = new ByteArray();
@@ -254,23 +257,23 @@ class RSAKey {
 
 
     /**
-		 * 
-		 * note: We should have a "nice" variant of this function that takes a callback,
-		 * 		and perform the computation is small fragments, to keep the web browser
-		 * 		usable.
-		 * 
-		 * @param B
-		 * @param E
-		 * @return a new random private key B bits long, using public expt E
-		 * 
-		 */
+     *
+     * note: We should have a "nice" variant of this function that takes a callback,
+     * 		and perform the computation is small fragments, to keep the web browser
+     * 		usable.
+     *
+     * @param B
+     * @param E
+     * @return a new random private key B bits long, using public expt E
+     *
+     */
 
     public static function generate(B:Int, E:String):RSAKey {
-        var rng:Random = new Random();
-        var qs:Int = B >> 1;
-        var key:RSAKey = new RSAKey(null, 0, null);
+        var rng = new Random();
+        var qs = B >> 1;
+        var key = new RSAKey(null, 0, null);
         key.e = Std2.parseInt(E, 16);
-        var ee:BigInteger = new BigInteger(E, 16, true);
+        var ee = new BigInteger(E, 16, true);
         while (true) {
             while (true) {
                 key.p = bigRandom(B - qs, rng);
@@ -283,13 +286,13 @@ class RSAKey {
                 key.q.isProbablePrime(10)) break;
             }
             if (key.p.compareTo(key.q) <= 0) {
-                var t:BigInteger = key.p;
+                var t = key.p;
                 key.p = key.q;
                 key.q = t;
             }
-            var p1:BigInteger = key.p.subtract(BigInteger.ONE);
-            var q1:BigInteger = key.q.subtract(BigInteger.ONE);
-            var phi:BigInteger = p1.multiply(q1);
+            var p1 = key.p.subtract(BigInteger.ONE);
+            var q1 = key.q.subtract(BigInteger.ONE);
+            var phi = p1.multiply(q1);
             if (phi.gcd(ee).compareTo(BigInteger.ONE) == 0) {
                 key.n = key.p.multiply(key.q);
                 key.d = ee.modInverse(phi);
@@ -306,10 +309,10 @@ class RSAKey {
 
     private static function bigRandom(bits:Int, rnd:Random):BigInteger {
         if (bits < 2) return BigInteger.nbv(1);
-        var x:ByteArray = new ByteArray();
+        var x = new ByteArray();
         rnd.nextBytes(x, (bits >> 3));
         x.position = 0;
-        var b:BigInteger = new BigInteger(x, 0, true);
+        var b = new BigInteger(x, 0, true);
         b.primify(bits, 1);
         return b;
     }
@@ -323,13 +326,13 @@ class RSAKey {
             return x.modPow(d, n);
         }
 
-        var xp:BigInteger = x.mod(p).modPow(dmp1, p);
-        var xq:BigInteger = x.mod(q).modPow(dmq1, q);
+        var xp = x.mod(p).modPow(dmp1, p);
+        var xq = x.mod(q).modPow(dmq1, q);
 
         while (xp.compareTo(xq) < 0) {
             xp = xp.add(p);
         }
-        var r:BigInteger = xp.subtract(xq).multiply(coeff).mod(p).multiply(q).add(xq);
+        var r = xp.subtract(xq).multiply(coeff).mod(p).multiply(q).add(xq);
 
         return r;
     }
@@ -339,8 +342,8 @@ class RSAKey {
             return x.modPow(d, n);
         } // TODO: re-calculate any missing CRT params
 
-        var xp:BigInteger = x.mod(p).modPow(dmp1, p);
-        var xq:BigInteger = x.mod(q).modPow(dmq1, q);
+        var xp = x.mod(p).modPow(dmp1, p);
+        var xq = x.mod(q).modPow(dmq1, q);
 
         while (xp.compareTo(xq) < 0) {
             xp = xp.add(p);

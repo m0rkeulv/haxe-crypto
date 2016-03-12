@@ -38,7 +38,8 @@ class ECBModeTest extends BaseTestCase {
             "3ad77bb40d7a3660a89ecaf32466ef97" +
             "f5d3d58503b9699de785895a96fdbaaf" +
             "43b1cd7f598ece23881b00e3ed030688" +
-            "7b0c785e27e8ad3f8223207104725dd4");
+            "7b0c785e27e8ad3f8223207104725dd4"
+        );
         var ecb = new ECBMode(new AESKey(key), new NullPad());
         var src = new ByteArray();
         src.writeBytes(pt);
@@ -98,6 +99,7 @@ class ECBModeTest extends BaseTestCase {
     }
 
     // crappier, older testing. keeping around for no good reason.
+
     public function test_aes() {
         var keys = [
             "00010203050607080A0B0C0D0F101112",

@@ -16,22 +16,19 @@ import com.hurlant.crypto.symmetric.IVMode;
 import com.hurlant.util.ByteArray;
 
 /**
-	 * CBC confidentiality mode. why not.
-	 */
-class CBCMode extends IVMode implements IMode
-{
-    
-    public function new(key : ISymmetricKey, padding : IPad = null)
-    {
+ * CBC confidentiality mode. why not.
+ */
+class CBCMode extends IVMode implements IMode {
+    public function new(key:ISymmetricKey, padding:IPad = null) {
         super(key, padding);
     }
-    
-    public function encrypt(src : ByteArray) : Void{
+
+    public function encrypt(src:ByteArray):Void {
         padding.pad(src);
-        var vector : ByteArray = getIV4e();
-        var i : Int = 0;
-        while (i < src.length){
-            for (j in 0...blockSize){
+        var vector:ByteArray = getIV4e();
+        var i:Int = 0;
+        while (i < src.length) {
+            for (j in 0...blockSize) {
                 src[i + j] ^= vector[j];
             }
             key.encrypt(src, i);
@@ -40,15 +37,16 @@ class CBCMode extends IVMode implements IMode
             i += blockSize;
         }
     }
-    public function decrypt(src : ByteArray) : Void{
-        var vector : ByteArray = getIV4d();
-        var tmp : ByteArray = new ByteArray();
-        var i : Int = 0;
-        while (i < src.length){
+
+    public function decrypt(src:ByteArray):Void {
+        var vector:ByteArray = getIV4d();
+        var tmp:ByteArray = new ByteArray();
+        var i:Int = 0;
+        while (i < src.length) {
             tmp.position = 0;
             tmp.writeBytes(src, i, blockSize);
             key.decrypt(src, i);
-            for (j in 0...blockSize){
+            for (j in 0...blockSize) {
                 src[i + j] ^= vector[j];
             }
             vector.position = 0;
@@ -57,9 +55,8 @@ class CBCMode extends IVMode implements IMode
         }
         padding.unpad(src);
     }
-    
-    public function toString() : String{
+
+    public function toString():String {
         return Std.string(key) + "-cbc";
     }
 }
-
