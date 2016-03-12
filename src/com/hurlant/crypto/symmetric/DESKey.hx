@@ -22,8 +22,8 @@ import com.hurlant.util.Memory;
 
 class DESKey implements ISymmetricKey {
     private var key:ByteArray;
-    private var encKey:Array<Dynamic>;
-    private var decKey:Array<Dynamic>;
+    private var encKey:Array<Int>;
+    private var decKey:Array<Int>;
 
 
     public function new(key:ByteArray) {
@@ -41,7 +41,6 @@ class DESKey implements ISymmetricKey {
     }
 
     public function dispose():Void {
-        var i:Int = 0;
         ArrayUtil.disposeArray(encKey);
         ArrayUtil.disposeArray(decKey);
         ArrayUtil.secureDisposeByteArray(key);
@@ -64,9 +63,9 @@ class DESKey implements ISymmetricKey {
      * Acknowledgements for this routine go to James Gillogly & Phil Karn.
      */
 
-    private function generateWorkingKey(encrypting:Bool, key:ByteArray, off:Int):Array<Dynamic> {
+    private function generateWorkingKey(encrypting:Bool, key:ByteArray, off:Int):Array<Int> {
         //int[] newKey = new int[32];
-        var newKey:Array<Dynamic> = [];
+        var newKey:Array<Int> = [];
         //boolean[] pc1m = new boolean[56], pcr = new boolean[56];
         var pc1m:ByteArray = new ByteArray();
         var pcr:ByteArray = new ByteArray();
@@ -79,16 +78,9 @@ class DESKey implements ISymmetricKey {
         }
 
         for (i in 0...16) {
-            var m:Int;
-            var n:Int;
+            var m = encrypting ? (i << 1) : ((15 - i) << 1);
+            var n = m + 1;
 
-            if (encrypting) {
-                m = i << 1;
-            } else {
-                m = (15 - i) << 1;
-            }
-
-            n = m + 1;
             newKey[m] = newKey[n] = 0;
 
             for (j in 0...28) {
@@ -109,10 +101,10 @@ class DESKey implements ISymmetricKey {
 
         var i = 0;
         while (i != 32) {
-            var i1 = newKey[i];
+            var i1 = newKey[i + 0];
             var i2 = newKey[i + 1];
-            newKey[i] = ((i1 & 0x00fc0000) << 6) | ((i1 & 0x00000fc0) << 10) | ((i2 & 0x00fc0000) >>> 10) | ((i2 & 0x00000fc0) >>> 6);
-            newKey[i + 1] = ((i1 & 0x0003f000) << 12) | ((i1 & 0x0000003f) << 16) | ((i2 & 0x0003f000) >>> 4) | (i2 & 0x0000003f);
+            newKey[i + 0] = ((i1 & 0x00fc0000) <<  6) | ((i1 & 0x00000fc0) << 10) | ((i2 & 0x00fc0000) >>> 10) | ((i2 & 0x00000fc0) >>> 6);
+            newKey[i + 1] = ((i1 & 0x0003f000) << 12) | ((i1 & 0x0000003f) << 16) | ((i2 & 0x0003f000) >>>  4) | ((i2 & 0x0000003f) >>> 0);
             i += 2;
         }
 

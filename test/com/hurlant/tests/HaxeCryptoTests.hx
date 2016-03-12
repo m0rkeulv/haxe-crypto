@@ -38,15 +38,14 @@ class HaxeCryptoTests {
         tr.add(new DESKeyTest());
         tr.add(new AESKeyTest());
         tr.add(new TripleDESKeyTest());
+        tr.add(new CFB8ModeTest());
+        tr.add(new CBCModeTest());
+        tr.add(new CFBModeTest());
+        tr.add(new CTRModeTest());
+        tr.add(new OFBModeTest());
 
         //tr.add(new ECBModeTest());
-
         //tr.add(new RSAKeyTest());
-        //tr.add(new CFB8ModeTest());
-        //tr.add(new CBCModeTest());
-        //tr.add(new CFBModeTest());
-        //tr.add(new CTRModeTest());
-        //tr.add(new OFBModeTest());
         tr.run();
     }
 }

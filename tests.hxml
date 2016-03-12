@@ -2,6 +2,7 @@
 -cp test
 -main com.hurlant.tests.HaxeCryptoTests
 -js tests.js
+#-cpp tests.cpp
 
 #--next
 #

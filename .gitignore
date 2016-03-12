@@ -3,4 +3,8 @@ docs/validation_errors.log
 *.iws
 *.ipr
 *.js
+*.n
 /.idea
+/tests.cpp
+/tests.java
+/tests.n

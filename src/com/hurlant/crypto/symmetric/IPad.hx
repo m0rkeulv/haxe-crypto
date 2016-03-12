@@ -12,22 +12,22 @@ package com.hurlant.crypto.symmetric;
 import com.hurlant.util.ByteArray;
 
 /**
-	 * Tiny interface that represents a padding mechanism.
-	 */
-interface IPad
-{
+ * Tiny interface that represents a padding mechanism.
+ */
+interface IPad {
+    /**
+     * Add padding to the array
+     */
+    function pad(a:ByteArray):Void;
 
     /**
-		 * Add padding to the array
-		 */
-    function pad(a : ByteArray) : Void;
+     * Remove padding from the array.
+     * @throws Error if the padding is invalid.
+     */
+    function unpad(a:ByteArray):Void;
+
     /**
-		 * Remove padding from the array.
-		 * @throws Error if the padding is invalid.
-		 */
-    function unpad(a : ByteArray) : Void;
-    /**
-		 * Set the blockSize to work on
-		 */
-    function setBlockSize(bs : Int) : Void;
+     * Set the blockSize to work on
+     */
+    function setBlockSize(bs:Int):Void;
 }

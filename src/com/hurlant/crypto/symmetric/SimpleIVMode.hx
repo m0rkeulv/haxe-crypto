@@ -14,39 +14,37 @@ package com.hurlant.crypto.symmetric;
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Memory;
 
-class SimpleIVMode implements IMode implements ICipher
-{
-    private var mode : IVMode;
-    private var cipher : ICipher;
-    
-    public function new(mode : IVMode)
-    {
+class SimpleIVMode implements IMode implements ICipher {
+    private var mode:IVMode;
+    private var cipher:ICipher;
+
+    public function new(mode:IVMode) {
         this.mode = mode;
-        cipher = try cast(mode, ICipher) catch(e:Dynamic) null;
+        cipher = try cast(mode, ICipher) catch (e:Dynamic) null;
     }
-    
-    public function getBlockSize() : Int{
+
+    public function getBlockSize():Int {
         return mode.getBlockSize();
     }
-    
-    public function dispose() : Void{
+
+    public function dispose():Void {
         mode.dispose();
         mode = null;
         cipher = null;
         Memory.gc();
     }
-    
-    public function encrypt(src : ByteArray) : Void{
+
+    public function encrypt(src:ByteArray):Void {
         cipher.encrypt(src);
-        var tmp : ByteArray = new ByteArray();
+        var tmp:ByteArray = new ByteArray();
         tmp.writeBytes(mode.IV);
         tmp.writeBytes(src);
         src.position = 0;
         src.writeBytes(tmp);
     }
-    
-    public function decrypt(src : ByteArray) : Void{
-        var tmp : ByteArray = new ByteArray();
+
+    public function decrypt(src:ByteArray):Void {
+        var tmp:ByteArray = new ByteArray();
         tmp.writeBytes(src, 0, getBlockSize());
         mode.IV = tmp;
         tmp = new ByteArray();
@@ -55,7 +53,8 @@ class SimpleIVMode implements IMode implements ICipher
         src.length = 0;
         src.writeBytes(tmp);
     }
-    public function toString() : String{
+
+    public function toString():String {
         return "simple-" + Std.string(cipher);
     }
 }

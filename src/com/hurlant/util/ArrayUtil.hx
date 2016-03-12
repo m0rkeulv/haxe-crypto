@@ -8,11 +8,13 @@ class ArrayUtil {
     }
 
     public static function disposeArray(k:Array<Dynamic>) {
+        if (k == null) return;
         var r = new Random();
         for (i in 0...k.length) k[i] = r.nextByte();
     }
 
     static public function secureDisposeByteArray(ba:ByteArray) {
+        if (ba == null) return;
         // @TODO: Not use ByteArray, since ByteArray can grow and it realloc buffers copying content
         // @TODO: Instead allocate a fixed size buffer
         for (i in 0...ba.length) ba[i] = Std.random(256);
