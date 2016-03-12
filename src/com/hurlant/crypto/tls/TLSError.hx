@@ -9,6 +9,7 @@
  */
 package com.hurlant.crypto.tls;
 
+import haxe.Int32;
 import com.hurlant.util.Error;
 
 class TLSError extends Error {
@@ -35,7 +36,7 @@ class TLSError extends Error {
     public static inline var user_canceled = 90;
     public static inline var no_renegotiation = 100;
 
-    public function new(message:String, id: Int) {
+    public function new(message:String, id:Int32) {
         //super(message, id);
         super(message);
     }

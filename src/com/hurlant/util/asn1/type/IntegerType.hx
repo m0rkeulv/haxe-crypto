@@ -1,6 +1,7 @@
 package com.hurlant.util.asn1.type;
 
 
+import haxe.Int32;
 import com.hurlant.math.BigInteger;
 
 import com.hurlant.util.ByteArray;
@@ -27,8 +28,7 @@ class IntegerType extends ASN1Type {
         // return a primitive type if it fits within one
         if (i.bitLength() < 31) {
             return i.intValue();
-        }
-        else {
+        } else {
             return i;
         }
     }

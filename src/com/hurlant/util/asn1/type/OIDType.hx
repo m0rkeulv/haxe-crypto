@@ -1,5 +1,6 @@
 package com.hurlant.util.asn1.type;
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 class OIDType extends ASN1Type {
@@ -30,9 +31,9 @@ class OIDType extends ASN1Type {
         // first byte = 40*value1 + value2
         var o:Int32 = s.readUnsignedByte();
         var left:Int32 = length - 1;
-        var a:Array<Dynamic> = [];
-        a.push(Int(o / 40));
-        a.push(Int(o % 40));
+        var a:Array<Int> = [];
+        a.push(Std.int(o / 40));
+        a.push(Std.int(o % 40));
         var v:Int32 = 0;
         while (left-- > 0) {
             o = s.readUnsignedByte();
@@ -48,13 +49,11 @@ class OIDType extends ASN1Type {
         if (oid != null) {
             if (oid == str) {
                 return this.clone();
-            }
-            else {
+            } else {
                 s.position = p;
                 return null;
             }
-        }
-        else {
+        } else {
             return new OIDType(str);
         }
     }

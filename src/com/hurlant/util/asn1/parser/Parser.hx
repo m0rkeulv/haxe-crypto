@@ -1,4 +1,5 @@
 package com.hurlant.util.asn1.parser;
+import haxe.Int32;
 import com.hurlant.util.asn1.type.UTF8StringType;
 import com.hurlant.util.asn1.type.UTCTimeType;
 import com.hurlant.util.asn1.type.UniversalStringType;
@@ -36,11 +37,9 @@ class Parser {
         return new BooleanType();
     }
 
-    static public function choice():ASN1Type {
+    static public function choice(p:Array<Dynamic>):ASN1Type {
         var a:Array<Dynamic> = [];
-        for (i in 0...p.length) {
-            a[i] = p[i];
-        }
+        for (i in 0...p.length) a[i] = p[i];
         return new ChoiceType(a);
     }
 

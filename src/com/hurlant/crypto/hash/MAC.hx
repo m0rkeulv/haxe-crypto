@@ -11,6 +11,7 @@
 package com.hurlant.crypto.hash;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 class MAC implements IHMAC {
@@ -115,7 +116,7 @@ class MAC implements IHMAC {
 
 
         if (bits > 0 && bits < 8 * outerHash.length) {
-            outerHash.length = bits / 8;
+            outerHash.length = Std.int(bits / 8);
         } // trace("MAC for record: " + Hex.fromArray(outerHash));
 
 

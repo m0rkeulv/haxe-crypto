@@ -1,5 +1,6 @@
 package com.hurlant.util.asn1.type;
 
+import haxe.Int32;
 import com.hurlant.util.Error;
 
 import com.hurlant.util.ByteArray;
@@ -12,8 +13,7 @@ class SequenceType extends ASN1Type {
         super(ASN1Type.SEQUENCE);
         if (Std.is(p, Array)) {
             children = cast(p, Array<Dynamic>);
-        }
-        else {
+        } else {
             childType = cast(p, ASN1Type);
         }
     }

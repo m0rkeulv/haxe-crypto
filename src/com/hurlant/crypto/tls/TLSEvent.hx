@@ -7,23 +7,21 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package
+package com.hurlant.crypto.tls;
 
 
 import com.hurlant.util.Event;
 import com.hurlant.util.ByteArray;
 
-class TLSEvent extends Event
-{
-    
-    public static inline var DATA : String = "data";
-    public static inline var READY : String = "ready";
-    public static inline var PROMPT_ACCEPT_CERT : String = "promptAcceptCert";
-    
-    public var data : ByteArray;
-    
-    public function new(type : String, data : ByteArray = null)
-    {
+class TLSEvent extends Event {
+
+    public static inline var DATA = "data";
+    public static inline var READY = "ready";
+    public static inline var PROMPT_ACCEPT_CERT = "promptAcceptCert";
+
+    public var data:ByteArray;
+
+    public function new(type:String, data:ByteArray = null) {
         this.data = data;
         super(type, false, false);
     }

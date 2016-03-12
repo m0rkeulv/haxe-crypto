@@ -17,31 +17,29 @@ import com.hurlant.util.ByteArray;
 class ObjectIdentifier implements IAsn1Type {
     private var type:Int32;
     private var len:Int32;
-    private var oid:Array<Dynamic>;
+    private var oid:Array<Int>;
 
     public function new(type:Int32 = 0, length:Int32 = 0, b:Dynamic = null) {
         this.type = type;
         this.len = length;
         if (Std.is(b, ByteArrayData)) {
             parse(cast(b, ByteArray));
-        }
-        else if (Std.is(b, String)) {
+        } else if (Std.is(b, String)) {
             generate(cast(b, String));
-        }
-        else {
+        } else {
             throw new Error("Invalid call to new ObjectIdentifier");
         }
     }
 
     private function generate(s:String):Void {
-        oid = s.split(".");
+        oid = [for (n in s.split(".")) Std2.parseInt(n)];
     }
 
     private function parse(b:ByteArray):Void {
         // parse stuff
         // first byte = 40*value1 + value2
         var o:Int32 = b.readUnsignedByte();
-        var a:Array<Dynamic> = [];
+        var a:Array<Int32> = [];
         a.push(Std.int(o / 40));
         a.push(Std.int(o % 40));
         var v:Int32 = 0;
@@ -67,10 +65,10 @@ class ObjectIdentifier implements IAsn1Type {
     }
 
     public function toDER():ByteArray {
-        var tmp:Array<Dynamic> = [];
+        var tmp:Array<Int32> = [];
         tmp[0] = oid[0] * 40 + oid[1];
         for (i in 2...oid.length) {
-            var v:Int32 = Std.parseInt(oid[i]);
+            var v:Int32 = oid[i];
             if (v < 128) {
                 tmp.push(v);
             }

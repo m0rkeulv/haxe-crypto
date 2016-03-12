@@ -7,44 +7,40 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package
+package com.hurlant.crypto.tls;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 import com.hurlant.crypto.hash.HMAC;
 import com.hurlant.crypto.symmetric.ICipher;
 import com.hurlant.crypto.symmetric.IVMode;
 import com.hurlant.util.ArrayUtil;
 
-class TLSConnectionState implements IConnectionState
-{
-    
-    
+class TLSConnectionState implements IConnectionState {
     // compression state
-    
+
     // cipher state
-    private var bulkCipher : Int;
-    private var cipherType : Int;
-    private var CIPHER_key : ByteArray;
-    private var CIPHER_IV : ByteArray;
-    private var cipher : ICipher;
-    private var ivmode : IVMode;
-    
+    private var bulkCipher:Int32;
+    private var cipherType:Int32;
+    private var CIPHER_key:ByteArray;
+    private var CIPHER_IV:ByteArray;
+    private var cipher:ICipher;
+    private var ivmode:IVMode;
+
     // mac secret
-    private var macAlgorithm : Int;
-    private var MAC_write_secret : ByteArray;
-    private var hmac : HMAC;
-    
+    private var macAlgorithm:Int32;
+    private var MAC_write_secret:ByteArray;
+    private var hmac:HMAC;
+
     // sequence number. uint64
-    private var seq_lo : Int;
-    private var seq_hi : Int;
-    
-    
-    
+    private var seq_lo:Int32;
+    private var seq_hi:Int32;
+
+
     public function new(
-            bulkCipher : Int = 0, cipherType : Int = 0, macAlgorithm : Int = 0,
-            mac : ByteArray = null, key : ByteArray = null, IV : ByteArray = null)
-    {
+        bulkCipher:Int32 = 0, cipherType:Int32 = 0, macAlgorithm:Int32 = 0,
+        mac:ByteArray = null, key:ByteArray = null, IV:ByteArray = null) {
         this.bulkCipher = bulkCipher;
         this.cipherType = cipherType;
         this.macAlgorithm = macAlgorithm;
@@ -54,18 +50,18 @@ class TLSConnectionState implements IConnectionState
         CIPHER_IV = IV;
         cipher = BulkCiphers.getCipher(bulkCipher, key, 0x0301);
         if (Std.is(cipher, IVMode)) {
-            ivmode = try cast(cipher, IVMode) catch(e:Dynamic) null;
+            ivmode = try cast(cipher, IVMode) catch (e:Dynamic) null;
             ivmode.IV = IV;
         }
     }
-    
-    public function decrypt(type : Int, length : Int, p : ByteArray) : ByteArray{
+
+    public function decrypt(type:Int32, length:Int32, p:ByteArray):ByteArray {
         // decompression is a nop.
-        
+
         if (cipherType == BulkCiphers.STREAM_CIPHER) {
             if (bulkCipher == BulkCiphers.NULL) {
                 // no-op
-                
+
             }
             else {
                 cipher.decrypt(p);
@@ -73,18 +69,18 @@ class TLSConnectionState implements IConnectionState
         }
         else {
             // block cipher
-            var nextIV : ByteArray = new ByteArray();
+            var nextIV:ByteArray = new ByteArray();
             nextIV.writeBytes(p, p.length - CIPHER_IV.length, CIPHER_IV.length);
-            
+
             cipher.decrypt(p);
-            
-            
+
+
             CIPHER_IV = nextIV;
             ivmode.IV = nextIV;
         }
         if (macAlgorithm != MACs.NULL) {
-            var data : ByteArray = new ByteArray();
-            var len : Int = p.length - hmac.getHashSize();
+            var data:ByteArray = new ByteArray();
+            var len:Int32 = p.length - hmac.getHashSize();
             data.writeUnsignedInt(seq_hi);
             data.writeUnsignedInt(seq_lo);
             data.writeByte(type);
@@ -93,29 +89,30 @@ class TLSConnectionState implements IConnectionState
             if (len != 0) {
                 data.writeBytes(p, 0, len);
             }
-            var mac : ByteArray = hmac.compute(MAC_write_secret, data);
+            var mac:ByteArray = hmac.compute(MAC_write_secret, data);
             // compare "mac" with the last X bytes of p.
-            var mac_received : ByteArray = new ByteArray();
+            var mac_received:ByteArray = new ByteArray();
             mac_received.writeBytes(p, len, hmac.getHashSize());
             if (ArrayUtil.equals(mac, mac_received)) {
                 // happy happy joy joy
-                
+
             }
             else {
                 throw new TLSError("Bad Mac Data", TLSError.bad_record_mac);
             }
             p.length = len;
             p.position = 0;
-        }  // increment seq  
-        
+        } // increment seq
+
         seq_lo++;
-        if (seq_lo == 0)             seq_hi++;
+        if (seq_lo == 0) seq_hi++;
         return p;
     }
-    public function encrypt(type : Int, p : ByteArray) : ByteArray{
-        var mac : ByteArray = null;
+
+    public function encrypt(type:Int32, p:ByteArray):ByteArray {
+        var mac:ByteArray = null;
         if (macAlgorithm != MACs.NULL) {
-            var data : ByteArray = new ByteArray();
+            var data:ByteArray = new ByteArray();
             data.writeUnsignedInt(seq_hi);
             data.writeUnsignedInt(seq_lo);
             data.writeByte(type);
@@ -133,7 +130,7 @@ class TLSConnectionState implements IConnectionState
             // stream cipher
             if (bulkCipher == BulkCiphers.NULL) {
                 // no-op
-                
+
             }
             else {
                 cipher.encrypt(p);
@@ -143,15 +140,15 @@ class TLSConnectionState implements IConnectionState
             // block cipher
             cipher.encrypt(p);
             // adjust IV
-            var nextIV : ByteArray = new ByteArray();
+            var nextIV:ByteArray = new ByteArray();
             nextIV.writeBytes(p, p.length - CIPHER_IV.length, CIPHER_IV.length);
             CIPHER_IV = nextIV;
             ivmode.IV = nextIV;
-        }  // increment seq  
-        
+        } // increment seq
+
         seq_lo++;
-        if (seq_lo == 0)             seq_hi++  // compression is a nop.  ;
-        
+        if (seq_lo == 0) seq_hi++ // compression is a nop.  ;
+
         return p;
     }
 }

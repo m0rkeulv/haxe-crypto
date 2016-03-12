@@ -7,7 +7,7 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package
+package com.hurlant.crypto.tls;
 
 import com.hurlant.util.Error;
 
@@ -17,29 +17,27 @@ import com.hurlant.crypto.symmetric.ICipher;
 import com.hurlant.crypto.symmetric.TLSPad;
 import com.hurlant.crypto.symmetric.SSLPad;
 
-class BulkCiphers
-{
-    public static inline var STREAM_CIPHER : Int = 0;
-    public static inline var BLOCK_CIPHER : Int = 1;
-    
-    public static inline var NULL : Int = 0;
-    public static inline var RC4_40 : Int = 1;
-    public static inline var RC4_128 : Int = 2;
-    public static inline var RC2_CBC_40 : Int = 3;  // XXX I don't have that one.  
-    public static inline var DES_CBC : Int = 4;
-    public static inline var DES3_EDE_CBC : Int = 5;
-    public static inline var DES40_CBC : Int = 6;
-    public static inline var IDEA_CBC : Int = 7;  // XXX I don't have that one.  
-    public static inline var AES_128 : Int = 8;
-    public static inline var AES_256 : Int = 9;
-    
-    private static var algos : Array<Dynamic> = 
-        ["", "rc4", "rc4", "", "des-cbc", "3des-cbc", "des-cbc", "", "aes", "aes"];
-    
-    private static var _props : Array<Dynamic>;
-    
-    
-    private static function init() : Void{
+class BulkCiphers {
+    public static inline var STREAM_CIPHER = 0;
+    public static inline var BLOCK_CIPHER = 1;
+
+    public static inline var NULL = 0;
+    public static inline var RC4_40 = 1;
+    public static inline var RC4_128 = 2;
+    public static inline var RC2_CBC_40 = 3; // XXX I don't have that one.
+    public static inline var DES_CBC = 4;
+    public static inline var DES3_EDE_CBC = 5;
+    public static inline var DES40_CBC = 6;
+    public static inline var IDEA_CBC = 7; // XXX I don't have that one.
+    public static inline var AES_128 = 8;
+    public static inline var AES_256 = 9;
+
+    private static var algos = ["", "rc4", "rc4", "", "des-cbc", "3des-cbc", "des-cbc", "", "aes", "aes"];
+
+    private static var _props:Array<BulkCiphers>;
+
+    private static function initOnce():Void {
+        if (_props != null) return;
         _props = [];
         _props[NULL] = new BulkCiphers(STREAM_CIPHER, 0, 0, 0, 0, 0);
         _props[RC4_40] = new BulkCiphers(STREAM_CIPHER, 5, 16, 40, 0, 0);
@@ -52,33 +50,38 @@ class BulkCiphers
         _props[AES_128] = new BulkCiphers(BLOCK_CIPHER, 16, 16, 128, 16, 16);
         _props[AES_256] = new BulkCiphers(BLOCK_CIPHER, 32, 32, 256, 16, 16);
     }
-    
-    private static function getProp(cipher : Int) : BulkCiphers{
-        var p : BulkCiphers = _props[cipher];
-        if (p == null) {
-            throw new Error("Unknown bulk cipher " + Std.string(cipher));
-        }
+
+    private static function getProp(cipher:Int):BulkCiphers {
+        var p = _props[cipher];
+        if (p == null) throw new Error("Unknown bulk cipher " + Std.string(cipher));
         return p;
     }
-    public static function getType(cipher : Int) : Int{
+
+    public static function getType(cipher:Int):Int {
         return getProp(cipher).type;
     }
-    public static function getKeyBytes(cipher : Int) : Int{
+
+    public static function getKeyBytes(cipher:Int):Int {
         return getProp(cipher).keyBytes;
     }
-    public static function getExpandedKeyBytes(cipher : Int) : Int{
+
+    public static function getExpandedKeyBytes(cipher:Int):Int {
         return getProp(cipher).expandedKeyBytes;
     }
-    public static function getEffectiveKeyBits(cipher : Int) : Int{
+
+    public static function getEffectiveKeyBits(cipher:Int):Int {
         return getProp(cipher).effectiveKeyBits;
     }
-    public static function getIVSize(cipher : Int) : Int{
+
+    public static function getIVSize(cipher:Int):Int {
         return getProp(cipher).IVSize;
     }
-    public static function getBlockSize(cipher : Int) : Int{
+
+    public static function getBlockSize(cipher:Int):Int {
         return getProp(cipher).blockSize;
     }
-    public static function getCipher(cipher : Int, key : ByteArray, proto : Int) : ICipher{
+
+    public static function getCipher(cipher:Int, key:ByteArray, proto:Int):ICipher {
         if (proto == TLSSecurityParameters.PROTOCOL_VERSION) {
             return Crypto.getCipher(algos[cipher], key, new TLSPad());
         }
@@ -86,17 +89,16 @@ class BulkCiphers
             return Crypto.getCipher(algos[cipher], key, new SSLPad());
         }
     }
-    
-    
-    private var type : Int;
-    private var keyBytes : Int;
-    private var expandedKeyBytes : Int;
-    private var effectiveKeyBits : Int;
-    private var IVSize : Int;
-    private var blockSize : Int;
-    
-    public function new(t : Int, kb : Int, ekb : Int, fkb : Int, ivs : Int, bs : Int)
-    {
+
+    private var type:Int;
+    private var keyBytes:Int;
+    private var expandedKeyBytes:Int;
+    private var effectiveKeyBits:Int;
+    private var IVSize:Int;
+    private var blockSize:Int;
+
+    public function new(t:Int, kb:Int, ekb:Int, fkb:Int, ivs:Int, bs:Int) {
+        initOnce();
         type = t;
         keyBytes = kb;
         expandedKeyBytes = ekb;
@@ -104,9 +106,5 @@ class BulkCiphers
         IVSize = ivs;
         blockSize = bs;
     }
-    private static var init = {
-        init();
-    }
-
 }
 

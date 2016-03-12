@@ -669,7 +669,7 @@ class BigInteger {
         return Std2.parseInt(str.charAt(index), 36);
     }
 
-    public function nbi():Dynamic {
+    public function nbi():BigInteger {
         return new BigInteger();
     }
 
@@ -1135,7 +1135,7 @@ class BigInteger {
      *
      */
 
-    public function divideAndRemainder(a:BigInteger):Array<Dynamic> {
+    public function divideAndRemainder(a:BigInteger):Array<BigInteger> {
         var q = new BigInteger();
         var r = new BigInteger();
         divRemTo(a, q, r);
@@ -1265,7 +1265,7 @@ class BigInteger {
             else new MontgomeryReduction(m)
         );
 
-        var g:Array<Dynamic> = [];
+        var g:Array<BigInteger> = [];
         var n:Int32 = 3;
         var k1:Int32 = k - 1;
         var km:Int32 = (1 << k) - 1;

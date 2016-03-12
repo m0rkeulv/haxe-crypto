@@ -1,6 +1,7 @@
 package com.hurlant.util.asn1.type;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
 class ChoiceType extends ASN1Type {

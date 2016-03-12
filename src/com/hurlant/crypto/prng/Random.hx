@@ -25,7 +25,7 @@ class Random {
     private var pptr:Int32;
     private var seeded:Bool = false;
 
-    public function new(prng:Class<Dynamic> = null) {
+    public function new(prng:Class<IPRNG> = null) {
         if (prng == null) prng = ARC4;
         state = cast(Type.createInstance(prng, []), IPRNG);
         psize = state.getPoolSize();

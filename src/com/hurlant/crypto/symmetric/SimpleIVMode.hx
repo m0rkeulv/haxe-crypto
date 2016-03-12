@@ -11,6 +11,7 @@
 package com.hurlant.crypto.symmetric;
 
 
+import haxe.Int32;
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Memory;
 

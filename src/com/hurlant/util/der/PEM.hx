@@ -37,7 +37,7 @@ class PEM {
     public static function readRSAPrivateKey(str:String):RSAKey {
         var der:ByteArray = extractBinary(RSA_PRIVATE_KEY_HEADER, RSA_PRIVATE_KEY_FOOTER, str);
         if (der == null) return null;
-        var obj:Dynamic = DER.parse(der);
+        var obj = DER.parse(der);
         if (Std.is(obj, Array)) {
             var arr:Array<Dynamic> = cast(obj, Array<Dynamic>);
             // arr[0] is Version. should be 0. should be checked. shoulda woulda coulda.

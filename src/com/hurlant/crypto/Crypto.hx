@@ -9,6 +9,7 @@
 package com.hurlant.crypto;
 
 
+import haxe.Int32;
 import com.hurlant.crypto.hash.HMAC;
 import com.hurlant.crypto.hash.MAC;
 import com.hurlant.crypto.hash.IHash;
@@ -79,6 +80,7 @@ class Crypto {
      *  "rc4"
      *  "simple-aes-cbc"
      */
+
     public static function getCipher(name:String, key:ByteArray, pad:IPad = null):ICipher {
         // split name into an array.
         var keys:Array<Dynamic> = name.split("-");
@@ -144,7 +146,7 @@ class Crypto {
      */
 
     public static function getKeySize(name:String):Int32 {
-        var keys:Array<Dynamic> = name.split("-");
+        var keys:Array<String> = name.split("-");
         var _sw1_ = (keys[0]);
 
         switch (_sw1_) {
@@ -195,7 +197,7 @@ class Crypto {
      */
 
     public static function getHash(name:String):IHash {
-        switch (name) {
+        switch (name.toLowerCase()) {
             case "md2": return new MD2();
             case "md5": return new MD5(); // let's hope you didn't mean sha-0
             case "sha", "sha1": return new SHA1();
