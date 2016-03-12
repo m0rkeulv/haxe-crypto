@@ -48,10 +48,9 @@ class CTRMode extends IVMode implements IMode {
 
             var j = blockSize - 1;
             while (j >= 0) {
-                X[j]++;
-                if (X[j] != 0)
-                    break;
-                --j;
+                X[j] = X[j] + 1;
+                if (X[j] != 0)break;
+                j--;
             }
             i += blockSize;
         }

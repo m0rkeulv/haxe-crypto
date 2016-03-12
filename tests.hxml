@@ -1,10 +1,14 @@
 -cp src
 -cp test
 -main com.hurlant.tests.HaxeCryptoTests
+#-D astcpp
+#-D cppast
 #-php tests.php
 -js tests.js
+#-swf tests.swf
 #-java tests.java
 #-cpp tests.cpp
+#-neko tests.n
 
 #--next
 #

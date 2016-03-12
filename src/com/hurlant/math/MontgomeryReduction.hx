@@ -65,7 +65,8 @@ class MontgomeryReduction implements IReduction {
             // propagate carry
             while (x.a[j] >= BigInteger.DV) {
                 x.a[j] -= BigInteger.DV;
-                x.a[++j]++;
+                j++;
+                x.a[j]++;
             }
         }
         x.clamp();
