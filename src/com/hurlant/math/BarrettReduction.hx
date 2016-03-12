@@ -10,8 +10,7 @@ class BarrettReduction implements IReduction {
     private var q3:BigInteger;
     private var mu:BigInteger;
 
-    @:allow(com.hurlant.math)
-    private function new(m:BigInteger) {
+    public function new(m:BigInteger) {
         // setup Barrett
         r2 = new BigInteger();
         q3 = new BigInteger();

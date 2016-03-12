@@ -9,6 +9,7 @@
 package com.hurlant.tests.math;
 
 
+import com.hurlant.util.Std2;
 import com.hurlant.tests.*;
 
 import com.hurlant.math.BigInteger;
@@ -27,7 +28,7 @@ class BigIntegerTest extends BaseTestCase {
 
         xp = xp.add(p);
 
-        assert(Std.string(xp), "eef71f932bdb2741");
+        assert(xp.toString(16), "eef71f932bdb2741");
     }
 
     public function test_signed():Void {
@@ -43,31 +44,48 @@ class BigIntegerTest extends BaseTestCase {
     }
 
     public function test_signed2():Void {
-        var i1 = BigInteger.nbv(-13);
-        assert(i1.valueOf(), -13);
+        assert(BigInteger.nbv(-13).valueOf(), -13);
+        assert(BigInteger.nbv(0).valueOf(), 0);
+        assert(BigInteger.nbv(13).valueOf(), 13);
+
+        assert(BigInteger.nbv(-13).sigNum(), -1);
+        assert(BigInteger.nbv(0).sigNum(), 0);
+        assert(BigInteger.nbv(13).sigNum(), 1);
+    }
+
+    public function test_subtract():Void {
+        var res = BigInteger.nbv(0);
+        var one = BigInteger.nbv(16);
+        var out = res.subtract(one);
+        assert(out.valueOf(), -16);
+        assert(out.sigNum(), -1);
     }
 
     public function test_toAndFromString():Void {
         var a:BigInteger;
 
         a = new BigInteger("1", 10);
-        assert(Std.string(a), "1");
+        assert(a.toString(10), "1");
 
         a = new BigInteger("112374128763487126349871263984761238", 10);
-        assert(Std.string(a), "112374128763487126349871263984761238");
+        assert(a.toString(10), "112374128763487126349871263984761238");
 
         a = new BigInteger("0", 10);
-        assert(Std.string(a), "0");
-
-        a = new BigInteger("-1", 10);
-        assert(Std.string(a), "-1");
-
-        a = new BigInteger("-987341928347812763498237649812763498172634", 10);
-        assert(Std.string(a), "-987341928347812763498237649812763498172634");
+        assert(a.toString(10), "0");
 
         a = new BigInteger("0xffff", 16, true);
-        assert(Std.string(a), "65535");
-        assert(Std.string(a), "ffff");
+        assert(a.toString(10), "65535");
+        assert(a.toString(16), "ffff");
+
+        a = new BigInteger("-1", 10);
+        assert(a.toString(10), "-1");
+
+        assert(new BigInteger("-1", 10).sigNum(), -1);
+        assert(new BigInteger("1", 10).sigNum(), 1);
+        assert(new BigInteger("0", 10).sigNum(), 0);
+
+        a = new BigInteger("-987341928347812763498237649812763498172634", 10);
+        assert(a.toString(10), "-987341928347812763498237649812763498172634");
     }
 
     public function test_compareTo():Void {
@@ -117,32 +135,27 @@ class BigIntegerTest extends BaseTestCase {
         a = new BigInteger("0", 10);
         b = a.toByteArray();
         b.position = 0;
-        assert(Std.string(new BigInteger(b, 0)), "0");
+        assert(new BigInteger(b, 0).toString(10), "0");
 
         a = new BigInteger("1", 10);
         b = a.toByteArray();
         b.position = 0;
-        assert(Std.string(new BigInteger(b, 0)), "1");
+        assert((new BigInteger(b, 0)).toString(10), "1");
 
         a = new BigInteger("-1", 10);
         b = a.toByteArray();
         b.position = 0;
-        assert(Std.string(new BigInteger(b, 0)), "-1");
+        assert((new BigInteger(b, 0)).toString(10), "-1");
 
         a = new BigInteger("123469827364987236498234", 10);
         b = a.toByteArray();
         b.position = 0;
-        assert(Std.string(new BigInteger(b, 0)), "123469827364987236498234");
+        assert((new BigInteger(b, 0)).toString(10), "123469827364987236498234");
 
         a = new BigInteger("-298471293048701923847", 10);
         b = a.toByteArray();
         b.position = 0;
-        assert(Std.string(new BigInteger(b, 0)), "-298471293048701923847");
+        assert((new BigInteger(b, 0)).toString(10), "-298471293048701923847");
     }
 
-    public function new() {
-        super();
-    }
 }
-
-

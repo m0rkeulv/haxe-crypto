@@ -34,6 +34,7 @@ class HaxeCryptoTests {
         tr.add(new HMACTest());
         tr.add(new TLSPRFTest());
         tr.add(new BlowFishKeyTest());
+        tr.add(new BigIntegerTest());
 
         //tr.add(new RSAKeyTest());
         //tr.add(new AESKeyTest());
@@ -45,7 +46,6 @@ class HaxeCryptoTests {
         //tr.add(new ECBModeTest());
         //tr.add(new OFBModeTest());
         //tr.add(new TripleDESKeyTest());
-        //tr.add(new BigIntegerTest());
         tr.run();
     }
 }

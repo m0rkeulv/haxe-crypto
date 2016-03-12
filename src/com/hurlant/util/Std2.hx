@@ -58,7 +58,7 @@ class Std2 {
         return out;
     }
 
-    static public function string(value:Int, radix:Int = 10):String {
+    static public function string(value:Int, radix:Int):String {
         if (value < 0) return '-' + string(-value, radix);
         if (value == 0) return '0';
         var out = '';
