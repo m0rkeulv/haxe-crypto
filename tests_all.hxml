@@ -1,0 +1,26 @@
+-debug
+-cp src
+-cp test
+-main com.hurlant.tests.HaxeCryptoTests
+
+--each
+
+--next
+-js tests.js
+-cmd node tests.js
+
+--next
+-php tests.php
+-cmd php tests.php/index.php
+
+--next
+-java tests.java
+-cmd java -jar tests.java/HaxeCryptoTests-Debug.jar
+
+--next
+-cpp tests.cpp
+-cmd tests.cpp/HaxeCryptoTests-debug
+
+--next
+-neko tests.n
+-cmd neko tests.n
