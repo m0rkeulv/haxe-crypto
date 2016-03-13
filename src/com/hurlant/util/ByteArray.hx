@@ -2,6 +2,7 @@ package com.hurlant.util;
 
 import haxe.Int32;
 import haxe.io.Bytes;
+
 abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
     public var position(get, set):Int32;
     public var length(get, set):Int32;
@@ -11,119 +12,54 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
     public function new() { this = new ByteArrayData(); }
 
     static public function fromBytes(bytes:Bytes):ByteArray {
-        var out = new ByteArray();
-        out.length = bytes.length;
-        for (n in 0 ... bytes.length) out.writeByte(bytes.get(n));
-        out.position = 0;
+        var out = new ByteArrayData(Bytes.alloc(bytes.length));
+        out._data.blit(0, bytes, 0, bytes.length);
         return out;
     }
 
     static public function fromBytesArray(bytes:Array<Int32>):ByteArray {
-        var out = new ByteArray();
-        out.length = bytes.length;
-        for (n in 0 ... bytes.length) out[n] = bytes[n];
+        var out = new ByteArrayData(Bytes.alloc(bytes.length));
+        var data = out._data;
+        for (n in 0 ... bytes.length) data.set(n, bytes[n]);
         return out;
     }
 
-    public function getBytes():Bytes { return this.getBytes(); }
+    static private function cloneBytes(v:Bytes, offset:Int = 0, length:Int = -1):Bytes {
+        if (length < 0) length = v.length;
+        var out = Bytes.alloc(length);
+        out.blit(0, v, offset, length);
+        return out;
+    }
 
+    public function getBytes():Bytes { return cloneBytes(this.getBytes(), 0, this.length); }
+
+    public function readBoolean():Bool { return this.readUnsignedByte() != 0; }
+    public function readByte():Int32 { return this.readByte(); }
+    public function readUnsignedByte():Int32 { return this.readUnsignedByte(); }
+    public function readShort():Int32 { return this.readShort(); }
+    public function readUnsignedShort():Int32 { return this.readUnsignedShort(); }
+    public function readUnsignedInt():Int32 { return this.readUnsignedInt(); }
     public function readBytes(output:ByteArray, offset:Int32, length:Int32) { return this.readBytes(output, offset, length); }
+    public function readMultiByte(length:Int32, encoding:String):String { return this.readMultiByte(length, encoding); }
+    public function readUTFBytes(length:Int32):String { return this.readUTFBytes(length); }
 
-    public function readMultiByte(length:Int32, encoding:String):String {
-        return this.readMultiByte(length, encoding);
-    }
+    public function writeByte(value:Int32) { return this.writeByte(value); }
+    public function writeUnsignedByte(value:Int32) { return this.writeUnsignedByte(value); }
+    public function writeShort(value:Int32) { return this.writeShort(value); }
+    public function writeInt24(value:Int32) { return this.writeInt24(value); }
+    public function writeUnsignedInt(value:Int32) { return this.writeUnsignedInt(value); }
+    public function writeBytes(input:ByteArray, offset:Int32 = 0, length:Int32 = 0) { return this.writeBytes(input, offset, length); }
+    public function writeMultiByte(str:String, encoding:String) { return this.writeMultiByte(str, encoding); }
+    public function writeUTFBytes(str:String) { return this.writeUTFBytes(str); }
+    public function writeUTF(str:String) { return this.writeUTF(str); }
 
-    public function writeMultiByte(str:String, encoding:String) {
-        return this.writeMultiByte(str, encoding);
-    }
-
-    public function readUnsignedInt():Int32 {
-        return this.readUnsignedInt();
-    }
-
-    public function readByte():Int32 {
-        return this.readByte();
-    }
-
-    public function readUnsignedByte():Int32 {
-        return this.readUnsignedByte();
-    }
-
-    public function readShort():Int32 {
-        return this.readShort();
-    }
-
-    public function readUnsignedShort():Int32 {
-        return this.readUnsignedShort();
-    }
-
-    public function readBoolean():Bool {
-        return this.readUnsignedByte() != 0;
-    }
-
-    public function writeUTF(str:String) {
-        return this.writeUTF(str);
-    }
-
-    public function writeUTFBytes(str:String) {
-        return this.writeUTFBytes(str);
-    }
-
-    public function writeByte(value:Int32) {
-        return this.writeByte(value);
-    }
-
-    public function writeShort(value:Int32) {
-        return this.writeShort(value);
-    }
-
-    public function writeInt24(value:Int32) {
-        return this.writeInt24(value);
-    }
-
-    public function writeBytes(input:ByteArray, offset:Int32 = 0, length:Int32 = 0) {
-        return this.writeBytes(input, offset, length);
-    }
-
-    public function readUTFBytes(length:Int32):String {
-        return this.readUTFBytes(length);
-    }
-
-    public function writeUnsignedByte(value:Int32) {
-        return this.writeUnsignedByte(value);
-    }
-
-    public function writeUnsignedInt(value:Int32) {
-        return this.writeUnsignedInt(value);
-    }
-
-    private function get_endian():Endian {
-        return this.endian;
-    }
-
-    private function get_position():Int32 {
-        return this.position;
-    }
-
-    private function get_length():Int32 {
-        return this.length;
-    }
-
-    private function get_bytesAvailable():Int32 {
-        return this.bytesAvailable;
-    }
-
-    private function set_endian(value:Endian):Endian {
-        return this.endian = value;
-    }
-
-    private function set_position(value:Int32):Int32 {
-        return this.position = value;
-    }
-
-    private function set_length(value:Int32):Int32 {
-        return this.length = value;
-    }
+    private function get_endian():Endian { return this.endian; }
+    private function get_position():Int32 { return this.position; }
+    private function get_length():Int32 { return this.length; }
+    private function get_bytesAvailable():Int32 { return this.bytesAvailable; }
+    private function set_endian(value:Endian):Endian { return this.endian = value; }
+    private function set_position(value:Int32):Int32 { return this.position = value; }
+    private function set_length(value:Int32):Int32 { return this.length = value; }
 
     public function clone():ByteArray {
         var out = new ByteArray();
@@ -142,11 +78,15 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     public var bytesAvailable(get, never):Int32;
     public var endian:Endian = Endian.BIG_ENDIAN;
     //public var endian:Endian = Endian.LITTLE_ENDIAN;
-    private var _data:Bytes = Bytes.alloc(16);
-    private var _length:Int32 = 0;
-    private var _position:Int32 = 0;
+    public var _data:Bytes = null;
+    public var _length:Int32 = 0;
+    public var _position:Int32 = 0;
 
-    public function new() {
+    public function new(_data:Bytes = null, _position:Int = 0, _length:Int = -1) {
+        if (_length < 0) _length = (_data != null) ? _data.length : 0;
+        this._data = (_data != null) ? _data : Bytes.alloc(16);
+        this._position = _position;
+        this._length = _length;
     }
 
     private function ensureLength(elength:Int32) {

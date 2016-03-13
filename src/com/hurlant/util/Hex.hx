@@ -8,6 +8,7 @@
  */
 package com.hurlant.util;
 
+import haxe.io.Bytes;
 import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
@@ -21,15 +22,13 @@ class Hex {
      */
     public static function toArray(hex:String):ByteArray {
         hex = new EReg('^0x|\\s|:', "gm").replace(hex, "");
-        var a:ByteArray = new ByteArray();
-        a.length = Std.int(hex.length / 2);
         if ((hex.length & 1) == 1) hex = "0" + hex;
-        var i:Int32 = 0;
-        while (i < hex.length) {
-            a[Std.int(i / 2)] = Std2.parseInt(hex.substr(i, 2), 16);
-            i += 2;
+
+        var a = Bytes.alloc(Std.int(hex.length / 2));
+        for (i in 0 ... a.length) {
+            a.set(i, Std2.parseInt(hex.substr(i * 2, 2), 16));
         }
-        return a;
+        return ByteArray.fromBytes(a);
     }
 
     /**
