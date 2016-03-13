@@ -35,6 +35,7 @@ class Hex {
     /**
      * Generates lowercase hexadecimal string from given byte-array
      */
+
     public static function fromArray(array:ByteArray, colons:Bool = false):String {
         var s:String = "";
         for (i in 0...array.length) {
@@ -46,9 +47,11 @@ class Hex {
         return s;
     }
 
+
     /**
      * Generates string from given hexadecimal string
      */
+
     public static function toString(hex:String, charSet:String = "utf-8"):String {
         var a:ByteArray = toArray(hex);
         return a.readMultiByte(a.length, charSet);
@@ -57,6 +60,7 @@ class Hex {
     /**
      * Convenience method for generating string using iso-8859-1
      */
+
     public static function toRawString(hex:String):String {
         return toString(hex, "iso-8859-1");
     }
@@ -64,6 +68,7 @@ class Hex {
     /**
      * Generates hexadecimal string from given string
      */
+
     public static function fromString(str:String, colons:Bool = false, charSet:String = "utf-8"):String {
         var a:ByteArray = new ByteArray();
         a.writeMultiByte(str, charSet);
@@ -74,6 +79,7 @@ class Hex {
     /**
      * Convenience method for generating hexadecimal string using iso-8859-1
      */
+
     public static function fromRawString(str:String, colons:Bool = false):String {
         return fromString(str, colons, "iso-8859-1");
     }

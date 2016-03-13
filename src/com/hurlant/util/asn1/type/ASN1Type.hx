@@ -149,7 +149,8 @@ class ASN1Type {
     }
 
     private function fromDERContent(s:ByteArray, length:Int32):Dynamic {
-        throw new Error("pure virtual function call: fromDERContent");
+        return s.readBoolean();
+        //throw new Error("pure virtual function call: fromDERContent");
     }
 
     private function readDERTag(s:ByteArray, classValue:Int32 = UNIVERSAL, constructed:Bool = false, any:Bool = false):Int32 {

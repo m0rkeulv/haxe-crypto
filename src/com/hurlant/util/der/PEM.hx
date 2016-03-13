@@ -24,32 +24,29 @@ class PEM {
     private static inline var CERTIFICATE_FOOTER:String = "-----END CERTIFICATE-----";
 
     /**
-     *
      * Read a structure encoded according to
      * ftp://ftp.rsasecurity.com/pub/pkcs/ascii/pkcs-1v2.asc
      * section 11.1.2
      *
      * @param str
      * @return
-     *
      */
-
     public static function readRSAPrivateKey(str:String):RSAKey {
         var der:ByteArray = extractBinary(RSA_PRIVATE_KEY_HEADER, RSA_PRIVATE_KEY_FOOTER, str);
         if (der == null) return null;
         var obj = DER.parse(der);
         if (Std.is(obj, Sequence)) {
-            var arr = cast(obj, Sequence).data;
+            var arr = cast(obj, Sequence);
             // arr[0] is Version. should be 0. should be checked. shoulda woulda coulda.
             return new RSAKey(
-                arr[1], // N
-                arr[2].valueOf(), // E
-                arr[3], // D
-                arr[4], // P
-                arr[5], // Q
-                arr[6], // DMP1
-                arr[7], // DMQ1
-                arr[8]
+                arr.get(1), // N
+                arr.get(2).valueOf(), // E
+                arr.get(3), // D
+                arr.get(4), // P
+                arr.get(5), // Q
+                arr.get(6), // DMP1
+                arr.get(7), // DMQ1
+                arr.get(8)
             );
         }
         // dunno
@@ -58,16 +55,14 @@ class PEM {
 
 
     /**
-		 * Read a structure encoded according to some spec somewhere
-		 * Also, follows some chunk from
-		 * ftp://ftp.rsasecurity.com/pub/pkcs/ascii/pkcs-1v2.asc
-		 * section 11.1
-		 * 
-		 * @param str
-		 * @return 
-		 * 
-		 */
-
+     * Read a structure encoded according to some spec somewhere
+     * Also, follows some chunk from
+     * ftp://ftp.rsasecurity.com/pub/pkcs/ascii/pkcs-1v2.asc
+     * section 11.1
+     *
+     * @param str
+     * @return
+     */
     public static function readRSAPublicKey(str:String):RSAKey {
         var der = extractBinary(RSA_PUBLIC_KEY_HEADER, RSA_PUBLIC_KEY_FOOTER, str);
         var obj = null;
@@ -85,7 +80,10 @@ class PEM {
                         seq = cast(obj, Sequence);
                         // arr[0] = modulus
                         // arr[1] = public expt.
-                        return new RSAKey(seq.get(0), seq.get(1));
+                        return new RSAKey(
+                            seq.get(0),
+                            seq.get(1)
+                        );
                     }
                 }
             }
@@ -109,8 +107,5 @@ class PEM {
         b64 = new EReg('\\s', "mg").replace(b64, "");
         // decode
         return Base64.decodeToByteArray(b64);
-    }
-
-    public function new() {
     }
 }

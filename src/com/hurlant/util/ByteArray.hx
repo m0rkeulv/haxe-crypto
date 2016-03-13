@@ -37,6 +37,10 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
         return this.readUnsignedByte();
     }
 
+    public function readBoolean():Bool {
+        return this.readUnsignedByte() != 0;
+    }
+
     public function writeUTF(str:String) {
         return this.writeUTF(str);
     }

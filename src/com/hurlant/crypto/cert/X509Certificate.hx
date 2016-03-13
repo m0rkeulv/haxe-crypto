@@ -9,6 +9,7 @@
  */
 package com.hurlant.crypto.cert;
 
+import com.hurlant.crypto.hash.SHA256;
 import com.hurlant.crypto.cert.X509CertificateCollection;
 import com.hurlant.util.Error;
 
@@ -125,6 +126,7 @@ class X509Certificate {
             case OID.SHA1_WITH_RSA_ENCRYPTION: new SHA1();
             case OID.MD2_WITH_RSA_ENCRYPTION : new MD2() ;
             case OID.MD5_WITH_RSA_ENCRYPTION : new MD5() ;
+            case OID.SHA2_WITH_RSA_ENCRYPTION: new SHA256();
             default: null;
         }
     }
@@ -134,6 +136,7 @@ class X509Certificate {
         if (Std.is(obj, SHA1)) return OID.SHA1_ALGORITHM;
         if (Std.is(obj, MD2)) return OID.MD2_ALGORITHM;
         if (Std.is(obj, MD5)) return OID.MD5_ALGORITHM;
+        if (Std.is(obj, SHA256)) return OID.SHA2_ALGORITHM;
         return null;
     }
 

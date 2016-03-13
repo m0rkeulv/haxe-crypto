@@ -102,6 +102,7 @@ class Type2 {
     // Attributes
     public static var id_at_commonName:OIDType = Parser.oid(id_at, 3);
     public static var id_at_surname:OIDType = Parser.oid(id_at, 4);
+    public static var id_at_serialNumber:OIDType = Parser.oid(id_at, 5);
     public static var id_at_countryName:OIDType = Parser.oid(id_at, 6);
     public static var id_at_localityName:OIDType = Parser.oid(id_at, 7);
     public static var id_at_stateOrProvinceName:OIDType = Parser.oid(id_at, 8);
@@ -171,11 +172,15 @@ class Type2 {
     // Directory string type, used extensively in Name types
     public static var directoryString = function(maxSize:Int32):ASN1Type {
         return Parser.choice([
-            { teletexString : Parser.teletexString(1, maxSize) },
+            //{ teletexString : Parser.teletexString(1, maxSize) },
             { printableString : Parser.printableString(1, maxSize) },
+            { utf8String: Parser.utf8String(1,maxSize) },
             { universalString : Parser.universalString(1, maxSize) },
-            { bmpString : Parser.bmpString(1, maxSize) },
-            { utf8String : Parser.utf8String(1, maxSize) }
+            //{ bmpString : Parser.bmpString(1, maxSize) },
+            //{ utf8String : Parser.utf8String(1, maxSize) }
+            { teletexString: Parser.teletexString(1,maxSize) },
+            { bmpString: Parser.bmpString(1,maxSize) },
+            //{ ia5String: Parser.ia5String(1,maxSize) } // @TODO: Check this!
         ]);
     };
 
