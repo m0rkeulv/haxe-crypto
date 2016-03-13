@@ -26,14 +26,14 @@ class ECBModeTest extends BaseTestCase {
      * yay. found hawt test vectors: http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf
      */
     public function test_aes128() {
-        var key = Hex.toArray("2b7e151628aed2a6abf7158809cf4f3c");
-        var pt = Hex.toArray(
+        var key:ByteArray = Hex.toArray("2b7e151628aed2a6abf7158809cf4f3c");
+        var pt:ByteArray = Hex.toArray(
             "6bc1bee22e409f96e93d7e117393172a" +
             "ae2d8a571e03ac9c9eb76fac45af8e51" +
             "30c81c46a35ce411e5fbc1191a0a52ef" +
             "f69f2445df4f9b17ad2b417be66c3710"
         );
-        var ct = Hex.toArray(
+        var ct:ByteArray = Hex.toArray(
             "3ad77bb40d7a3660a89ecaf32466ef97" +
             "f5d3d58503b9699de785895a96fdbaaf" +
             "43b1cd7f598ece23881b00e3ed030688" +
@@ -47,7 +47,7 @@ class ECBModeTest extends BaseTestCase {
         assert(Hex.fromArray(src), Hex.fromArray(pt));
     }
 
-/*
+
     public function test_aes192() {
         var key = Hex.toArray("8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b");
         var pt = Hex.toArray(
@@ -156,7 +156,6 @@ class ECBModeTest extends BaseTestCase {
             assert(pts[i], str);
         }
     }
-*/
 }
 
 

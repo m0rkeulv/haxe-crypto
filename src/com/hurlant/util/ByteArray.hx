@@ -11,7 +11,7 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
 
     public function new() { this = new ByteArrayData(); }
 
-    static public function fromBytes(bytes:Bytes):ByteArray {
+    @:from static public function fromBytes(bytes:Bytes):ByteArray {
         var out = new ByteArrayData(Bytes.alloc(bytes.length));
         out._data.blit(0, bytes, 0, bytes.length);
         return out;
@@ -31,7 +31,7 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
         return out;
     }
 
-    public function getBytes():Bytes { return cloneBytes(this.getBytes(), 0, this.length); }
+    @:to public function getBytes():Bytes { return cloneBytes(this.getBytes(), 0, this.length); }
 
     public function readBoolean():Bool { return this.readUnsignedByte() != 0; }
     public function readByte():Int32 { return this.readByte(); }

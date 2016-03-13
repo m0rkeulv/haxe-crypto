@@ -28,7 +28,7 @@ class Hex {
         for (i in 0 ... a.length) {
             a.set(i, Std2.parseInt(hex.substr(i * 2, 2), 16));
         }
-        return ByteArray.fromBytes(a);
+        return a;
     }
 
     /**
@@ -39,9 +39,7 @@ class Hex {
         var s:String = "";
         for (i in 0...array.length) {
             s += ("0" + Std2.string(array[i], 16)).substr(-2, 2);
-            if (colons) {
-                if (i < array.length - 1) s += ":";
-            }
+            if (colons) if (i < array.length - 1) s += ":";
         }
         return s;
     }
