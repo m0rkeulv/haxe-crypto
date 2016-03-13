@@ -9,6 +9,7 @@
  */
 package com.hurlant.crypto.cert;
 
+import haxe.Int32;
 import com.hurlant.crypto.hash.SHA256;
 import com.hurlant.crypto.cert.X509CertificateCollection;
 import com.hurlant.util.Error;
@@ -240,7 +241,7 @@ class X509Certificate {
                 return val;
             }
         }
-        //			return (subject.findAttributeValue(OID.COMMON_NAME) as PrintableString).getString();
+        // return (subject.findAttributeValue(OID.COMMON_NAME) as PrintableString).getString();
 
         return "hi";
     }

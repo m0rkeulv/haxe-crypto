@@ -57,9 +57,18 @@ class Random {
     }
 
     public function nextBytes(buffer:ByteArray, length:Int32):Void {
-        while (length-- > 0) {
-            buffer.writeByte(nextByte());
-        }
+        while (length-- > 0) buffer.writeByte(nextByte());
+    }
+
+    public function getRandomBytes(length:Int32):ByteArray {
+        var buffer = new ByteArray();
+        while (length-- > 0) buffer.writeByte(nextByte());
+        buffer.position = 0;
+        return buffer;
+    }
+
+    static public function getStaticRandomBytes(length:Int32, prng:Void -> IPRNG = null):ByteArray {
+        return new Random(prng).getRandomBytes(length);
     }
 
     public function nextByte():Int32 {

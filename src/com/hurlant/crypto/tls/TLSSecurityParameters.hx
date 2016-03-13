@@ -169,54 +169,38 @@ class TLSSecurityParameters implements ISecurityParameters {
         return out;
     }
 
-    public function getConnectionStates():Dynamic {
+    public function getConnectionStates():ConnectionStateRW {
         if (masterSecret != null) {
             var seed:ByteArray = new ByteArray();
             seed.writeBytes(serverRandom, 0, serverRandom.length);
             seed.writeBytes(clientRandom, 0, clientRandom.length);
-            var prf:TLSPRF = new TLSPRF(masterSecret, "key expansion", seed);
+            var prf = new TLSPRF(masterSecret, "key expansion", seed);
 
-            var client_write_MAC:ByteArray = new ByteArray();
-            prf.nextBytes(client_write_MAC, hashSize);
-            var server_write_MAC:ByteArray = new ByteArray();
-            prf.nextBytes(server_write_MAC, hashSize);
-            var client_write_key:ByteArray = new ByteArray();
-            prf.nextBytes(client_write_key, keyMaterialLength);
-            var server_write_key:ByteArray = new ByteArray();
-            prf.nextBytes(server_write_key, keyMaterialLength);
-            var client_write_IV:ByteArray = new ByteArray();
-            prf.nextBytes(client_write_IV, IVSize);
-            var server_write_IV:ByteArray = new ByteArray();
-            prf.nextBytes(server_write_IV, IVSize);
+            var client_write_MAC = prf.getNextBytes(hashSize);
+            var server_write_MAC = prf.getNextBytes(hashSize);
+            var client_write_key = prf.getNextBytes(keyMaterialLength);
+            var server_write_key = prf.getNextBytes(keyMaterialLength);
+            var client_write_IV = prf.getNextBytes(IVSize);
+            var server_write_IV = prf.getNextBytes(IVSize);
 
-            var client_write:TLSConnectionState = new TLSConnectionState(
-            bulkCipher, cipherType, macAlgorithm,
-            client_write_MAC, client_write_key, client_write_IV);
-            var server_write:TLSConnectionState = new TLSConnectionState(
-            bulkCipher, cipherType, macAlgorithm,
-            server_write_MAC, server_write_key, server_write_IV);
+            var client_write = new TLSConnectionState(
+                bulkCipher, cipherType, macAlgorithm,
+                client_write_MAC, client_write_key, client_write_IV
+            );
+
+            var server_write = new TLSConnectionState(
+                bulkCipher, cipherType, macAlgorithm,
+                server_write_MAC, server_write_key, server_write_IV
+            );
 
             if (entity == TLSEngine.CLIENT) {
-                return {
-                    read : server_write,
-                    write : client_write,
-
-                };
-            }
-            else {
-                return {
-                    read : client_write,
-                    write : server_write,
-
-                };
+                return new ConnectionStateRW(server_write, client_write);
+            } else {
+                return new ConnectionStateRW(client_write, server_write);
             }
         }
         else {
-            return {
-                read : new TLSConnectionState(),
-                write : new TLSConnectionState(),
-
-            };
+            return new ConnectionStateRW(new TLSConnectionState(), new TLSConnectionState());
         }
     }
 }

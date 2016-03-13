@@ -39,7 +39,6 @@ import com.hurlant.crypto.symmetric.PKCS5;
 import com.hurlant.crypto.symmetric.SimpleIVMode;
 import com.hurlant.crypto.symmetric.TripleDESKey;
 import com.hurlant.crypto.symmetric.XTeaKey;
-import com.hurlant.util.Base64;
 
 import com.hurlant.util.ByteArray;
 
@@ -52,13 +51,6 @@ import com.hurlant.util.ByteArray;
  * (But feel free to read it to get ideas on how to get the algorithm you want.)
  */
 class Crypto {
-    // we don't use it, but we want the swc to include it, so cheap trick.
-    private var b64:Base64;
-
-    public function new() {
-
-    }
-
     /**
      * Things that should work, among others:
      *  "aes"
@@ -80,7 +72,6 @@ class Crypto {
      *  "rc4"
      *  "simple-aes-cbc"
      */
-
     public static function getCipher(name:String, key:ByteArray, pad:IPad = null):ICipher {
         // split name into an array.
         var keys:Array<Dynamic> = name.split("-");
@@ -146,44 +137,41 @@ class Crypto {
      */
 
     public static function getKeySize(name:String):Int32 {
-        var keys:Array<String> = name.split("-");
+        var keys = name.split("-");
         var _sw1_ = (keys[0]);
 
-        switch (_sw1_) {
-            case "simple": keys.shift(); return getKeySize(keys.join("-"));
-            case "aes128": return 16;
-            case "aes192": return 24;
-            case "aes256": return 32;
-            case "aes": keys.shift(); return Std.int(Std.parseInt(keys[0]) / 8);
-            case "bf", "blowfish": return 16;
-            case "xtea": return 8;
-            case "rc4": return (Std.parseInt(keys[1]) > 0) ? Std.int(Std.parseInt(keys[1]) / 8) : 16;
+        return switch (_sw1_) {
+            case "simple": getKeySize(keys.slice(1).join("-"));
+            case "aes128": 16;
+            case "aes192": 24;
+            case "aes256": 32;
+            case "aes": Std.int(Std.parseInt(keys[1]) / 8);
+            case "bf", "blowfish": 16;
+            case "xtea": 8;
+            case "rc4": (Std.parseInt(keys[1]) > 0) ? Std.int(Std.parseInt(keys[1]) / 8) : 16;
             case "des", "3des", "des3":
                 switch (_sw1_) {
                     case "des":
-                        keys.shift();
-                        var _sw2_ = (keys[0]);
-
-                        switch (_sw2_){
-                            case "ede": return 16;
-                            case "ede3": return 24;
-                            default: return 8;
+                        switch (keys[1]){
+                            case "ede": 16;
+                            case "ede3": 24;
+                            default: 8;
                         }
+                    default: 24;
                 }
-                return 24;
+            default: 0;
         }
-        return 0;
     }
 
     private static function getMode(name:String, alg:ISymmetricKey, padding:IPad = null):IMode {
-        switch (name) {
-            case "ecb": return new ECBMode(alg, padding);
-            case "cfb": return new CFBMode(alg, padding);
-            case "cfb8": return new CFB8Mode(alg, padding);
-            case "ofb": return new OFBMode(alg, padding);
-            case "ctr": return new CTRMode(alg, padding);
-            case "cbc": return new CBCMode(alg, padding);
-            default: return new CBCMode(alg, padding);
+        return switch (name) {
+            case "ecb": new ECBMode(alg, padding);
+            case "cfb": new CFBMode(alg, padding);
+            case "cfb8": new CFB8Mode(alg, padding);
+            case "ofb": new OFBMode(alg, padding);
+            case "ctr": new CTRMode(alg, padding);
+            case "cbc": new CBCMode(alg, padding);
+            default: new CBCMode(alg, padding);
         }
     }
 
@@ -195,16 +183,15 @@ class Crypto {
      * "sha224"
      * "sha256"
      */
-
     public static function getHash(name:String):IHash {
-        switch (name.toLowerCase()) {
-            case "md2": return new MD2();
-            case "md5": return new MD5(); // let's hope you didn't mean sha-0
-            case "sha", "sha1": return new SHA1();
-            case "sha224": return new SHA224();
-            case "sha256": return new SHA256();
+        return switch (name.toLowerCase()) {
+            case "md2": new MD2();
+            case "md5": new MD5(); // let's hope you didn't mean sha-0
+            case "sha", "sha1": new SHA1();
+            case "sha224": new SHA224();
+            case "sha256": new SHA256();
+            default: null;
         }
-        return null;
     }
 
     /**
@@ -220,8 +207,7 @@ class Crypto {
     public static function getHMAC(name:String):HMAC {
         var keys = name.split("-");
         if (keys[0] == "hmac") keys.shift();
-        var bits:Int32 = 0;
-        if (keys.length > 1) bits = Std.parseInt(keys[1]);
+        var bits = if (keys.length > 1) Std.parseInt(keys[1]) else 0;
         return new HMAC(getHash(keys[0]), bits);
     }
 
@@ -229,17 +215,15 @@ class Crypto {
     public static function getMAC(name:String):MAC {
         var keys = name.split("-");
         if (keys[0] == "mac") keys.shift();
-        var bits = 0;
-        if (keys.length > 1) bits = Std.parseInt(keys[1]);
+        var bits = if (keys.length > 1) Std.parseInt(keys[1]) else 0;
         return new MAC(getHash(keys[0]), bits);
     }
 
-
     public static function getPad(name:String):IPad {
-        switch (name) {
-            case "null": return new NullPad();
-            case "pkcs5": return new PKCS5();
-            default: return new PKCS5();
+        return switch (name) {
+            case "null": new NullPad();
+            case "pkcs5": new PKCS5();
+            default: new PKCS5();
         }
     }
 

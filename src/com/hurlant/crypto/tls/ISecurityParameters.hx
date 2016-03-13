@@ -28,5 +28,5 @@ interface ISecurityParameters {
     function setServerRandom(secret:ByteArray):Void;
     function computeVerifyData(side:Int32, handshakeMessages:ByteArray):ByteArray;
     function computeCertificateVerify(side:Int32, handshakeRecords:ByteArray):ByteArray;
-    function getConnectionStates():Dynamic;
+    function getConnectionStates():ConnectionStateRW;
 }

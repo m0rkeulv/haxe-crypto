@@ -74,6 +74,13 @@ class TLSPRF {
         while (length-- > 0) buffer.writeByte(nextByte());
     }
 
+    public function getNextBytes(length:Int32):ByteArray {
+        var out = new ByteArray();
+        nextBytes(out, length);
+        out.position = 0;
+        return out;
+    }
+
     public function nextByte():Int32 {
         if (p1.bytesAvailable == 0) more_md5();
         if (p2.bytesAvailable == 0) more_sha1();

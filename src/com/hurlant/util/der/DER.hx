@@ -34,21 +34,17 @@ class DER {
     public static var indent = "";
 
     public static function parse(der:ByteArray, structure:Dynamic = null):IAsn1Type {
-        /*
-        if (der.position==0) {
-            trace("DER.parse: "+Hex.fromArray(der));
-        }
-        */
-
+        // if (der.position==0) trace("DER.parse: "+Hex.fromArray(der));
         // type
-        var type = der.readUnsignedByte();
-        var constructed = (type & 0x20) != 0;
-        type &= 0x1F;
+        var typeRaw = der.readUnsignedByte();
+        var constructed = (typeRaw & 0x20) != 0;
+        var type = typeRaw & 0x1F;
+
         // length
         var len = der.readUnsignedByte();
         if (len >= 0x80) {
             // long form of length
-            var count:Int32 = len & 0x7f;
+            var count = len & 0x7f;
             len = 0;
             while (count > 0) {
                 len = (len << 8) | der.readUnsignedByte();
@@ -62,7 +58,7 @@ class DER {
             // WHAT IS THIS THINGY? (seen as 0xa0)
             // (note to self: read a spec someday.)
             // for now, treat as a sequence.
-            case 0x00, 0x10: // SEQUENCE/SEQUENCE OF. whatever
+            case V_ASN1_SEQUENCE, V_ASN1_SEQUENCE_OF:
                 // treat as an array
                 var p = der.position;
                 var o:Sequence = new Sequence(type, len);
@@ -73,9 +69,7 @@ class DER {
                 }
                 while (der.position < p + len) {
                     var tmpStruct:Dynamic = null;
-                    if (arrayStruct != null) {
-                        tmpStruct = arrayStruct.shift();
-                    }
+                    if (arrayStruct != null) tmpStruct = arrayStruct.shift();
                     if (tmpStruct != null) {
                         while (tmpStruct && tmpStruct.optional) {
                             // make sure we have something that looks reasonable. XXX I'm winging it here..
@@ -111,24 +105,23 @@ class DER {
                     }
                 }
                 return o;
-            case 0x11: // SET/SET OF
+            case V_ASN1_SET:
                 var p = der.position;
                 var s = new Set(type, len);
                 while (der.position < p + len) s.push(DER.parse(der));
                 return s;
-            case 0x02: // INTEGER
+            case V_ASN1_INTEGER:
                 // put in a BigInteger
                 b = new ByteArray();
                 der.readBytes(b, 0, len);
                 b.position = 0;
                 return new Integer(type, len, b);
-            case 0x06: // OBJECT IDENTIFIER:
+            case V_ASN1_OID:
                 b = new ByteArray();
                 der.readBytes(b, 0, len);
                 b.position = 0;
                 return new ObjectIdentifier(type, len, b);
             case 0x03, 0x04:
-
                 switch (type) {
                     case 0x03: // BIT STRING
                         if (der[der.position] == 0) {
@@ -153,28 +146,24 @@ class DER {
                 ps.setString(der.readMultiByte(len, "US-ASCII"));
                 return ps; // XXX look up what this is. openssl uses this to store my email.
             case 0x22, 0x14: // T61String - an horrible format we don't even pretend to support correctly
-                var ps = new PrintableString(type, len);
-                ps.setString(der.readMultiByte(len, "latin1"));
-                return ps;
-            case 0x17: // UTCTime
-                var ut = new UTCTime(type, len);
-                ut.setUTCTime(der.readMultiByte(len, "US-ASCII"));
-                return ut;
-            case 0x0C: // V_ASN1_UTF8STRING
-                // support for type 12
-                var ps = new PrintableString(type, len);
-                ps.setString(der.readMultiByte(len, "utf-8"));
-                return ps;
-            case 0x16: // V_ASN1_IA5STRING
-                // support for type 22
-                var ps = new PrintableString(type, len);
-                ps.setString(der.readMultiByte(len, "x-IA5"));
-                return ps;
+                return new PrintableString(type, len).setString(der.readMultiByte(len, "latin1"));
+            case V_ASN1_UTCTIME:return new UTCTime(type, len).setUTCTime(der.readMultiByte(len, "US-ASCII"));
+            case V_ASN1_UTF8STRING: return new PrintableString(type, len).setString(der.readMultiByte(len, "utf-8"));
+            case V_ASN1_IA5STRING: return new PrintableString(type, len).setString(der.readMultiByte(len, "x-IA5"));
             default:
                 trace("I DONT KNOW HOW TO HANDLE DER stuff of TYPE " + type);
                 return null;
         }
     }
+
+    private static inline var V_ASN1_SEQUENCE = 0x00; // 0
+    private static inline var V_ASN1_SEQUENCE_OF = 0x10; // 16
+    private static inline var V_ASN1_SET = 0x11; // 17 // SET/SET OF
+    private static inline var V_ASN1_INTEGER = 0x02; // 2
+    private static inline var V_ASN1_OID = 0x06; // 6
+    private static inline var V_ASN1_UTF8STRING = 0x0C; // 12
+    private static inline var V_ASN1_IA5STRING = 0x16; // 22
+    private static inline var V_ASN1_UTCTIME = 0x17;
 
     private static function getLengthOfNextElement(b:ByteArray):Int32 {
         var p:Int32 = b.position;
@@ -196,12 +185,11 @@ class DER {
     }
 
     private static function isConstructedType(b:ByteArray):Bool {
-        var type:Int32 = b[b.position];
-        return (type & 0x20) != 0;
+        return (b[b.position] & 0x20) != 0;
     }
 
     public static function wrapDER(type:Int32, data:ByteArray):ByteArray {
-        var d:ByteArray = new ByteArray();
+        var d = new ByteArray();
         d.writeByte(type);
         var len:Int32 = data.length;
         if (len < 128) {

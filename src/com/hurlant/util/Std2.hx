@@ -78,6 +78,13 @@ class Std2 {
         return ((a & 0xFF) << 24) | ((a & 0x0000ff00) << 8) | ((a & 0x00ff0000) >>> 8) | ((a >>> 24) & 0xFF);
     }
 
+    static public function bswap24(a:Int32):Int32 {
+        var v0 = (a >>> 0) & 0xFF;
+        var v1 = (a >>> 8) & 0xFF;
+        var v2 = (a >>> 16) & 0xFF;
+        return (v2 << 0) | (v1 << 8) | (v0 << 16);
+    }
+
     static public function bswap16(value:Int32):Int32 {
         return ((value & 0xFF) << 8) | ((value >>> 8) & 0xFF);
     }
@@ -165,6 +172,11 @@ class Std2 {
         return x & ~y;
     }
 
+    static public function sx8(v:Int32):Int32 {
+        return (v << 24) >> 24;
+    }
 
-
+    static public function sx16(v:Int32):Int32 {
+        return (v << 16) >> 16;
+    }
 }

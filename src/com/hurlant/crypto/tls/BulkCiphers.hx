@@ -82,12 +82,8 @@ class BulkCiphers {
     }
 
     public static function getCipher(cipher:Int, key:ByteArray, proto:Int):ICipher {
-        if (proto == TLSSecurityParameters.PROTOCOL_VERSION) {
-            return Crypto.getCipher(algos[cipher], key, new TLSPad());
-        }
-        else {
-            return Crypto.getCipher(algos[cipher], key, new SSLPad());
-        }
+        var pad = (proto == TLSSecurityParameters.PROTOCOL_VERSION) ? new TLSPad() : new SSLPad();
+        return Crypto.getCipher(algos[cipher], key, pad);
     }
 
     private var type:Int;

@@ -34,35 +34,32 @@ class SSLConnectionState implements IConnectionState {
     private var mac:MAC;
 
     // sequence number. uint64
-
     private var seq_lo:Int32 = 0x0;
     private var seq_hi:Int32 = 0x0;
 
     public function new(
         bulkCipher:Int32 = 0, cipherType:Int32 = 0, macAlgorithm:Int32 = 0,
-        mac_enc:ByteArray = null, key:ByteArray = null, IV:ByteArray = null) {
+        mac_enc:ByteArray = null, key:ByteArray = null, IV:ByteArray = null
+    ) {
         this.bulkCipher = bulkCipher;
         this.cipherType = cipherType;
         this.macAlgorithm = macAlgorithm;
-        MAC_write_secret = mac_enc;
-        mac = MACs.getMAC(macAlgorithm);
+        this.MAC_write_secret = mac_enc;
+        this.mac = MACs.getMAC(macAlgorithm);
 
-        CIPHER_key = key;
-        CIPHER_IV = IV;
-        cipher = BulkCiphers.getCipher(bulkCipher, key, 0x0300);
+        this.CIPHER_key = key;
+        this.CIPHER_IV = IV;
+        this.cipher = BulkCiphers.getCipher(bulkCipher, key, 0x0300);
         if (Std.is(cipher, IVMode)) {
-            ivmode = try cast(cipher, IVMode) catch (e:Dynamic) null;
-            ivmode.IV = IV;
+            this.ivmode = cast(cipher, IVMode);
+            this.ivmode.IV = IV;
         }
     }
 
     public function decrypt(type:Int32, length:Int32, p:ByteArray):ByteArray {
-        // decompression is a nop.
-
         if (cipherType == BulkCiphers.STREAM_CIPHER) {
             if (bulkCipher != BulkCiphers.NULL) cipher.decrypt(p);
-        }
-        else {
+        } else {
             p.position = 0;
             // block cipher
             if (bulkCipher != BulkCiphers.NULL) {
@@ -108,18 +105,15 @@ class SSLConnectionState implements IConnectionState {
     public function encrypt(type:Int32, p:ByteArray):ByteArray {
         var mac_enc:ByteArray = null;
         if (macAlgorithm != MACs.NULL) {
-            var data:ByteArray = new ByteArray();
+            var data = new ByteArray();
             // data.writeUnsignedInt(seq);
 
             // Sequence
             data.writeUnsignedInt(seq_hi);
             data.writeUnsignedInt(seq_lo);
 
-            // Type
-            data.writeByte(type);
-
-            // Length
-            data.writeShort(p.length);
+            data.writeByte(type); // Type
+            data.writeShort(p.length); // Length
 
             // The data
             if (p.length != 0) data.writeBytes(p);

@@ -15,29 +15,26 @@ import com.hurlant.crypto.hash.HMAC;
 import com.hurlant.crypto.hash.MAC;
 
 class MACs {
-    public static inline var NULL = 0;
-    public static inline var MD5 = 1;
-    public static inline var SHA1 = 2;
+    static public inline var NULL = 0;
+    static public inline var MD5 = 1;
+    static public inline var SHA1 = 2;
 
     static private var HASHES = ["", "md5", "sha1"];
 
-    public static function getHashSize(hash:Int32):Int32 {
+    static public function getHashSize(hash:Int32):Int32 {
         return [0, 16, 20][hash];
     }
 
-    public static function getPadSize(hash:Int32):Int32 {
+    static public function getPadSize(hash:Int32):Int32 {
         return [0, 48, 40][hash];
     }
 
-    public static function getHMAC(hash:Int32):HMAC {
+    static public function getHMAC(hash:Int32):HMAC {
         if (hash == NULL) return null;
         return Crypto.getHMAC(HASHES[hash]);
     }
 
-    public static function getMAC(hash:Int32):MAC {
+    static public function getMAC(hash:Int32):MAC {
         return Crypto.getMAC(HASHES[hash]);
-    }
-
-    public function new() {
     }
 }

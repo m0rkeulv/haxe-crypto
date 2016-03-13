@@ -12,8 +12,16 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
 
     static public function fromBytes(bytes:Bytes):ByteArray {
         var out = new ByteArray();
+        out.length = bytes.length;
         for (n in 0 ... bytes.length) out.writeByte(bytes.get(n));
         out.position = 0;
+        return out;
+    }
+
+    static public function fromBytesArray(bytes:Array<Int32>):ByteArray {
+        var out = new ByteArray();
+        out.length = bytes.length;
+        for (n in 0 ... bytes.length) out[n] = bytes[n];
         return out;
     }
 
@@ -33,8 +41,20 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
         return this.readUnsignedInt();
     }
 
+    public function readByte():Int32 {
+        return this.readByte();
+    }
+
     public function readUnsignedByte():Int32 {
         return this.readUnsignedByte();
+    }
+
+    public function readShort():Int32 {
+        return this.readShort();
+    }
+
+    public function readUnsignedShort():Int32 {
+        return this.readUnsignedShort();
     }
 
     public function readBoolean():Bool {
@@ -51,6 +71,14 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
 
     public function writeByte(value:Int32) {
         return this.writeByte(value);
+    }
+
+    public function writeShort(value:Int32) {
+        return this.writeShort(value);
+    }
+
+    public function writeInt24(value:Int32) {
+        return this.writeInt24(value);
     }
 
     public function writeBytes(input:ByteArray, offset:Int32 = 0, length:Int32 = 0) {
@@ -150,10 +178,25 @@ class ByteArrayData implements IDataOutput implements IDataInput {
         return str;
     }
 
+    public function readByte():Int32 {
+        return Std2.sx8(readUnsignedByte());
+    }
+
+    public function readShort():Int32 {
+        return Std2.sx16(readUnsignedShort());
+    }
+
     public function readUnsignedByte():Int32 {
         ensureWrite(1);
         var result = get(this._position) & 0xFF;
         this._position += 1;
+        return result;
+    }
+
+    public function readUnsignedShort():Int32 {
+        ensureWrite(2);
+        var result = bswap16Endian(this._data.getUInt16(this.position));
+        this._position += 2;
         return result;
     }
 
@@ -198,6 +241,10 @@ class ByteArrayData implements IDataOutput implements IDataInput {
         writeUnsignedShort(value);
     }
 
+    public function writeInt24(value:Int32) {
+        writeUnsignedInt24(value);
+    }
+
     public function writeBytes(input:ByteArray, offset:Int32 = 0, length:Int32 = 0) {
         if (length == 0) length = input.length - offset;
         //throw new Error('Not implemented');
@@ -217,6 +264,13 @@ class ByteArrayData implements IDataOutput implements IDataInput {
         ensureWrite(2);
         this._data.setUInt16(this._position, bswap16Endian(value));
         this._position += 2;
+    }
+
+    public function writeUnsignedInt24(value:Int32) {
+        var v2 = bswap24Endian(value);
+        writeByte((v2 >>> 0) & 0xFF);
+        writeByte((v2 >>> 8) & 0xFF);
+        writeByte((v2 >>> 16) & 0xFF);
     }
 
     public function writeUnsignedInt(value:Int32) {
@@ -266,6 +320,10 @@ class ByteArrayData implements IDataOutput implements IDataInput {
 
     private function bswap32Endian(value:Int32):Int32 {
         return (this.endian == Endian.BIG_ENDIAN) ? Std2.bswap32(value) : value;
+    }
+
+    private function bswap24Endian(value:Int32):Int32 {
+        return (this.endian == Endian.BIG_ENDIAN) ? Std2.bswap24(value) : value;
     }
 
     private function bswap16Endian(value:Int32):Int32 {

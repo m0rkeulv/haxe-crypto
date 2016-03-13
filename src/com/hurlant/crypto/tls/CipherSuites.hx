@@ -12,7 +12,6 @@ package com.hurlant.crypto.tls;
 import haxe.Int32;
 import com.hurlant.util.Error;
 
-
 class CipherSuites {
     // only the lines marked "ok" are currently implemented.
 

@@ -24,18 +24,18 @@ class TLSConfig {
     public var certificate:ByteArray;
     public var privateKey:RSAKey;
 
-    public var cipherSuites:Array<Dynamic>;
+    public var cipherSuites:Array<Int32>;
 
     public var compressions:Array<Dynamic>;
-    public var ignoreCommonNameMismatch:Bool = false;
-    public var trustAllCertificates:Bool = false;
-    public var trustSelfSignedCertificates:Bool = false;
-    public var promptUserForAcceptCert:Bool = false;
+    public var ignoreCommonNameMismatch = false;
+    public var trustAllCertificates = false;
+    public var trustSelfSignedCertificates = false;
+    public var promptUserForAcceptCert = false;
     public var CAStore:X509CertificateCollection;
     public var localKeyStore:X509CertificateCollection;
     public var version:Int32;
 
-    public function new(entity:Int32, cipherSuites:Array<Dynamic> = null, compressions:Array<Dynamic> = null, certificate:ByteArray = null, privateKey:RSAKey = null, CAStore:X509CertificateCollection = null, ver:Int32 = 0x00) {
+    public function new(entity:Int32, cipherSuites:Array<Int32> = null, compressions:Array<Dynamic> = null, certificate:ByteArray = null, privateKey:RSAKey = null, CAStore:X509CertificateCollection = null, ver:Int32 = 0x00) {
         this.entity = entity;
         this.cipherSuites = cipherSuites;
         this.compressions = compressions;
@@ -44,21 +44,10 @@ class TLSConfig {
         this.CAStore = CAStore;
         this.version = ver;
         // default settings.
-        if (cipherSuites == null) {
-            this.cipherSuites = CipherSuites.getDefaultSuites();
-        }
-        if (compressions == null) {
-            this.compressions = [TLSSecurityParameters.COMPRESSION_NULL];
-        }
-
-        if (CAStore == null) {
-            this.CAStore = new MozillaRootCertificates();
-        }
-
-        if (ver == 0x00) {
-            // Default to TLS
-            this.version = TLSSecurityParameters.PROTOCOL_VERSION;
-        }
+        if (cipherSuites == null) this.cipherSuites = CipherSuites.getDefaultSuites();
+        if (compressions == null) this.compressions = [TLSSecurityParameters.COMPRESSION_NULL];
+        if (CAStore == null) this.CAStore = new MozillaRootCertificates();
+        if (ver == 0x00) this.version = TLSSecurityParameters.PROTOCOL_VERSION; // Default to TLS
     }
 
     public function setPEMCertificate(cert:String, key:String = null):Void {

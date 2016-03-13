@@ -12,6 +12,7 @@
 package com.hurlant.crypto.tls;
 
 
+import com.hurlant.util.ProgressEvent;
 import com.hurlant.util.ArrayUtil;
 import com.hurlant.crypto.prng.Random;
 import haxe.Int32;
@@ -133,16 +134,16 @@ class TLSEngine extends EventDispatcher {
         handshakeHandlersClient[20] = verifyHandshake;
 
         handshakeHandlersServer = new Map<Int, Dynamic>();
-        handshakeHandlersServer[0 ] = notifyStateError;
-        handshakeHandlersServer[1 ] = parseHandshakeClientHello;
-        handshakeHandlersServer[2 ] = notifyStateError;
-        handshakeHandlersServer[11 ] = loadCertificates;
-        handshakeHandlersServer[12 ] = notifyStateError;
-        handshakeHandlersServer[13 ] = notifyStateError;
-        handshakeHandlersServer[14 ] = notifyStateError;
-        handshakeHandlersServer[15 ] = notifyStateError;
-        handshakeHandlersServer[16 ] = parseHandshakeClientKeyExchange;
-        handshakeHandlersServer[20 ] = verifyHandshake;
+        handshakeHandlersServer[0] = notifyStateError;
+        handshakeHandlersServer[1] = parseHandshakeClientHello;
+        handshakeHandlersServer[2] = notifyStateError;
+        handshakeHandlersServer[11] = loadCertificates;
+        handshakeHandlersServer[12] = notifyStateError;
+        handshakeHandlersServer[13] = notifyStateError;
+        handshakeHandlersServer[14] = notifyStateError;
+        handshakeHandlersServer[15] = notifyStateError;
+        handshakeHandlersServer[16] = parseHandshakeClientKeyExchange;
+        handshakeHandlersServer[20] = verifyHandshake;
 
         protocolHandlers = new Map<Int, Dynamic>();
         protocolHandlers[23] = parseApplicationData;
@@ -221,8 +222,7 @@ class TLSEngine extends EventDispatcher {
         rec[0] = 2;
         if (e == null) {
             rec[1] = TLSError.close_notify;
-        }
-        else {
+        } else {
             rec[1] = e.errorID;
             trace("TLSEngine shutdown triggered by " + e);
         }
@@ -247,8 +247,7 @@ class TLSEngine extends EventDispatcher {
                     parseOneRecord(packet.type, packet.length, p);
                     // do another loop to parse any leftover record
                     continue;
-                }
-                else {
+                } else {
                     // not enough. grab the data and park it.
                     stream.readBytes(p, p.length, stream.bytesAvailable);
                     _packetQueue.push(packet);
@@ -257,13 +256,16 @@ class TLSEngine extends EventDispatcher {
             }
 
 
-            var type:Int32 = stream.readByte();
-            var ver:Int32 = stream.readShort();
-            var length:Int32 = stream.readShort();
-            if (length > 16384 + 2048) { // support compression and encryption overhead.  
-                throw new TLSError("Excessive TLS Record length: " + length, TLSError.record_overflow);
-            } // Can pretty much assume that if I'm here, I've got a default config, so let's use it.  
+            var type = stream.readByte();
+            var ver = stream.readShort();
+            var length = stream.readShort();
 
+            // support compression and encryption overhead.
+            if (length > 16384 + 2048) {
+                throw new TLSError("Excessive TLS Record length: " + length, TLSError.record_overflow);
+            }
+
+            // Can pretty much assume that if I'm here, I've got a default config, so let's use it.
             if (ver != _securityParameters.version) {
                 throw new TLSError("Unsupported TLS version: $ver", TLSError.protocol_version);
             }
@@ -300,21 +302,19 @@ class TLSEngine extends EventDispatcher {
             throw new TLSError("Excessive Decrypted TLS Record length: " + p.length, TLSError.record_overflow);
         }
         if (protocolHandlers.exists(type)) {
-            while (p != null)
-                p = protocolHandlers[type](p);
-        }
-        else {
+            while (p != null) p = protocolHandlers[type](p);
+        } else {
             throw new TLSError("Unsupported TLS Record Content Type: $type", TLSError.unexpected_message);
         }
     }
 
-///////// handshake handling
-// session identifier
-// peer certificate
-// compression method
-// cipher spec
-// master secret
-// is resumable
+    ///////// handshake handling
+    // session identifier
+    // peer certificate
+    // compression method
+    // cipher spec
+    // master secret
+    // is resumable
     private static inline var HANDSHAKE_HELLO_REQUEST = 0;
     private static inline var HANDSHAKE_CLIENT_HELLO = 1;
     private static inline var HANDSHAKE_SERVER_HELLO = 2;
@@ -329,11 +329,12 @@ class TLSEngine extends EventDispatcher {
     // Server handshake handler map
     private var handshakeHandlersServer:Map<Int, Dynamic> = null;
 
-// Client handshake handler map
+    // Client handshake handler map
     private var handshakeHandlersClient:Map<Int, Dynamic> = null;
     private var _entityHandshakeHandlers:Dynamic;
     private var _handshakeCanContinue:Bool = true; // For handling cases where I might need to pause processing during a handshake (cert issues, etc.).  
     private var _handshakeQueue:Array<Dynamic> = [];
+
     /**
      * The handshake is always started by the client.
      */
@@ -362,25 +363,27 @@ class TLSEngine extends EventDispatcher {
         var type:Int32 = rec.readUnsignedByte();
         var tmp:Int32 = rec.readUnsignedByte();
         var length:Int32 = (tmp << 16) | rec.readUnsignedShort();
+
         if (length + 4 > p.length) {
             // partial read.
             trace("Handshake packet is incomplete. bailing.");
             return null;
-        } // we need to copy the record, to have a valid FINISHED exchange.  
+        }
 
+        // we need to copy the record, to have a valid FINISHED exchange.
 
         if (type != HANDSHAKE_FINISHED) {
             _handshakePayloads.writeBytes(p, 0, length + 4);
-        } // is required, as was the case using the switch statement. BP    // about the incoming packet type, so no previous handling or massaging of the data    // I modified the individual handlers so they encapsulate all possible knowledge    // Surf the handler map and find the right handler for this handshake packet type.  
-
-
-        if (_entityHandshakeHandlers.exists(type)) {
-            if (Std.is(_entityHandshakeHandlers[type], Function))
-                _entityHandshakeHandlers[type](rec);
         }
-        else {
+
+        // is required, as was the case using the switch statement. BP    // about the incoming packet type, so no previous handling or massaging of the data    // I modified the individual handlers so they encapsulate all possible knowledge    // Surf the handler map and find the right handler for this handshake packet type.
+
+
+        if (!_entityHandshakeHandlers.exists(type)) {
             throw new TLSError("Unimplemented or unknown handshake type!", TLSError.internal_error);
-        } // Get set up for the next packet.  
+        } // Get set up for the next packet.
+
+        _entityHandshakeHandlers[type](rec);
 
 
         if (length + 4 < p.length) {
@@ -405,6 +408,7 @@ class TLSEngine extends EventDispatcher {
     /**
      * two unimplemented functions
      */
+
     private function parseClientKeyExchange(rec:ByteArray):Void {
         throw new TLSError("ClientKeyExchange is currently unimplemented!", TLSError.internal_error);
     }
@@ -414,27 +418,25 @@ class TLSEngine extends EventDispatcher {
     }
 
     /**
-		 * Test the server's Finished message for validity against the data we know about. Only slightly rewritten. BP
-		 */
+     * Test the server's Finished message for validity against the data we know about. Only slightly rewritten. BP
+     */
 
     private function verifyHandshake(rec:ByteArray):Void {
         // Get the Finished message
-        var verifyData:ByteArray = new ByteArray();
+        var verifyData = new ByteArray();
         // This, in the vain hope that noboby is using SSL 2 anymore
         if (_securityParameters.version == SSLSecurityParameters.PROTOCOL_VERSION) {
             rec.readBytes(verifyData, 0, 36);
-        }
-        else { // presuming TLS  
+        } else { // presuming TLS
             rec.readBytes(verifyData, 0, 12);
         }
 
-        var data:ByteArray = _securityParameters.computeVerifyData(1 - _entity, _handshakePayloads);
+        var data = _securityParameters.computeVerifyData(1 - _entity, _handshakePayloads);
 
         if (ArrayUtil.equals(verifyData, data)) {
             _state = STATE_READY;
             dispatchEvent(new TLSEvent(TLSEvent.READY));
-        }
-        else {
+        } else {
             throw new TLSError("Invalid Finished mac.", TLSError.bad_record_mac);
         }
     }
@@ -459,23 +461,22 @@ class TLSEngine extends EventDispatcher {
      */
 
     private function parseHandshakeClientKeyExchange(rec:ByteArray):Void {
-        if (_securityParameters.useRSA) {
-            // skip 2 bytes for length.
-            var len:Int32 = rec.readShort();
-            var cipher:ByteArray = new ByteArray();
-            rec.readBytes(cipher, 0, len);
-            var preMasterSecret:ByteArray = new ByteArray();
-            _config.privateKey.decrypt(cipher, preMasterSecret, len);
-            _securityParameters.setPreMasterSecret(preMasterSecret);
-
-            // now is a good time to get our pending states
-            var o:Dynamic = _securityParameters.getConnectionStates();
-            _pendingReadState = o.read;
-            _pendingWriteState = o.write;
-        }
-        else {
+        if (!_securityParameters.useRSA) {
             throw new TLSError("parseHandshakeClientKeyExchange not implemented for DH modes.", TLSError.internal_error);
         }
+
+        // skip 2 bytes for length.
+        var len = rec.readShort();
+        var cipher = new ByteArray();
+        rec.readBytes(cipher, 0, len);
+        var preMasterSecret:ByteArray = new ByteArray();
+        _config.privateKey.decrypt(cipher, preMasterSecret, len);
+        _securityParameters.setPreMasterSecret(preMasterSecret);
+
+        // now is a good time to get our pending states
+        var o:Dynamic = _securityParameters.getConnectionStates();
+        _pendingReadState = o.read;
+        _pendingWriteState = o.write;
     }
 
     /** 
@@ -483,7 +484,6 @@ class TLSEngine extends EventDispatcher {
      */
 
     private function parseHandshakeServerHello(rec:IDataInput):Void {
-
         var ver:Int32 = rec.readShort();
         if (ver != _securityParameters.version) {
             throw new TLSError("Unsupported TLS version: $ver", TLSError.protocol_version);
@@ -503,17 +503,16 @@ class TLSEngine extends EventDispatcher {
     }
 
     /**
-		 *  Handle HANDSHAKE_CLIENT_HELLO - server side
-		 */
+     *  Handle HANDSHAKE_CLIENT_HELLO - server side
+     */
 
     private function parseHandshakeClientHello(rec:IDataInput):Void {
-        var ret:Dynamic;
-        var ver:Int32 = rec.readShort();
+        var ver = rec.readShort();
         if (ver != _securityParameters.version) {
             throw new TLSError("Unsupported TLS version: $ver", TLSError.protocol_version);
         }
 
-        var random:ByteArray = new ByteArray();
+        var random = new ByteArray();
         rec.readBytes(random, 0, 32);
         var session_length:Int32 = rec.readByte();
         var session:ByteArray = new ByteArray();
@@ -521,26 +520,25 @@ class TLSEngine extends EventDispatcher {
             // some implementations don't assign a session ID
             rec.readBytes(session, 0, session_length);
         }
-        var suites:Array<Dynamic> = [];
+        var suites = [];
 
-        var suites_length:Int32 = rec.readShort();
+        var suites_length = rec.readShort();
         for (i in 0...suites_length / 2) {
             suites.push(rec.readShort());
         }
 
-        var compressions:Array<Dynamic> = [];
+        var compressions = [];
 
-        var comp_length:Int32 = rec.readByte();
+        var comp_length = rec.readByte();
         for (i in 0...comp_length) {
             compressions.push(rec.readByte());
         }
 
-        ret = {
+        var ret = {
             random : random,
             session : session,
             suites : suites,
-            compressions : compressions,
-
+            compressions : compressions
         };
 
         var sofar:Int32 = 2 + 32 + 1 + session_length + 2 + suites_length + 1 + comp_length;
@@ -549,16 +547,15 @@ class TLSEngine extends EventDispatcher {
             // we have extensions. great.
             var ext_total_length:Int32 = rec.readShort();
             while (ext_total_length > 0) {
-                var ext_type:Int32 = rec.readShort();
-                var ext_length:Int32 = rec.readShort();
-                var ext_data:ByteArray = new ByteArray();
+                var ext_type = rec.readShort();
+                var ext_length = rec.readShort();
+                var ext_data = new ByteArray();
                 rec.readBytes(ext_data, 0, ext_length);
                 ext_total_length -= 4 + ext_length;
                 extensions.push({
                     type : ext_type,
                     length : ext_length,
                     data : ext_data,
-
                 });
             }
         }
@@ -571,54 +568,46 @@ class TLSEngine extends EventDispatcher {
         sendServerHelloDone();
     }
 
-    private function sendClientHello():Void {
-        var rec:ByteArray = new ByteArray();
+    private function sendClientHello() {
+        var rec = new ByteArray();
         // version - modified to support version attribute from ISecurityParameters
         rec.writeShort(_securityParameters.version);
         // random
-        var prng:Random = new Random();
-        var clientRandom:ByteArray = new ByteArray();
-        prng.nextBytes(clientRandom, 32);
-        _securityParameters.setClientRandom(clientRandom);
-        rec.writeBytes(clientRandom, 0, 32);
+        var clientRandom = Random.getStaticRandomBytes(32);
+        _securityParameters.setClientRandom(clientRandom.clone());
+        rec.writeBytes(clientRandom.clone());
         // session
         rec.writeByte(32);
-        prng.nextBytes(rec, 32);
+        rec.writeBytes(Random.getStaticRandomBytes(32));
         // Cipher suites
-        var cs:Array<Dynamic> = _config.cipherSuites;
+        var cs = _config.cipherSuites;
         rec.writeShort(2 * cs.length);
-        for (i in 0...cs.length) {
-            rec.writeShort(cs[i]);
-        } // Compression  
+        for (i in 0...cs.length) rec.writeShort(cs[i]); // Compression
 
         cs = _config.compressions;
         rec.writeByte(cs.length);
-        for (i in 0...cs.length) {
-            rec.writeByte(cs[i]);
-        } // no extensions, yet.  
+        for (i in 0...cs.length) rec.writeByte(cs[i]); // no extensions, yet.
 
         rec.position = 0;
         sendHandshake(HANDSHAKE_CLIENT_HELLO, rec.length, rec);
     }
 
-    private function findMatch(a1:Array<Dynamic>, a2:Array<Dynamic>):Int32 {
+    private function findMatch(a1:Array<Int32>, a2:Array<Int32>):Int32 {
         for (i in 0...a1.length) {
-            var e:Int32 = a1[i];
-            if (Lambda.indexOf(a2, e) > -1) {
-                return e;
-            }
+            var e = a1[i];
+            if (Lambda.indexOf(a2, e) > -1) return e;
         }
         return -1;
     }
 
     private function sendServerHello(v:Dynamic):Void {
-        var cipher:Int32 = findMatch(_config.cipherSuites, v.suites);
+        var cipher = findMatch(_config.cipherSuites, v.suites);
         if (cipher == -1) {
             throw new TLSError("No compatible cipher found.", TLSError.handshake_failure);
         }
         _securityParameters.setCipher(cipher);
 
-        var comp:Int32 = findMatch(_config.compressions, v.compressions);
+        var comp = findMatch(_config.compressions, v.compressions);
         if (comp == 01) {
             throw new TLSError("No compatible compression method found.", TLSError.handshake_failure);
         }
@@ -628,14 +617,12 @@ class TLSEngine extends EventDispatcher {
 
         var rec:ByteArray = new ByteArray();
         rec.writeShort(_securityParameters.version);
-        var prng:Random = new Random();
-        var serverRandom:ByteArray = new ByteArray();
-        prng.nextBytes(serverRandom, 32);
+        var serverRandom = Random.getStaticRandomBytes(32);
         _securityParameters.setServerRandom(serverRandom);
-        rec.writeBytes(serverRandom, 0, 32);
+        rec.writeBytes(serverRandom);
         // session
         rec.writeByte(32);
-        prng.nextBytes(rec, 32);
+        rec.writeBytes(Random.getStaticRandomBytes(32));
         // Cipher suite
         rec.writeShort(v.suites[0]);
         // Compression
@@ -659,15 +646,11 @@ class TLSEngine extends EventDispatcher {
         if (cert != null) {
             len = cert.length;
             len2 = cert.length + 3;
-            rec.writeByte(len2 >> 16);
-            rec.writeShort(len2 & 65535);
-            rec.writeByte(len >> 16);
-            rec.writeShort(len & 65535);
+            rec.writeInt24(len2);
+            rec.writeInt24(len);
             rec.writeBytes(cert);
-        }
-        else {
-            rec.writeShort(0);
-            rec.writeByte(0);
+        } else {
+            rec.writeInt24(0);
         }
         rec.position = 0;
         sendHandshake(HANDSHAKE_CERTIFICATE, rec.length, rec);
@@ -676,7 +659,7 @@ class TLSEngine extends EventDispatcher {
     private function sendCertificateVerify():Void {
         var rec:ByteArray = new ByteArray();
         // Encrypt the handshake payloads here
-        var data:ByteArray = _securityParameters.computeCertificateVerify(_entity, _handshakePayloads);
+        var data = _securityParameters.computeCertificateVerify(_entity, _handshakePayloads);
         data.position = 0;
         sendHandshake(HANDSHAKE_CERTIFICATE_VERIFY, data.length, data);
     }
@@ -687,53 +670,50 @@ class TLSEngine extends EventDispatcher {
     }
 
     private function sendClientKeyExchange():Void {
-        if (_securityParameters.useRSA) {
-            var p:ByteArray = new ByteArray();
-            p.writeShort(_securityParameters.version);
-            var prng:Random = new Random();
-            prng.nextBytes(p, 46);
-            p.position = 0;
-
-            var preMasterSecret:ByteArray = new ByteArray();
-            preMasterSecret.writeBytes(p, 0, p.length);
-            preMasterSecret.position = 0;
-            _securityParameters.setPreMasterSecret(preMasterSecret);
-
-            var enc_key:ByteArray = new ByteArray();
-            _otherCertificate.getPublicKey().encrypt(preMasterSecret, enc_key, preMasterSecret.length);
-
-            enc_key.position = 0;
-            var rec:ByteArray = new ByteArray();
-
-            // TLS requires the size of the premaster key be sent BUT
-            // SSL 3.0 does not
-            if (_securityParameters.version > 0x0300) {
-                rec.writeShort(enc_key.length);
-            }
-            rec.writeBytes(enc_key, 0, enc_key.length);
-
-            rec.position = 0;
-
-            sendHandshake(HANDSHAKE_CLIENT_KEY_EXCHANGE, rec.length, rec);
-
-            // now is a good time to get our pending states
-            var o:Dynamic = _securityParameters.getConnectionStates();
-            _pendingReadState = o.read;
-            _pendingWriteState = o.write;
-        }
-        else {
+        if (!_securityParameters.useRSA) {
             throw new TLSError("Non-RSA Client Key Exchange not implemented.", TLSError.internal_error);
         }
+
+        var p:ByteArray = new ByteArray();
+        p.writeShort(_securityParameters.version);
+        var prng:Random = new Random();
+        prng.nextBytes(p, 46);
+        p.position = 0;
+
+        var preMasterSecret:ByteArray = new ByteArray();
+        preMasterSecret.writeBytes(p, 0, p.length);
+        preMasterSecret.position = 0;
+        _securityParameters.setPreMasterSecret(preMasterSecret);
+
+        var enc_key:ByteArray = new ByteArray();
+        _otherCertificate.getPublicKey().encrypt(preMasterSecret, enc_key, preMasterSecret.length);
+
+        enc_key.position = 0;
+        var rec = new ByteArray();
+
+        // TLS requires the size of the premaster key be sent BUT
+        // SSL 3.0 does not
+        if (_securityParameters.version > 0x0300) rec.writeShort(enc_key.length);
+        rec.writeBytes(enc_key, 0, enc_key.length);
+
+        rec.position = 0;
+
+        sendHandshake(HANDSHAKE_CLIENT_KEY_EXCHANGE, rec.length, rec);
+
+        // now is a good time to get our pending states
+        var o = _securityParameters.getConnectionStates();
+        _pendingReadState = o.read;
+        _pendingWriteState = o.write;
     }
 
     private function sendFinished():Void {
-        var data:ByteArray = _securityParameters.computeVerifyData(_entity, _handshakePayloads);
+        var data = _securityParameters.computeVerifyData(_entity, _handshakePayloads);
         data.position = 0;
         sendHandshake(HANDSHAKE_FINISHED, data.length, data);
     }
 
     private function sendHandshake(type:Int32, len:Int32, payload:IDataInput):Void {
-        var rec:ByteArray = new ByteArray();
+        var rec = new ByteArray();
         rec.writeByte(type);
         rec.writeByte(0);
         rec.writeShort(len);
@@ -743,9 +723,7 @@ class TLSEngine extends EventDispatcher {
     }
 
     private function sendChangeCipherSpec():Void {
-        var rec:ByteArray = new ByteArray();
-        rec[0] = 1;
-        sendRecord(PROTOCOL_CHANGE_CIPHER_SPEC, rec);
+        sendRecord(PROTOCOL_CHANGE_CIPHER_SPEC, ByteArray.fromBytesArray([1]));
 
         // right after, switch the cipher for writing.
         _currentWriteState = _pendingWriteState;
@@ -780,7 +758,7 @@ class TLSEngine extends EventDispatcher {
         _oStream.writeByte(type);
         _oStream.writeShort(_securityParameters.version);
         _oStream.writeShort(payload.length);
-        _oStream.writeBytes(payload, 0, payload.length);
+        _oStream.writeBytes(payload);
 
         scheduleWrite();
     }
@@ -801,20 +779,18 @@ class TLSEngine extends EventDispatcher {
     }
 
     private function sendClientAck(rec:ByteArray):Void {
-        if (_handshakeCanContinue) {
-            // If I have a pending cert request, send it
-            if (sendClientCert)
-                sendCertificate() // send a client key exchange  ;
+        if (!_handshakeCanContinue) return;
 
-            sendClientKeyExchange();
-            // Send the certificate verify, if we have one
-            if (_config.certificate != null)
-                sendCertificateVerify() // send a change cipher spec  ;
+        // If I have a pending cert request, send it
+        if (sendClientCert) sendCertificate(); // send a client key exchange
 
-            sendChangeCipherSpec();
-            // send a finished
-            sendFinished();
-        }
+        sendClientKeyExchange();
+        // Send the certificate verify, if we have one
+        if (_config.certificate != null) sendCertificateVerify(); // send a change cipher spec
+
+        sendChangeCipherSpec();
+        // send a finished
+        sendFinished();
     }
 
     /**
@@ -822,9 +798,10 @@ class TLSEngine extends EventDispatcher {
      *
      * As long as that certificate looks just the way we expect it to.
      */
+
     private function loadCertificates(rec:ByteArray):Void {
-        var tmp:Int32 = rec.readByte();
-        var certs_len:Int32 = (tmp << 16) | rec.readShort();
+        var tmp:Int32 = rec.readUnsignedByte();
+        var certs_len = (tmp << 16) | rec.readShort();
         var certs:Array<Dynamic> = [];
 
         while (certs_len > 0) {
@@ -840,41 +817,31 @@ class TLSEngine extends EventDispatcher {
         for (i in 0...certs.length) {
             var x509:X509Certificate = new X509Certificate(certs[i]);
             _store.addCertificate(x509);
-            if (firstCert == null) {
-                firstCert = x509;
-            }
-        } // This nice trust override stuff comes from Joey Parrish via As3crypto forums    // Test first for trust override parameters  
+            if (firstCert == null) firstCert = x509;
+        } // This nice trust override stuff comes from Joey Parrish via As3crypto forums    // Test first for trust override parameters
 
 
-        var certTrusted:Bool;
-        if (_config.trustAllCertificates) {
-            certTrusted = true;
+        var certTrusted = if (_config.trustAllCertificates) {
+            true;
+        } else if (_config.trustSelfSignedCertificates) { // Good so far
+            firstCert.isSelfSigned(Date.now()); // Self-signed certs
+        } else {
+            firstCert.isSigned(_store, _config.CAStore); // Certs with a signer in the CA store - realistically, I should setup an event chain to handle this
         }
-            // Good so far
-        else if (_config.trustSelfSignedCertificates) {
-            // Self-signed certs
-            certTrusted = firstCert.isSelfSigned(Date.now());
-        }
-        else {
-            // Certs with a signer in the CA store - realistically, I should setup an event chain to handle this
-            certTrusted = firstCert.isSigned(_store, _config.CAStore);
-        }
-
 
         if (certTrusted) {
             // ok, that's encouraging. now for the hostname match.
             if (_otherIdentity == null || _config.ignoreCommonNameMismatch) {
                 // we don't care who we're talking with. groovy.
                 _otherCertificate = firstCert;
-            }
-            else {
+            } else {
                 // use regex to handle wildcard certs
-                var commonName:String = firstCert.getCommonName();
+                var commonName = firstCert.getCommonName();
 
                 // replace the asterisk and first dot with a regex sequence to match one or more non-dot characters followed by a dot
                 // this allows the wildcard cert to match a naked domain ( mydomain.com ) and subdomains (sub.mydomain.com)
                 //var commonNameRegex:RegExp = new RegExp( commonName.replace(/[\^\\\-$.[\]|()?+{}]/g, "\\$&").replace(/\*\\\./g, "([^.]+\.)?"), "gi");
-                var commonNameRegex:RegExp = new RegExp(commonName.replace(new EReg('[\\^\\\\\\-$.[\\]|()?+{}]', "g"), "\\$&").replace(new EReg('\\*', "g"), "([^.]+\.)?"), "gi");
+                var commonNameRegex = new RegExp(commonName.replace(new EReg('[\\^\\\\\\-$.[\\]|()?+{}]', "g"), "\\$&").replace(new EReg('\\*', "g"), "([^.]+\.)?"), "gi");
                 if (commonNameRegex.exec(_otherIdentity)) {
                     _otherCertificate = firstCert;
                 }
@@ -882,22 +849,19 @@ class TLSEngine extends EventDispatcher {
                     if (_config.promptUserForAcceptCert) {
                         _handshakeCanContinue = false;
                         dispatchEvent(new TLSEvent(TLSEvent.PROMPT_ACCEPT_CERT));
-                    }
-                    else {
+                    } else {
                         throw new TLSError("Invalid common name: " + firstCert.getCommonName() + ", expected " + _otherIdentity, TLSError.bad_certificate);
                     }
                 }
             }
-        }
-        else {
+        } else {
             // Let's ask the user if we can accept this cert. I'm not certain of the behaviour in case of timeouts,
             // so I probably need to handle the case by killing and restarting the connection rather than continuing if it becomes
             // an issue. We shall see. BP
             if (_config.promptUserForAcceptCert) {
                 _handshakeCanContinue = false;
                 dispatchEvent(new TLSEvent(TLSEvent.PROMPT_ACCEPT_CERT));
-            }
-            else {
+            } else {
                 // Cannot continue, die.
                 throw new TLSError("Cannot verify certificate", TLSError.bad_certificate);
             }
@@ -916,7 +880,6 @@ class TLSEngine extends EventDispatcher {
     public function rejectPeerCertificate():Void {
         throw new TLSError("Peer certificate not accepted!", TLSError.bad_certificate);
     }
-
 
     private function parseAlert(p:ByteArray):Void {
         //throw new Error("Alert not implemented.");

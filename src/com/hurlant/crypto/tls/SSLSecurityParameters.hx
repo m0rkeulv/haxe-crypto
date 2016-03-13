@@ -102,23 +102,23 @@ class SSLSecurityParameters implements ISecurityParameters {
     }
 
     public function setPreMasterSecret(secret:ByteArray):Void {
-        /* Warning! Following code may cause madness
-             Tread not here, unless ye be men of valor.
-
-        ***** Official Prophylactic Comment ******
-            (to protect the unwary...this code actually works, that's all you need to know)
-
-        This does two things, computes the master secret, and generates the keyBlock
-
-
-        To compute the master_secret, the following algorithm is used.
-         for SSL 3, this means
-         master = MD5( premaster + SHA1('A' + premaster + client_random + server_random ) ) +
-                    MD5( premaster + SHA1('BB' + premaster + client_random + server_random ) ) +
-                    MD5( premaster + SHA1('CCC' + premaster + client_random + server_random ) )
-        */
-        var tempHashA:ByteArray = new ByteArray(); // temporary hash, gets reused a lot
-        var tempHashB:ByteArray = new ByteArray(); // temporary hash, gets reused a lot
+        //  Warning! Following code may cause madness
+        //      Tread not here, unless ye be men of valor.
+        //
+        // ***** Official Prophylactic Comment ******
+        //     (to protect the unwary...this code actually works, that's all you need to know)
+        //
+        // This does two things, computes the master secret, and generates the keyBlock
+        //
+        // To compute the master_secret, the following algorithm is used.
+        //  for SSL 3, this means
+        // master = (
+        //     MD5( premaster + SHA1('A'   + premaster + client_random + server_random ) ) +
+        //     MD5( premaster + SHA1('BB'  + premaster + client_random + server_random ) ) +
+        //     MD5( premaster + SHA1('CCC' + premaster + client_random + server_random ) )
+        // )
+        var tempHashA = new ByteArray(); // temporary hash, gets reused a lot
+        var tempHashB = new ByteArray(); // temporary hash, gets reused a lot
 
         var shaHash:ByteArray;
         var mdHash:ByteArray;
@@ -170,14 +170,13 @@ class SSLSecurityParameters implements ISecurityParameters {
 
         tempHashA = new ByteArray();
         tempHashB = new ByteArray();
+
         // now for 16 iterations to get 256 bytes (16 * 16), better to have more than not enough
         pad_char = 0x41;
         for (i in 0...16) {
             tempHashA.position = 0;
+            for (j in 0...i + 1) tempHashA.writeByte(pad_char);
 
-            for (j in 0...i + 1) {
-                tempHashA.writeByte(pad_char);
-            }
             pad_char++;
             tempHashA.writeBytes(k);
             shaHash = sha.hash(tempHashA);
@@ -205,30 +204,24 @@ class SSLSecurityParameters implements ISecurityParameters {
 
     // This is the Finished message
     // if you value your sanity, stay away...far away
-
     public function computeVerifyData(side:Int32, handshakeMessages:ByteArray):ByteArray {
         // for SSL 3.0, this consists of
         // 	finished = md5( masterSecret + pad2 + md5( handshake + sender + masterSecret + pad1 ) ) +
         //			   sha1( masterSecret + pad2 + sha1( handshake + sender + masterSecret + pad1 ) )
-
         // trace("Handshake messages: " + Hex.fromArray(handshakeMessages));
-        var sha:SHA1 = new SHA1();
-        var md:MD5 = new MD5();
-        var k:ByteArray = new ByteArray(); // handshake + sender + masterSecret + pad1
-        var j:ByteArray = new ByteArray(); // masterSecret + pad2 + k
+        var sha = new SHA1();
+        var md = new MD5();
+        var k = new ByteArray(); // handshake + sender + masterSecret + pad1
+        var j = new ByteArray(); // masterSecret + pad2 + k
 
         var innerKey:ByteArray;
-        var outerKey:ByteArray = new ByteArray();
+        var outerKey = new ByteArray();
 
         var hashSha:ByteArray;
         var hashMD:ByteArray;
 
-        var sideBytes:ByteArray = new ByteArray();
-        if (side == TLSEngine.CLIENT) {
-            sideBytes.writeUnsignedInt(0x434C4E54);
-        } else {
-            sideBytes.writeUnsignedInt(0x53525652);
-        }
+        var sideBytes = new ByteArray();
+        sideBytes.writeUnsignedInt((side == TLSEngine.CLIENT) ? 0x434C4E54 : 0x53525652);
 
         // Do the SHA1 part of the routine first
         masterSecret.position = 0;
@@ -282,18 +275,16 @@ class SSLSecurityParameters implements ISecurityParameters {
     }
 
     public function getConnectionStates():SSLConnectionStateRW {
-        if (masterSecret == null) {
-            return new SSLConnectionStateRW(new SSLConnectionState(), new SSLConnectionState());
-        }
+        if (masterSecret == null) return new SSLConnectionStateRW(new SSLConnectionState(), new SSLConnectionState());
         // so now, I have to derive the actual keys from the keyblock that I generated in setPremasterSecret.
         // for MY purposes, I need RSA-AES 128/256 + SHA
         // so I'm gonna have keylen = 32, minlen = 32, mac_length = 20, iv_length = 16
         // but...I can get this data from the settings returned in the constructor when this object is
         // It strikes me that TLS does this more elegantly...
 
-        var mac_length:Int32 = try cast(hashSize, Float) catch (e:Dynamic) null;
-        var key_length:Int32 = try cast(keySize, Float) catch (e:Dynamic) null;
-        var iv_length:Int32 = try cast(IVSize, Float) catch (e:Dynamic) null;
+        var mac_length = this.hashSize;
+        var key_length = this.keySize;
+        var iv_length = this.IVSize;
 
         var client_write_MAC = new ByteArray();
         var server_write_MAC = new ByteArray();

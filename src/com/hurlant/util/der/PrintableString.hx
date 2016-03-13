@@ -30,8 +30,9 @@ class PrintableString implements IAsn1Type {
         return type;
     }
 
-    public function setString(s:String):Void {
+    public function setString(s:String):PrintableString {
         str = s;
+        return this;
     }
 
     public function getString():String {
