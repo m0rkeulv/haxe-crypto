@@ -118,6 +118,7 @@ class RSAKeyTest extends BaseTestCase {
         assert(txt, txt2);
     }
 
+    /*
     public function test_adobeSample() {
         var myPEMPublicKeyString = (
             "-----BEGIN PUBLIC KEY-----" +
@@ -143,5 +144,5 @@ class RSAKeyTest extends BaseTestCase {
         var hexEncryptedResult = Hex.fromArray(encryptedResult);
         assertTrue(hexEncryptedResult.length > 5);
     }
-
+    */
 }

@@ -1,26 +1,14 @@
 # Haxe Cryptography Library
 
+[![Build Status](https://travis-ci.org/soywiz/haxe-crypto.svg?branch=master)](https://travis-ci.org/soywiz/haxe-crypto)
+
 Forked from:
-https://github.com/timkurvers/as3-crypto
-that was forked from:
-https://code.google.com/archive/p/as3crypto/
-http://crypto.hurlant.com/
+* [https://github.com/timkurvers/as3-crypto](https://github.com/timkurvers/as3-crypto)
 
-# ActionScript 3 Cryptography Library
+That was forked from:
 
-[<img alt="Supported by FDT" src="http://office.moonsphere.net/supported-by-fdt.png" align="right" />](http://fdt.powerflasher.com)
-
-[![Seeking new maintainer(s)](https://img.shields.io/badge/%E2%9A%A0-seeking_new_maintainer%28s%29-red.svg?style=flat)](https://github.com/timkurvers/as3-crypto/issues/21)
-
-Copyright (c) 2007 Henri Torgemane  
-Modifications (c) 2011-2013 Tim Kurvers and various other contributors
-
-A cryptography library written in ActionScript 3 that provides several common algorithms. This version also introduces a TLS engine, more commonly known as SSL.
-
-Licensed under the **BSD** license. Includes several derivative works from Java, C and JavaScript sources. See LICENSE for more information and a list of contributors.
-
-
-## Original & GitHub-fork
+* [https://code.google.com/archive/p/as3crypto/](https://code.google.com/archive/p/as3crypto/)
+* [http://crypto.hurlant.com/](http://crypto.hurlant.com/)
 
 The original project can be found at [http://code.google.com/p/as3crypto/](http://code.google.com/p/as3crypto/)
 
@@ -29,11 +17,19 @@ Although unofficial, this GitHub-fork includes community fixes and patches.
 Consult the CHANGELOG for implemented fixes and contributors.
 
 
+-----
+
+Copyright (c) 2007 Henri Torgemane  
+Modifications (c) 2011-2013 Tim Kurvers and various other contributors
+Ported to Haxe (c) 2016 Carlos Ballesteros and various other contributors
+
+A cryptography library written in Haxe that provides several common algorithms. This version also introduces a TLS engine, more commonly known as SSL.
+
+Licensed under the **BSD** license. Includes several derivative works from Java, C and JavaScript sources. See LICENSE for more information and a list of contributors.
+
 ## Usage
 
-The binary can be found in `/deploy/as3crypto.swc`
-
-Copy to your library folder, add it to your class-path and off you go.
+`haxelib install haxe-crypto`
 
 
 ## Features
