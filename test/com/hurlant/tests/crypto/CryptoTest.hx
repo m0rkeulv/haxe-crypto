@@ -45,4 +45,16 @@ class CryptoTest extends BaseTestCase {
         assertEquals('68656c6c6f20776f726c64', BinaryEncodings.HEX.encode(Crypto.getCharset('utf-8').encode('hello world')));
         assertEquals('aGVsbG8gd29ybGQ=', BinaryEncodings.BASE64.encode(Crypto.getCharset('utf-8').encode('hello world')));
     }
+
+    public function test_encoding() {
+        var strs = ['hello world', 'あえいおう'];
+        var encodings = [Crypto.getCharset('utf-8'), Crypto.getCharset('utf-16')];
+        for (str in strs) {
+            for (encoding in encodings) {
+                var encodedStr = encoding.encode(str);
+                var decodedStr = encoding.decode(encodedStr);
+                assertEquals(str, decodedStr);
+            }
+        }
+    }
 }

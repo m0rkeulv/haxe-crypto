@@ -1,5 +1,7 @@
 package com.hurlant.util;
 
+import com.hurlant.crypto.encoding.binary.BinaryEncodings;
+import com.hurlant.crypto.encoding.Charsets;
 import haxe.Int32;
 import haxe.io.Bytes;
 
@@ -71,6 +73,7 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
     public function readUnsignedShort():Int32 { return this.readUnsignedShort(); }
     public function readUnsignedInt():Int32 { return this.readUnsignedInt(); }
     public function readBytes(output:ByteArray, offset:Int32, length:Int32) { return this.readBytes(output, offset, length); }
+    public function readBytes2(length:Int32):Bytes { return this.readBytes2(length); }
     public function readMultiByte(length:Int32, encoding:String):String { return this.readMultiByte(length, encoding); }
     public function readUTFBytes(length:Int32):String { return this.readUTFBytes(length); }
 
@@ -80,6 +83,7 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
     public function writeInt24(value:Int32) { return this.writeInt24(value); }
     public function writeUnsignedInt(value:Int32) { return this.writeUnsignedInt(value); }
     public function writeBytes(input:ByteArray, offset:Int32 = 0, length:Int32 = 0) { return this.writeBytes(input, offset, length); }
+    public function writeBytes2(input:Bytes) { return this.writeBytes2(input); }
     public function writeMultiByte(str:String, encoding:String) { return this.writeMultiByte(str, encoding); }
     public function writeUTFBytes(str:String) { return this.writeUTFBytes(str); }
     public function writeUTF(str:String) { return this.writeUTF(str); }
@@ -138,15 +142,18 @@ class ByteArrayData implements IDataOutput implements IDataInput {
         for (n in 0 ... length) output.writeByte(this.readUnsignedByte());
     }
 
+    public function readBytes2(length:Int32):Bytes {
+        var out = new ByteArray();
+        readBytes(out, 0, length);
+        return out;
+    }
+
     public function readUTFBytes(length:Int32):String {
-        return readMultiByte(length, 'ascii');
+        return readMultiByte(length, 'utf-8');
     }
 
     public function readMultiByte(length:Int32, encoding:String):String {
-        // @TODO: handle encoding
-        var str = '';
-        for (n in 0 ... length) str += String.fromCharCode(readUnsignedByte());
-        return str;
+        return Charsets.fromString(encoding).decode(readBytes2(length));
     }
 
     public function readByte():Int32 {
@@ -195,13 +202,11 @@ class ByteArrayData implements IDataOutput implements IDataInput {
     }
 
     public function writeUTFBytes(str:String) {
-        return writeMultiByte(str, 'ascii');
+        return writeMultiByte(str, 'utf-8');
     }
 
     public function writeMultiByte(str:String, encoding:String) {
-        for (n in 0 ... str.length) {
-            writeUnsignedByte(str.charCodeAt(n));
-        }
+        writeBytes(Charsets.fromString(encoding).encode(str));
     }
 
     public function writeByte(value:Int32) {
@@ -225,6 +230,10 @@ class ByteArrayData implements IDataOutput implements IDataInput {
         //this.position = 0;
     }
 
+    public function writeBytes2(input:Bytes) {
+        this.writeBytes(input);
+    }
+
     public function writeUnsignedByte(value:Int32) {
         ensureWrite(1);
         this._data.set(this._position, value);
@@ -246,21 +255,8 @@ class ByteArrayData implements IDataOutput implements IDataInput {
 
     public function writeUnsignedInt(value:Int32) {
         ensureWrite(4);
-        //trace(value + " -> " + bswap32Endian(value) + " -> " + this._data);
-        //trace(this._position + " : " + this._length + " : " + this._data.length);
-        this._set32(this._position, bswap32Endian(value));
-        //trace(value + " -> " + bswap32Endian(value) + " -> " + this._data);
+        this._data.setInt32(this._position, bswap32Endian(value));
         this._position += 4;
-    }
-
-    private inline function _set32(pos:Int, v:Int32) {
-        this._data.setInt32(pos, v);
-        /*
-        this._data.set(pos + 0, v >> 0);
-        this._data.set(pos + 1, v >> 8);
-        this._data.set(pos + 2, v >> 16);
-        this._data.set(pos + 3, v >>> 24);
-        */
     }
 
     private function get_position():Int32 {

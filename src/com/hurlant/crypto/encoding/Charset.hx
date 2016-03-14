@@ -4,5 +4,5 @@ import haxe.io.Bytes;
 
 interface Charset {
     function encode(str:String):Bytes;
-    function decode(str:Bytes):String;
+    function decode(bytes:Bytes):String;
 }
