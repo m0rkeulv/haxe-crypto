@@ -17,7 +17,7 @@ import com.hurlant.util.ByteArray;
 import com.hurlant.util.Memory;
 import com.hurlant.util.System;
 
-class Random {
+class Random implements IRandom {
     private var state:IPRNG;
     private var ready:Bool = false;
     private var pool:ByteArray;

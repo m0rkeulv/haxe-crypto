@@ -6,6 +6,7 @@
 package com.hurlant.tests;
 
 
+import com.hurlant.tests.crypto.extra.UUIDTest;
 import com.hurlant.tests.crypto.extra.ROT13Test;
 import com.hurlant.tests.crypto.rsa.RSAKeyTest;
 import com.hurlant.tests.math.BigIntegerTest;
@@ -54,6 +55,7 @@ class HaxeCryptoTests {
         tr.add(new BigIntegerTest());
         tr.add(new RSAKeyTest());
         tr.add(new ROT13Test());
+        tr.add(new UUIDTest());
         //tr.add(new TLSTest());
 
         tr.run();

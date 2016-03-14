@@ -32,6 +32,9 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
     }
 
     @:to public function getBytes():Bytes { return cloneBytes(this.getBytes(), 0, this.length); }
+    public function toBytesArray():Array<Int32> {
+        return [for (n in 0 ... length) get(n)];
+    }
 
     public function readBoolean():Bool { return this.readUnsignedByte() != 0; }
     public function readByte():Int32 { return this.readByte(); }
