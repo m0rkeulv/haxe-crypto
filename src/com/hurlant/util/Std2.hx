@@ -1,19 +1,8 @@
 package com.hurlant.util;
 import haxe.Int32;
 class Std2 {
-    static private var _C0 = '0'.charCodeAt(0);
-    static private var _C9 = '9'.charCodeAt(0);
-    static private var _Cla = 'a'.charCodeAt(0);
-    static private var _Clz = 'z'.charCodeAt(0);
-    static private var _UA = 'A'.charCodeAt(0);
-    static private var _UZ = 'Z'.charCodeAt(0);
-    static private var DIGITS = '0123456789abcdefghijklmnopqrstuvwxyz';
-
-    static public function getDigit(charCode:Int32):Int32 {
-        if (charCode >= _C0 && charCode <= _C9) return charCode - _C0;
-        if (charCode >= _Cla && charCode <= _Clz) return (charCode - _Cla) + 10;
-        if (charCode >= _UA && charCode <= _UZ) return (charCode - _UA) + 10;
-        return -1;
+    static public function modulo(x:Int, y:Int):Int {
+        return ((x % y) + y) % y;
     }
 
     static public function parseHex(value:String):Int32 {
@@ -22,7 +11,7 @@ class Std2 {
         for (n in 0 ... value.length) {
             var c = value.charAt(n);
             var cc = value.charCodeAt(n);
-            var digit = getDigit(cc);
+            var digit = CType.getDigit(cc);
             if (digit < 0 || digit >= 16) throw new Error('Invalid digit $digit');
 
             out = out << 4;
@@ -39,7 +28,7 @@ class Std2 {
         for (n in 0 ... value.length) {
             var c = value.charAt(n);
             var cc = value.charCodeAt(n);
-            var digit = getDigit(cc);
+            var digit = CType.getDigit(cc);
             if (digit < 0 || digit >= radix) throw new Error('Invalid digit $digit');
             out *= radix;
             out += digit;
@@ -51,7 +40,7 @@ class Std2 {
         if (value == 0) return '0';
         var out = '';
         while (value != 0) {
-            var c = DIGITS.charAt(value & 0xF);
+            var c = CType.DIGITS.charAt(value & 0xF);
             out = c + out;
             value = value >>> 4;
         }
@@ -63,7 +52,7 @@ class Std2 {
         if (value == 0) return '0';
         var out = '';
         while (value > 0) {
-            var c = DIGITS.charAt(value % radix);
+            var c = CType.DIGITS.charAt(value % radix);
             out = c + out;
             value = Std.int(value / radix);
         }

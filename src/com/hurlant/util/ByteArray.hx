@@ -24,7 +24,7 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
         return out;
     }
 
-    static private function cloneBytes(v:Bytes, offset:Int = 0, length:Int = -1):Bytes {
+    static public function cloneBytes(v:Bytes, offset:Int = 0, length:Int = -1):Bytes {
         if (length < 0) length = v.length;
         var out = Bytes.alloc(length);
         out.blit(0, v, offset, length);
