@@ -8,9 +8,11 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.symmetric;
+package com.hurlant.crypto.symmetric.mode;
 
 
+import com.hurlant.crypto.symmetric.mode.IMode;
+import com.hurlant.crypto.symmetric.mode.IVMode;
 import haxe.Int32;
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Memory;

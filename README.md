@@ -39,6 +39,6 @@ Licensed under the **BSD** license. Includes several derivative works from Java,
 * Public Key Encryption: RSA (encrypt/decrypt, sign/verify)
 * Secret Key Encryption: AES, DES, 3DES, BlowFish, XTEA, RC4
 * Confidentiality Modes: ECB, CBC, CFB, CFB8, OFB, CTR
-* Hashing Algorithms: MD2, MD5, SHA-1, SHA-224, SHA-256
+* Hashing Algorithms: MD2, MD5, SHA-1, SHA-224, SHA-256, RMD-160
 * Paddings available: PKCS#5, PKCS#1 type 1 and 2
-* Other Useful Stuff: HMAC, Random, TLS-PRF, some ASN-1/DER parsing
+* Other Useful Stuff: HMAC, Random, TLS-PRF, some ASN-1/DER parsing, ROT13, UUID, UTF-8

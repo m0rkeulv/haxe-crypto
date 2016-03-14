@@ -48,7 +48,6 @@ class Hex {
     /**
      * Generates string from given hexadecimal string
      */
-
     public static function toString(hex:String, charSet:String = "utf-8"):String {
         var a:ByteArray = toArray(hex);
         return a.readMultiByte(a.length, charSet);

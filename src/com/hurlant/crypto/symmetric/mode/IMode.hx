@@ -7,7 +7,7 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.symmetric;
+package com.hurlant.crypto.symmetric.mode;
 
 interface IMode extends ICipher {
 }

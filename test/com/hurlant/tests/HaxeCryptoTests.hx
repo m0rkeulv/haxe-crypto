@@ -31,6 +31,7 @@ class HaxeCryptoTests {
         tr.add(new Std2Test());
         tr.add(new MD2Test());
         tr.add(new MD5Test());
+        tr.add(new RMD160Test());
         tr.add(new ARC4Test());
         tr.add(new HexTest());
         tr.add(new Base64Test());

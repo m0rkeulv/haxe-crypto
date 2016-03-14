@@ -6,8 +6,9 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.symmetric;
+package com.hurlant.crypto.pad;
 
+import com.hurlant.crypto.pad.IPad;
 import haxe.Int32;
 import com.hurlant.crypto.tls.TLSError;
 import com.hurlant.util.ByteArray;

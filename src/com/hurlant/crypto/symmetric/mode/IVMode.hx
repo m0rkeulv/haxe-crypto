@@ -6,10 +6,11 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.symmetric;
+package com.hurlant.crypto.symmetric.mode;
 
+import com.hurlant.crypto.pad.IPad;
 import haxe.Int32;
-import com.hurlant.crypto.symmetric.PKCS5;
+import com.hurlant.crypto.pad.PKCS5;
 import com.hurlant.util.Error;
 
 import com.hurlant.crypto.prng.Random;

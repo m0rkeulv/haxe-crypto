@@ -6,8 +6,9 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.symmetric;
+package com.hurlant.crypto.pad;
 
+import com.hurlant.crypto.pad.IPad;
 import com.hurlant.util.ArrayUtil;
 import com.hurlant.util.Endian;
 import com.hurlant.crypto.hash.SHA1;

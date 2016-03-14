@@ -6,9 +6,12 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.symmetric;
+package com.hurlant.crypto.symmetric.mode;
 
 
+import com.hurlant.crypto.symmetric.mode.IMode;
+import com.hurlant.crypto.symmetric.mode.IVMode;
+import com.hurlant.crypto.pad.IPad;
 import haxe.Int32;
 import com.hurlant.util.ByteArray;
 

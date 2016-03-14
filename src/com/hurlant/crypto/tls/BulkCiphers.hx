@@ -14,8 +14,8 @@ import com.hurlant.util.Error;
 import com.hurlant.crypto.Crypto;
 import com.hurlant.util.ByteArray;
 import com.hurlant.crypto.symmetric.ICipher;
-import com.hurlant.crypto.symmetric.TLSPad;
-import com.hurlant.crypto.symmetric.SSLPad;
+import com.hurlant.crypto.pad.TLSPad;
+import com.hurlant.crypto.pad.SSLPad;
 
 class BulkCiphers {
     public static inline var STREAM_CIPHER = 0;

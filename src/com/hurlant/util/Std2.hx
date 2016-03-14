@@ -168,4 +168,9 @@ class Std2 {
     static public function sx16(v:Int32):Int32 {
         return (v << 16) >> 16;
     }
+
+    static public function roundUp(numToRound:Int32, multiple:Int32) {
+        var isPositive = (numToRound >= 0) ? 1 : 0;
+        return Std.int((numToRound + isPositive * (multiple - 1)) / multiple) * multiple;
+    }
 }

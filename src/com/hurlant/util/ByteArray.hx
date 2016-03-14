@@ -24,6 +24,20 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
         return out;
     }
 
+    static public function fromInt32ArrayBE(ints:Array<Int32>):ByteArray {
+        var out = new ByteArrayData(Bytes.alloc(ints.length * 4));
+        out.endian = Endian.BIG_ENDIAN;
+        for (i in ints) out.writeUnsignedInt(i);
+        return out;
+    }
+
+    static public function fromInt32ArrayLE(ints:Array<Int32>):ByteArray {
+        var out = new ByteArrayData(Bytes.alloc(ints.length * 4));
+        out.endian = Endian.LITTLE_ENDIAN;
+        for (i in ints) out.writeUnsignedInt(i);
+        return out;
+    }
+
     static public function cloneBytes(v:Bytes, offset:Int = 0, length:Int = -1):Bytes {
         if (length < 0) length = v.length;
         var out = Bytes.alloc(length);
@@ -34,6 +48,20 @@ abstract ByteArray(ByteArrayData) to ByteArrayData from ByteArrayData {
     @:to public function getBytes():Bytes { return cloneBytes(this.getBytes(), 0, this.length); }
     public function toBytesArray():Array<Int32> {
         return [for (n in 0 ... length) get(n)];
+    }
+
+    public function toInt32ArrayLE():Array<Int32> {
+        var t = clone();
+        t.endian = Endian.LITTLE_ENDIAN;
+        t.position = 0;
+        return [for (n in 0 ... Std.int(length / 4)) readUnsignedInt()];
+    }
+
+    public function toInt32ArrayBE():Array<Int32> {
+        var t = clone();
+        t.endian = Endian.BIG_ENDIAN;
+        t.position = 0;
+        return [for (n in 0 ... Std.int(length / 4)) readUnsignedInt()];
     }
 
     public function readBoolean():Bool { return this.readUnsignedByte() != 0; }

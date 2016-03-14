@@ -14,7 +14,7 @@ import haxe.Int32;
 import com.hurlant.util.ByteArray;
 import com.hurlant.crypto.hash.HMAC;
 import com.hurlant.crypto.symmetric.ICipher;
-import com.hurlant.crypto.symmetric.IVMode;
+import com.hurlant.crypto.symmetric.mode.IVMode;
 import com.hurlant.util.ArrayUtil;
 
 class TLSConnectionState implements IConnectionState {

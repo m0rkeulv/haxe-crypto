@@ -6,13 +6,15 @@
  * 
  * See LICENSE.txt for full license information.
  */
-package com.hurlant.crypto.symmetric;
+package com.hurlant.crypto.pad;
 
 
+import com.hurlant.crypto.pad.IPad;
 import com.hurlant.crypto.tls.TLSError;
 import haxe.Int32;
 import com.hurlant.util.ByteArray;
 
+// PKCS#7 ?
 class TLSPad implements IPad {
     private var blockSize:Int32;
 

@@ -12,8 +12,8 @@ package com.hurlant.tests.crypto.symmetric;
 import com.hurlant.tests.*;
 
 import com.hurlant.crypto.symmetric.AESKey;
-import com.hurlant.crypto.symmetric.ECBMode;
-import com.hurlant.crypto.symmetric.NullPad;
+import com.hurlant.crypto.symmetric.mode.ECBMode;
+import com.hurlant.crypto.pad.NullPad;
 import com.hurlant.crypto.symmetric.XTeaKey;
 import com.hurlant.util.Hex;
 

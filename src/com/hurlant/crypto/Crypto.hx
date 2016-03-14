@@ -9,6 +9,11 @@
 package com.hurlant.crypto;
 
 
+import com.hurlant.crypto.encoding.binary.BinaryEncodings;
+import com.hurlant.crypto.encoding.Charsets;
+import com.hurlant.crypto.encoding.Charset;
+import com.hurlant.crypto.encoding.binary.BinaryEncoding;
+import com.hurlant.crypto.hash.RMD160;
 import haxe.Int32;
 import com.hurlant.crypto.hash.HMAC;
 import com.hurlant.crypto.hash.MAC;
@@ -22,21 +27,21 @@ import com.hurlant.crypto.prng.ARC4;
 import com.hurlant.crypto.rsa.RSAKey;
 import com.hurlant.crypto.symmetric.AESKey;
 import com.hurlant.crypto.symmetric.BlowFishKey;
-import com.hurlant.crypto.symmetric.CBCMode;
-import com.hurlant.crypto.symmetric.CFB8Mode;
-import com.hurlant.crypto.symmetric.CFBMode;
-import com.hurlant.crypto.symmetric.CTRMode;
+import com.hurlant.crypto.symmetric.mode.CBCMode;
+import com.hurlant.crypto.symmetric.mode.CFB8Mode;
+import com.hurlant.crypto.symmetric.mode.CFBMode;
+import com.hurlant.crypto.symmetric.mode.CTRMode;
 import com.hurlant.crypto.symmetric.DESKey;
-import com.hurlant.crypto.symmetric.ECBMode;
+import com.hurlant.crypto.symmetric.mode.ECBMode;
 import com.hurlant.crypto.symmetric.ICipher;
-import com.hurlant.crypto.symmetric.IMode;
-import com.hurlant.crypto.symmetric.IPad;
+import com.hurlant.crypto.symmetric.mode.IMode;
+import com.hurlant.crypto.pad.IPad;
 import com.hurlant.crypto.symmetric.ISymmetricKey;
-import com.hurlant.crypto.symmetric.IVMode;
-import com.hurlant.crypto.symmetric.NullPad;
-import com.hurlant.crypto.symmetric.OFBMode;
-import com.hurlant.crypto.symmetric.PKCS5;
-import com.hurlant.crypto.symmetric.SimpleIVMode;
+import com.hurlant.crypto.symmetric.mode.IVMode;
+import com.hurlant.crypto.pad.NullPad;
+import com.hurlant.crypto.symmetric.mode.OFBMode;
+import com.hurlant.crypto.pad.PKCS5;
+import com.hurlant.crypto.symmetric.mode.SimpleIVMode;
 import com.hurlant.crypto.symmetric.TripleDESKey;
 import com.hurlant.crypto.symmetric.XTeaKey;
 
@@ -182,6 +187,7 @@ class Crypto {
      * "sha1"
      * "sha224"
      * "sha256"
+     * "rmd160", "ripemd160"
      */
     public static function getHash(name:String):IHash {
         return switch (name.toLowerCase()) {
@@ -190,8 +196,26 @@ class Crypto {
             case "sha", "sha1": new SHA1();
             case "sha224": new SHA224();
             case "sha256": new SHA256();
+            case "rmd160", "ripemd160": new RMD160();
             default: null;
         }
+    }
+
+    /**
+     * Things that should work:
+     * "base16"
+     * "base64"
+     **/
+    public static function getBinaryEncoding(name:String):BinaryEncoding {
+        return BinaryEncodings.fromString(name);
+    }
+
+    /**
+     * Things that should work:
+     * "utf8"
+     **/
+    public static function getCharset(name:String):Charset {
+        return Charsets.fromString(name);
     }
 
     /**
