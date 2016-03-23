@@ -32,9 +32,9 @@ class ROT {
 
     static private function rotate(charCode:Int, rotationOffset:Int):Int {
         if (CType.isLowerAlpha(charCode)) {
-            return CType.LOWER_A + Std2.modulo((charCode - CType.LOWER_A) + rotationOffset, 26);
+            return 'a'.code + Std2.modulo((charCode - 'a'.code) + rotationOffset, 26);
         } else if (CType.isUpperAlpha(charCode)) {
-            return CType.UPPER_A + Std2.modulo((charCode - CType.UPPER_A) + rotationOffset, 26);
+            return 'A'.code + Std2.modulo((charCode - 'A'.code) + rotationOffset, 26);
         } else {
             return charCode;
         }
