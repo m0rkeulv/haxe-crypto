@@ -31,9 +31,6 @@ class SecureRandom {
             #elseif java
                 return Bytes.ofData(java.security.SecureRandom.getSeed(length));
             #elseif cs
-                var rng = new System.Security.Cryptography.RNGCryptoServiceProvider();
-                return rng.GetBytes(length);
-            #elseif cs
                 var out = Bytes.alloc(length);
                 var rng = new cs.system.security.cryptography.RNGCryptoServiceProvider();
                 rng.GetBytes(out.getData());
