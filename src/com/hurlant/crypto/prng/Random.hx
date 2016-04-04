@@ -15,7 +15,6 @@ import haxe.Int32;
 import com.hurlant.util.ArrayUtil;
 import com.hurlant.util.ByteArray;
 import com.hurlant.util.Memory;
-import com.hurlant.util.System;
 
 class Random implements IRandom {
     private var state:IPRNG;
@@ -51,8 +50,7 @@ class Random implements IRandom {
     }
 
     public function autoSeed():Void {
-        // @TODO: Provide real seed stuff
-        var data = System.getSecureRandomBytes(512);
+        var data: ByteArray = SecureRandom.getSecureRandomBytes(512);
         while (data.bytesAvailable >= 4) seed(data.readUnsignedInt());
     }
 

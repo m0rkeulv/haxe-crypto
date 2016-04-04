@@ -28,6 +28,7 @@ class HaxeCryptoTests {
         //assert(a.toString(10), "112374128763487126349871263984761238");
 
         var tr = new TestRunner();
+        tr.add(new RandomTest());
         tr.add(new Std2Test());
         tr.add(new MD2Test());
         tr.add(new MD5Test());
