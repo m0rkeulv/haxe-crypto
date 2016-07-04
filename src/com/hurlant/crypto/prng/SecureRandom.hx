@@ -41,7 +41,7 @@ class SecureRandom {
                 #if windows
                     var input = sys.io.File.read("\\Device\\KsecDD");
                 #else
-                    var input = sys.io.File.read("/dev/random");
+                    var input = sys.io.File.read("/dev/urandom");
                 #end
                 input.readBytes(out, 0, length);
                 input.close();
