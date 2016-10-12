@@ -661,7 +661,7 @@ class BigInteger {
 
     public function exp(e:UInt, z:IReduction):BigInteger {
         //trace('aaaaaaaaaaaaa:$e');
-        if (e > 0xffffffff || e < 1) return ONE;
+        if (e > cast 0xffffffff || e < 1) return ONE; // use implicit cast to avoid compile time error on flash target
         var r = nbi();
         var r2 = nbi();
         var g = z.convert(this);
