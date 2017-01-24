@@ -44,7 +44,7 @@ class BigInteger {
 
     public var s:Int; // sign
     public var t:Int32; // number of chunks.
-    public var a:Array<Int>; // chunks
+    public var a:Array<Int32>; // chunks
 
     /**
      *
@@ -502,11 +502,14 @@ class BigInteger {
         var y:BigInteger = v.abs();
         var i:Int32 = x.t;
         r.t = i + y.t;
-        while (--i >= 0) r.a[i] = 0;
-        for (i in 0...y.t) r.a[i + x.t] = x.am(0, y.a[i], r, i, 0, x.t);
+        while (--i >= 0) 
+			r.a[i] = 0;
+        for (i in 0...y.t) 
+			r.a[i + x.t] = x.am(0, y.a[i], r, i, 0, x.t);
         r.s = 0;
         r.clamp();
-        if (s != v.s) ZERO.subTo(r, r);
+        if (s != v.s) 
+			ZERO.subTo(r, r);
     }
 
     public function square():BigInteger {
@@ -525,20 +528,23 @@ class BigInteger {
         } else {
             var x:BigInteger = abs();
             var i:Int32 = r.t = 2 * x.t;
-            while (--i >= 0) r.a[i] = 0;
+            while (--i >= 0) 
+				r.a[i] = 0;
             //trace(r.a);
-            for (i in 0...x.t) {
+            for (i in 0...(x.t-1)) {
                 //trace(i);
                 var c:Int32 = x.am(i, x.a[i], r, 2 * i, 0, 1);
                 r.a[i + x.t] += x.am(i + 1, 2 * x.a[i], r, 2 * i + 1, c, x.t - i - 1);
                 r.a[i + x.t] |= 0;
                 if (r.a[i + x.t] >= DV) {
                     r.a[i + x.t] -= DV;
-                    r.a[i + x.t] |= 0;
+                    r.a[i + x.t] |= 0; //why is it here?
                     r.a[i + x.t + 1] = 1;
                 }
             }
-            if (r.t > 0) r.a[r.t - 1] += x.am(i, x.a[i], r, 2 * i, 0, 1);
+			i = x.t - 1; //otherwise i=-1
+            if (r.t > 0) 
+				r.a[r.t - 1] += x.am(i, x.a[i], r, 2 * i, 0, 1);
             r.s = 0;
             r.clamp();
         }
@@ -661,11 +667,8 @@ class BigInteger {
 
     public function exp(e:UInt, z:IReduction):BigInteger {
         //trace('aaaaaaaaaaaaa:$e');
-	#if flash
-	if (cast( e, Int ) > 0xffffffff || e < 1) return ONE; // use cast to avoid compile time error on flash target
-	#else	
-        if (e > 0xffffffff || e < 1) return ONE;
-	#end
+		//if (e > 0xffffffff) return ONE; // use cast to avoid compile time error on flash target
+		if (e > cast( 0xffffffff, UInt) || e < 1) return ONE; // use cast to avoid compile time error on flash target
         var r = nbi();
         var r2 = nbi();
         var g = z.convert(this);
@@ -891,9 +894,12 @@ class BigInteger {
                         --i;
                     }
                 }
-                if ((d & 0x80) != 0) d |= -256;
-                if (k == 0 && (s & 0x80) != (d & 0x80)) ++k;
-                if (k > 0 || d != s) r[k++] = d;
+                if ((d & 0x80) != 0) 
+					d |= -256;
+                if (k == 0 && (s & 0x80) != (d & 0x80)) 
+					++k;
+                if (k > 0 || d != s) 
+					r[k++] = d;
             }
         }
         return r;

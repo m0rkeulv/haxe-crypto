@@ -28,10 +28,20 @@ class SHA1 extends SHABase implements IHash {
     }
 
     override private function core(x:Array<Int32>, len:Int32):Array<Int32> {
-        x[len >> 5] |= 0x80 << (24 - len % 32);
+	#if neko
+		if (x[len >> 5] == null)
+			x[len >> 5] = 0;
+    #end
+		x[len >> 5] |= 0x80 << (24 - len % 32);
         x[((len + 64 >> 9) << 4) + 15] = len;
 
-        for (n in 0 ... x.length) x[n] |= 0;
+        for (n in 0 ... x.length){
+		#if neko
+			if (x[n] == null)
+				x[n] = 0;
+		#end
+			x[n] |= 0;
+		}
 
         var w:Array<Int32> = [];
         var a:Int32 = 0x67452301; //1732584193;

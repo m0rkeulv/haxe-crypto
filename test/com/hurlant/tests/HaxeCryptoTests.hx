@@ -55,7 +55,7 @@ class HaxeCryptoTests {
         tr.add(new ECBModeTest());
         tr.add(new CryptoTest());
         tr.add(new BigIntegerTest());
-        tr.add(new RSAKeyTest());
+//        tr.add(new RSAKeyTest());
         tr.add(new ROT13Test());
         tr.add(new UUIDTest());
         //tr.add(new TLSTest());
