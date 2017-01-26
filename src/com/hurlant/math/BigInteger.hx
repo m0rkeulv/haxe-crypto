@@ -580,16 +580,16 @@ class BigInteger {
             pt.copyTo(r);
         }
 		if (debug){
-			trace("pm="+pm.toString(16));
-			trace("pt="+pt.toString(16));
-			trace("y="+y.toString(16));
-			trace("r="+r.toString(16));
+			trace("pm= "+pm.toString(16));
+			trace("pt= "+pt.toString(16));
+			trace("y= "+y.toString(16));
+			trace("r= "+r.toString(16));
 		}
 		var ys:Int = y.t;
         var y0:Int = y.a[ys - 1];
         if (y0 == 0) 
 			return;
-        var yt:Float = y0 * (1 << F1) + (((ys > 1)) ? y.a[ys - 2] >> F2 : 0);
+        var yt:Float = y0 * 1.0 * (1 << F1) + (((ys > 1)) ? y.a[ys - 2] >> F2 : 0);
         var d1:Float = FV / yt;
         var d2:Float = (1 << F1) / yt;
         var e:Float = 1 << F2;
@@ -597,7 +597,16 @@ class BigInteger {
         var j:Int32 = i - ys;
         var t:BigInteger = ((q == null)) ? nbi() : q;
         y.dlShiftTo(j, t);
-        if (r.compareTo(t) >= 0) {
+        if (debug){
+			trace("y0= "+y0);
+			trace("ys= "+ys);
+			trace("yt= "+yt);
+			trace("d1= "+d1);
+			trace("i= "+i);
+			trace("j= "+j);
+			trace("t= "+t.toString(16));
+		}
+		if (r.compareTo(t) >= 0) {
             r.a[r.t++] = 1;
             r.subTo(t, r);
         }
