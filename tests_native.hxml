@@ -1,0 +1,14 @@
+-debug
+-cp src
+-cp test
+-main com.hurlant.tests.HaxeCryptoTests
+
+--each
+
+--next
+-neko tests.n
+-cmd neko tests.n
+
+--next
+-cpp tests.cpp
+-cmd tests.cpp/HaxeCryptoTests-debug
