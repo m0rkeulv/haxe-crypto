@@ -30,7 +30,7 @@ import com.hurlant.util.ByteArray;
 
 
 class BigInteger {
-    public static inline var DB = 30; // number of significant bits per chunk
+    public static inline var DB = 28; // number of significant bits per chunk
     public static inline var DV = (1 << DB);
     public static inline var DM = (DV - 1); // Max value in a chunk
 
@@ -478,16 +478,20 @@ class BigInteger {
      * c is initial carry, returns final carry.
      * c < 3*dvalue, x < 2*dvalue, this_i < dvalue
      */
+	
     public function am(i:Int32, x:Int32, w:BigInteger, j:Int32, c:Int32, n:Int32):Int32 {
-        var xl:Int32 = x & 0x7fff;
-        var xh:Int32 = x >> 15;
+        var DB2:Int32 = Std.int(DB / 2);
+        var DB2M:Int32 = (2 << (DB2 - 1)) - 1;
+		var DBM:Int32 = (2 << (DB - 1)) - 1;
+        var xl:Int32 = x & DB2M;
+        var xh:Int32 = x >> DB2;
         while (--n >= 0) {
-            var l:Int32 = a[i] & 0x7fff;
-            var h:Int32 = a[i++] >> 15;
+            var l:Int32 = a[i] & DB2M;
+            var h:Int32 = a[i++] >> DB2;
             var m:Int32 = xh * l + h * xl;
-            l = xl * l + ((m & 0x7fff) << 15) + w.a[j] + (c & 0x3fffffff);
-            c = (l >>> 30) + (m >>> 15) + xh * h + (c >>> 30);
-            w.a[j++] = l & 0x3fffffff;
+            l = xl * l + ((m & DB2M) << DB2) + w.a[j] +  (c & DBM);// (c & 0xfffffff);
+            c = (l >>> DB) + (m >>> DB2) + xh * h + (c >>> DB);
+            w.a[j++] = l & DBM;// B0xfffffff;
         }
         return c;
     }
@@ -524,7 +528,7 @@ class BigInteger {
 
     public function squareTo(r:BigInteger):Void {
         if (false) {
-            this.multiplyTo(this, r);
+		    this.multiplyTo(this, r);
         } else {
             var x:BigInteger = abs();
             var i:Int32 = r.t = 2 * x.t;
@@ -554,7 +558,7 @@ class BigInteger {
      * divide this by m, quotient and remainder to q, r (HAC 14.20)
      * r != q, this != m. q or r may be null.
      */
-    public function divRemTo(m:BigInteger, q:BigInteger = null, r:BigInteger = null):Void {
+    public function divRemTo(m:BigInteger, q:BigInteger = null, r:BigInteger = null, debug:Bool=false):Void {
         var pm:BigInteger = m.abs();
         if (pm.t <= 0) return;
         var pt:BigInteger = abs();
@@ -565,25 +569,32 @@ class BigInteger {
         }
         if (r == null) r = nbi();
         var y:BigInteger = nbi();
-        var ts:Int = s;
-        var ms:Int = m.s;
-        var nsh = DB - Std2.nbits(cast pm.a[pm.t - 1]); // normalize modulus
-        if (nsh > 0) {
+        var ts:Int32 = s;
+        var ms:Int32 = m.s;
+        var nsh = DB - Std2.nbits(pm.a[pm.t - 1]); // normalize modulus
+		if (nsh > 0) {
             pm.lShiftTo(nsh, y);
             pt.lShiftTo(nsh, r);
         } else {
             pm.copyTo(y);
             pt.copyTo(r);
         }
-        var ys:Int = y.t;
+		if (debug){
+			trace("pm="+pm.toString(16));
+			trace("pt="+pt.toString(16));
+			trace("y="+y.toString(16));
+			trace("r="+r.toString(16));
+		}
+		var ys:Int = y.t;
         var y0:Int = y.a[ys - 1];
-        if (y0 == 0) return;
+        if (y0 == 0) 
+			return;
         var yt:Float = y0 * (1 << F1) + (((ys > 1)) ? y.a[ys - 2] >> F2 : 0);
         var d1:Float = FV / yt;
         var d2:Float = (1 << F1) / yt;
         var e:Float = 1 << F2;
-        var i:Int = r.t;
-        var j:Int = i - ys;
+        var i:Int32 = r.t;
+        var j:Int32 = i - ys;
         var t:BigInteger = ((q == null)) ? nbi() : q;
         y.dlShiftTo(j, t);
         if (r.compareTo(t) >= 0) {
@@ -601,7 +612,9 @@ class BigInteger {
         while (--j >= 0) {
             //trace('[a] : $j');
             // Estimate quotient digit
-            var qd:Int = ((r.a[--i] == y0)) ? DM : Std.int((r.a[i]) * d1 + ((r.a[i - 1]) + e) * d2);
+            var qd:Int = ((r.a[--i] == y0)) ? DM : Math.floor((r.a[i]) * d1 + ((r.a[i - 1]) + e) * d2);
+			if (debug)
+				trace("qd= "+qd);
             if ((r.a[i] += y.am(0, qd, r, j, 0, ys)) < qd) { // Try it out
                 y.dlShiftTo(j, t);
                 r.subTo(t, r);
@@ -612,13 +625,17 @@ class BigInteger {
             }
         }
         if (q != null) {
-            r.drShiftTo(ys, q);
+			r.drShiftTo(ys, q);
             if (ts != ms) ZERO.subTo(q, q);
         }
+		if (debug)
+			trace(r.toString(16));
         r.t = ys;
         r.clamp();
-        if (nsh > 0) r.rShiftTo(nsh, r);
-        if (ts < 0) ZERO.subTo(r, r);
+        if (nsh > 0) 
+			r.rShiftTo(nsh, r);
+        if (ts < 0) 
+			ZERO.subTo(r, r);
     }
 
     /**
@@ -664,11 +681,12 @@ class BigInteger {
     /**
      * this^e, e < 2^32, doing sqr and mul with "r" (HAC 14.79)
      */
-
+	private static inline var XFFFFFFFF:UInt = 0xffffffff;
+	 
     public function exp(e:UInt, z:IReduction):BigInteger {
         //trace('aaaaaaaaaaaaa:$e');
 		//if (e > 0xffffffff) return ONE; // use cast to avoid compile time error on flash target
-		if (e > cast( 0xffffffff, UInt) || e < 1) return ONE; // use cast to avoid compile time error on flash target
+		if (e > XFFFFFFFF || e < 1) return ONE; // use cast to avoid compile time error on flash target
         var r = nbi();
         var r2 = nbi();
         var g = z.convert(this);
