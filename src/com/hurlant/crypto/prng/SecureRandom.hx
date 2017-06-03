@@ -25,8 +25,8 @@ class SecureRandom {
                 return out;
             #elseif python
                 var out = Bytes.alloc(length);
-                var str = RandomOs.urandom(length);
-                for (n in 0 ... length) out.set(n, str.charCodeAt(n));
+                var bytes = RandomOs.urandom(length);
+                for (n in 0 ... length) out.set(n, bytes[n]);
                 return out;
             #elseif java
                 return Bytes.ofData(java.security.SecureRandom.getSeed(length));
@@ -60,6 +60,6 @@ class SecureRandom {
 #if python
 @:pythonImport("os")
 extern class RandomOs {
-    static public function urandom(count:Int):String;
+    static public function urandom(count:Int):Array<Int>;
 }
 #end
