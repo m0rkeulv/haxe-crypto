@@ -1,3 +1,4 @@
+--library hx3compat
 -debug
 -cp src
 -cp test

@@ -101,7 +101,8 @@ class Crypto {
                      */
                 }
                 keys.shift();
-                if (key.length * 8 == keys[0]) {
+                var bits:Int = Std.parseInt(keys[0]);
+                if (key.length * 8 == bits) {
                     // support for "aes-128-..." and such.
                     keys.shift();
                 }
